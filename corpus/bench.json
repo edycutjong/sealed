@@ -1,0 +1,573 @@
+{
+ "v": 1,
+ "source": "corpus/evidence/*.json (OutLayer on-chain events + resolve_execution args)",
+ "percentile": "nearest-rank",
+ "summary": {
+  "runs": 29,
+  "enforced_limits": {
+   "i": 2000000000,
+   "m": 512,
+   "s": 120
+  },
+  "verdict_s": {
+   "n": 29,
+   "p50": 7.27,
+   "p95": 10.85,
+   "max": 13.4
+  },
+  "instructions": {
+   "n": 29,
+   "p50": 6274484,
+   "p95": 27947477,
+   "max": 479555711,
+   "max_pct_of_limit": 23.98
+  },
+  "time_ms": {
+   "n": 29,
+   "p50": 2293,
+   "p95": 2664,
+   "max": 2766,
+   "max_pct_of_limit": 2.31
+  },
+  "verifier_peak_mem_bytes": {
+   "n": 29,
+   "p50": 1572864,
+   "p95": 1769472,
+   "max": 1835008,
+   "max_pct_of_limit": 0.34
+  }
+ },
+ "rows": [
+  {
+   "label": "d3-fake-noop",
+   "kind": "REFUSED",
+   "verdict_s": 10.85,
+   "instructions": 7048046,
+   "time_ms": 2304,
+   "mem_bytes": 1507328,
+   "lim": {
+    "i": 2000000000,
+    "m": 512,
+    "s": 120
+   }
+  },
+  {
+   "label": "d3-paid-fallback",
+   "kind": "PAID",
+   "verdict_s": 7.28,
+   "instructions": 7367526,
+   "time_ms": 2275,
+   "mem_bytes": 1507328,
+   "lim": {
+    "i": 2000000000,
+    "m": 512,
+    "s": 120
+   }
+  },
+  {
+   "label": "d5-abuse-create",
+   "kind": "REFUSED",
+   "verdict_s": 7.39,
+   "instructions": 7773530,
+   "time_ms": 2289,
+   "mem_bytes": 1835008,
+   "lim": {
+    "i": 2000000000,
+    "m": 512,
+    "s": 120
+   }
+  },
+  {
+   "label": "d5-abuse-input",
+   "kind": "REFUSED",
+   "verdict_s": 8.27,
+   "instructions": 27947477,
+   "time_ms": 2325,
+   "mem_bytes": 1769472,
+   "lim": {
+    "i": 2000000000,
+    "m": 512,
+    "s": 120
+   }
+  },
+  {
+   "label": "d5-abuse-keccak",
+   "kind": "REFUSED",
+   "verdict_s": 7.89,
+   "instructions": 479555711,
+   "time_ms": 2664,
+   "mem_bytes": 1572864,
+   "lim": {
+    "i": 2000000000,
+    "m": 512,
+    "s": 120
+   }
+  },
+  {
+   "label": "d5-abuse-loop",
+   "kind": "REFUSED",
+   "verdict_s": 6.99,
+   "instructions": 19504259,
+   "time_ms": 2113,
+   "mem_bytes": 1572864,
+   "lim": {
+    "i": 2000000000,
+    "m": 512,
+    "s": 120
+   }
+  },
+  {
+   "label": "d5-expire-fallback",
+   "kind": "EXPIRED",
+   "verdict_s": 7.29,
+   "instructions": 7371260,
+   "time_ms": 2290,
+   "mem_bytes": 1572864,
+   "lim": {
+    "i": 2000000000,
+    "m": 512,
+    "s": 120
+   }
+  },
+  {
+   "label": "d5-llm-muse-telephone",
+   "kind": "REFUSED",
+   "verdict_s": 7.19,
+   "instructions": 5983810,
+   "time_ms": 2337,
+   "mem_bytes": 1572864,
+   "lim": {
+    "i": 2000000000,
+    "m": 512,
+    "s": 120
+   }
+  },
+  {
+   "label": "d5-llm-qwen-delegation",
+   "kind": "REFUSED",
+   "verdict_s": 7.3,
+   "instructions": 6268265,
+   "time_ms": 2287,
+   "mem_bytes": 1572864,
+   "lim": {
+    "i": 2000000000,
+    "m": 512,
+    "s": 120
+   }
+  },
+  {
+   "label": "d5-llm-qwen-fallback",
+   "kind": "REFUSED",
+   "verdict_s": 7.21,
+   "instructions": 7263386,
+   "time_ms": 2102,
+   "mem_bytes": 1572864,
+   "lim": {
+    "i": 2000000000,
+    "m": 512,
+    "s": 120
+   }
+  },
+  {
+   "label": "d5-llm-qwen-king",
+   "kind": "REFUSED",
+   "verdict_s": 7.28,
+   "instructions": 6619009,
+   "time_ms": 2211,
+   "mem_bytes": 1572864,
+   "lim": {
+    "i": 2000000000,
+    "m": 512,
+    "s": 120
+   }
+  },
+  {
+   "label": "d5-llm-qwen-telephone",
+   "kind": "REFUSED",
+   "verdict_s": 7.24,
+   "instructions": 5991675,
+   "time_ms": 2293,
+   "mem_bytes": 1572864,
+   "lim": {
+    "i": 2000000000,
+    "m": 512,
+    "s": 120
+   }
+  },
+  {
+   "label": "d5-malformed-bad-address",
+   "kind": "REFUSED",
+   "verdict_s": 6.61,
+   "instructions": 6132868,
+   "time_ms": 1991,
+   "mem_bytes": 1572864,
+   "lim": {
+    "i": 2000000000,
+    "m": 512,
+    "s": 120
+   }
+  },
+  {
+   "label": "d5-malformed-bad-hex",
+   "kind": "REFUSED",
+   "verdict_s": 7.85,
+   "instructions": 5800412,
+   "time_ms": 2287,
+   "mem_bytes": 1572864,
+   "lim": {
+    "i": 2000000000,
+    "m": 512,
+    "s": 120
+   }
+  },
+  {
+   "label": "d5-malformed-not-json",
+   "kind": "REFUSED",
+   "verdict_s": 6.57,
+   "instructions": 5776787,
+   "time_ms": 2088,
+   "mem_bytes": 1572864,
+   "lim": {
+    "i": 2000000000,
+    "m": 512,
+    "s": 120
+   }
+  },
+  {
+   "label": "d5-malformed-too-many-txs",
+   "kind": "REFUSED",
+   "verdict_s": 6.68,
+   "instructions": 6261532,
+   "time_ms": 2299,
+   "mem_bytes": 1572864,
+   "lim": {
+    "i": 2000000000,
+    "m": 512,
+    "s": 120
+   }
+  },
+  {
+   "label": "d5-nearmiss-delegation-wrong-contract",
+   "kind": "REFUSED",
+   "verdict_s": 7.3,
+   "instructions": 6249796,
+   "time_ms": 2282,
+   "mem_bytes": 1572864,
+   "lim": {
+    "i": 2000000000,
+    "m": 512,
+    "s": 120
+   }
+  },
+  {
+   "label": "d5-nearmiss-fallback-no-receive",
+   "kind": "REFUSED",
+   "verdict_s": 6.73,
+   "instructions": 7279880,
+   "time_ms": 2306,
+   "mem_bytes": 1572864,
+   "lim": {
+    "i": 2000000000,
+    "m": 512,
+    "s": 120
+   }
+  },
+  {
+   "label": "d5-nearmiss-force-transfer",
+   "kind": "REFUSED",
+   "verdict_s": 7.27,
+   "instructions": 5273278,
+   "time_ms": 2258,
+   "mem_bytes": 1572864,
+   "lim": {
+    "i": 2000000000,
+    "m": 512,
+    "s": 120
+   }
+  },
+  {
+   "label": "d5-nearmiss-king-eoa",
+   "kind": "REFUSED",
+   "verdict_s": 6.71,
+   "instructions": 6517705,
+   "time_ms": 2305,
+   "mem_bytes": 1572864,
+   "lim": {
+    "i": 2000000000,
+    "m": 512,
+    "s": 120
+   }
+  },
+  {
+   "label": "d5-nearmiss-telephone-direct",
+   "kind": "REFUSED",
+   "verdict_s": 7.84,
+   "instructions": 5941572,
+   "time_ms": 2601,
+   "mem_bytes": 1572864,
+   "lim": {
+    "i": 2000000000,
+    "m": 512,
+    "s": 120
+   }
+  },
+  {
+   "label": "d5-noop-telephone",
+   "kind": "REFUSED",
+   "verdict_s": 7.21,
+   "instructions": 5847382,
+   "time_ms": 2321,
+   "mem_bytes": 1572864,
+   "lim": {
+    "i": 2000000000,
+    "m": 512,
+    "s": 120
+   }
+  },
+  {
+   "label": "d5-real-delegation",
+   "kind": "PAID",
+   "verdict_s": 6.82,
+   "instructions": 6274484,
+   "time_ms": 2295,
+   "mem_bytes": 1572864,
+   "lim": {
+    "i": 2000000000,
+    "m": 512,
+    "s": 120
+   }
+  },
+  {
+   "label": "d5-real-fallback",
+   "kind": "PAID",
+   "verdict_s": 7.26,
+   "instructions": 7370050,
+   "time_ms": 2302,
+   "mem_bytes": 1572864,
+   "lim": {
+    "i": 2000000000,
+    "m": 512,
+    "s": 120
+   }
+  },
+  {
+   "label": "d5-real-force",
+   "kind": "PAID",
+   "verdict_s": 7.31,
+   "instructions": 5492538,
+   "time_ms": 2301,
+   "mem_bytes": 1572864,
+   "lim": {
+    "i": 2000000000,
+    "m": 512,
+    "s": 120
+   }
+  },
+  {
+   "label": "d5-real-king",
+   "kind": "PAID",
+   "verdict_s": 7.26,
+   "instructions": 7107238,
+   "time_ms": 2307,
+   "mem_bytes": 1572864,
+   "lim": {
+    "i": 2000000000,
+    "m": 512,
+    "s": 120
+   }
+  },
+  {
+   "label": "d5-real-telephone",
+   "kind": "PAID",
+   "verdict_s": 13.4,
+   "instructions": 6379342,
+   "time_ms": 2268,
+   "mem_bytes": 1572864,
+   "lim": {
+    "i": 2000000000,
+    "m": 512,
+    "s": 120
+   }
+  },
+  {
+   "label": "d5-wrong-snapshot-fallback-on-telephone",
+   "kind": "REFUSED",
+   "verdict_s": 7.22,
+   "instructions": 5994515,
+   "time_ms": 2286,
+   "mem_bytes": 1572864,
+   "lim": {
+    "i": 2000000000,
+    "m": 512,
+    "s": 120
+   }
+  },
+  {
+   "label": "d5-wrong-snapshot-king-on-force",
+   "kind": "REFUSED",
+   "verdict_s": 7.95,
+   "instructions": 5845116,
+   "time_ms": 2766,
+   "mem_bytes": 1572864,
+   "lim": {
+    "i": 2000000000,
+    "m": 512,
+    "s": 120
+   }
+  }
+ ],
+ "chain": {
+  "rpc_note": "block header timestamps (ns) via `block`; resolve args re-decoded",
+  "summary": {
+   "runs": 29,
+   "commit_to_verdict_s": {
+    "n": 29,
+    "p50": 8.48,
+    "p95": 12.15,
+    "max": 14.41
+   },
+   "commit_to_paid_s": {
+    "n": 6,
+    "p50": 16.41,
+    "p95": 25.58,
+    "max": 25.58
+   },
+   "deliver_to_paid_s": {
+    "n": 6,
+    "p50": 1.8,
+    "p95": 1.9,
+    "max": 1.9
+   }
+  },
+  "rows": [
+   {
+    "label": "d3-fake-noop",
+    "commit_to_verdict_s": 12.15
+   },
+   {
+    "label": "d3-paid-fallback",
+    "commit_to_verdict_s": 8.57,
+    "commit_to_paid_s": 19.48,
+    "deliver_to_paid_s": 1.85
+   },
+   {
+    "label": "d5-abuse-create",
+    "commit_to_verdict_s": 9.18
+   },
+   {
+    "label": "d5-abuse-input",
+    "commit_to_verdict_s": 8.99
+   },
+   {
+    "label": "d5-abuse-keccak",
+    "commit_to_verdict_s": 9.08
+   },
+   {
+    "label": "d5-abuse-loop",
+    "commit_to_verdict_s": 8.36
+   },
+   {
+    "label": "d5-expire-fallback",
+    "commit_to_verdict_s": 8.6
+   },
+   {
+    "label": "d5-llm-muse-telephone",
+    "commit_to_verdict_s": 8.48
+   },
+   {
+    "label": "d5-llm-qwen-delegation",
+    "commit_to_verdict_s": 8.39
+   },
+   {
+    "label": "d5-llm-qwen-fallback",
+    "commit_to_verdict_s": 8.48
+   },
+   {
+    "label": "d5-llm-qwen-king",
+    "commit_to_verdict_s": 8.45
+   },
+   {
+    "label": "d5-llm-qwen-telephone",
+    "commit_to_verdict_s": 8.41
+   },
+   {
+    "label": "d5-malformed-bad-address",
+    "commit_to_verdict_s": 7.9
+   },
+   {
+    "label": "d5-malformed-bad-hex",
+    "commit_to_verdict_s": 9.12
+   },
+   {
+    "label": "d5-malformed-not-json",
+    "commit_to_verdict_s": 7.37
+   },
+   {
+    "label": "d5-malformed-too-many-txs",
+    "commit_to_verdict_s": 7.79
+   },
+   {
+    "label": "d5-nearmiss-delegation-wrong-contract",
+    "commit_to_verdict_s": 8.47
+   },
+   {
+    "label": "d5-nearmiss-fallback-no-receive",
+    "commit_to_verdict_s": 8.16
+   },
+   {
+    "label": "d5-nearmiss-force-transfer",
+    "commit_to_verdict_s": 8.44
+   },
+   {
+    "label": "d5-nearmiss-king-eoa",
+    "commit_to_verdict_s": 7.36
+   },
+   {
+    "label": "d5-nearmiss-telephone-direct",
+    "commit_to_verdict_s": 9.13
+   },
+   {
+    "label": "d5-noop-telephone",
+    "commit_to_verdict_s": 8.45
+   },
+   {
+    "label": "d5-real-delegation",
+    "commit_to_verdict_s": 7.9,
+    "commit_to_paid_s": 16.29,
+    "deliver_to_paid_s": 1.79
+   },
+   {
+    "label": "d5-real-fallback",
+    "commit_to_verdict_s": 8.51,
+    "commit_to_paid_s": 16.36,
+    "deliver_to_paid_s": 1.8
+   },
+   {
+    "label": "d5-real-force",
+    "commit_to_verdict_s": 8.5,
+    "commit_to_paid_s": 16.41,
+    "deliver_to_paid_s": 1.83
+   },
+   {
+    "label": "d5-real-king",
+    "commit_to_verdict_s": 8.53,
+    "commit_to_paid_s": 17.08,
+    "deliver_to_paid_s": 1.9
+   },
+   {
+    "label": "d5-real-telephone",
+    "commit_to_verdict_s": 14.41,
+    "commit_to_paid_s": 25.58,
+    "deliver_to_paid_s": 1.74
+   },
+   {
+    "label": "d5-wrong-snapshot-fallback-on-telephone",
+    "commit_to_verdict_s": 8.45
+   },
+   {
+    "label": "d5-wrong-snapshot-king-on-force",
+    "commit_to_verdict_s": 9.19
+   }
+  ]
+ }
+}
