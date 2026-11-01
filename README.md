@@ -159,9 +159,9 @@ only needed to rebuild the verifier from source (`make verifier-check`).
 | `make doctor` | prerequisites present, `verifier.wasm` hash matches its pin | archival RPC ping |
 | `make replay` | every published commit re-run under wasmtime from the committed wasm its bounty pinned (sha256-checked) = its on-chain verdict | none |
 | `make replay INPUT=corpus/vectors/real-fallback.json` | the verdict for one tx list (yours: `{"target":0,"invariant_id":"…","txs":[…]}`) | none |
-| `make open` | all 6 paid deliveries opened offline: `sha256(enc)` = the verdict's `h_enc`, the box opens to the exploit `make replay` re-runs, and it hashes to the commit (needs PyNaCl) | none |
-| `make verify` | each of the 29 runs proven from chain data: pinned hash, the operator's scoped worker key, verdict, `h_enc`, PAID; every commit on chain bundled; paid totals match | archival RPC, about 80 calls (a few minutes on a rate-limited node; `Error 2` = unreachable, `Error 1` = a failed check) |
-| `make verify-demo` | the same checks on the 5 paid demo-bounty runs, and FAIL unless that bounty has 0 access keys and runs the committed `contracts/bounty.wasm` (global hash `7Htmes…`) | about 25 calls (about 1.5 min) |
+| `make open` | each of the 6 paid runs in `corpus/results.json` (FAIL if one is missing): verdict `broken` with `h_exploit` = the commit, AWARDED / DELIVERED / PAID for that commit id, `sha256(enc)` = `h_enc`, and the box opens to the published exploit `make replay` re-runs, which hashes to the commit (needs PyNaCl) | none |
+| `make verify` | each of the 29 runs proven from chain data: pinned hash, the operator's scoped worker key, verdict, and for the 6 paid runs `h_enc` and PAID; every commit on chain bundled; paid totals match | archival RPC, about 80 calls (a few minutes on a rate-limited node; `Error 2` = unreachable, `Error 1` = a failed check) |
+| `make verify-demo` | the same checks on the 5 paid demo-bounty runs, and FAIL unless that bounty has 0 access keys, runs the committed `contracts/bounty.wasm` (global hash `7Htmes…`) and was created with no key (its create tx) | about 25 calls (about 1.5 min) |
 | `make corpus` | all 52 corpus items vs their golden verdicts | none |
 | `make refusals` | the 6 on-chain refusal kinds with tx hashes | none |
 | `make bench` | request→verdict p50/p95, instructions / time / memory vs the enforced limits | none (`make bench-chain` re-reads the chain) |

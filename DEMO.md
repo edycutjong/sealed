@@ -38,9 +38,11 @@ make open          # offline: all 6 paid deliveries open to the exploit `make re
 
 Per run it checks: the pinned verifier hash, the operator's scoped OutLayer worker key, the verdict, `h_enc`, and PAID
 for that commit id; that every commit on chain is bundled; and that the bounty's paid and escrow totals match.
-`verify-demo` also fails unless the demo bounty has 0 access keys and runs the committed `contracts/bounty.wasm`.
-`make open` is the protocol's side: the delivered box opens (with the hunter's ephemeral key, published after payment;
-it is the same shared key the protocol's own key gives) to the replayed exploit, which hashes to the commit.
+`verify-demo` also fails unless the demo bounty has 0 access keys, runs the committed `contracts/bounty.wasm`, and its
+create tx added no key. `make open` checks what the protocol received: for each paid run in `corpus/results.json`, the
+verdict says broken for this commit, the bounty logged AWARDED, DELIVERED and PAID for it, and the delivered box (the
+one the protocol opens with its own key) opens with the hunter's ephemeral key, published after payment, which gives
+the same shared secret, to the replayed exploit, which hashes to the commit.
 
 ## 4. The numbers
 

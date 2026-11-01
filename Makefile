@@ -58,8 +58,9 @@ RPC ?= https://archival-rpc.testnet.fastnear.com
 replay:
 	@python3 scripts/verify_offline.py $(INPUT)
 
-## Open every paid delivery offline: sha256(enc) = the verdict's h_enc, the box opens (published EPH_SK, the same
-## shared key the protocol's own key gives) to the exact exploit `make replay` re-runs, and it hashes to the commit.
+## Open every paid delivery offline (exactly the Paid runs in corpus/results.json): verdict broken for this commit,
+## AWARDED/DELIVERED/PAID logged for it, sha256(enc) = h_enc, the box opens (published EPH_SK, the same shared key the
+## protocol's own key gives) to the exact exploit `make replay` re-runs, and it hashes to the commit.
 ## Needs PyNaCl (pip install pynacl); no network, no NEAR credentials.
 open:
 	@python3 scripts/open_deliveries.py
@@ -73,13 +74,14 @@ verify:
 	@python3 scripts/verify.py --rpc $(RPC)
 
 ## Quick path (~25 RPC calls instead of ~80): the 5 paid lines of the D5 demo bounty, with the same checks, its
-## completeness and its ledger, and FAIL unless it is keyless on the committed bounty.wasm's global code hash.
+## completeness and its ledger, and FAIL unless it is keyless on the committed bounty.wasm's global code hash and its
+## create tx added no key (I6).
 ## Use it when a full `make verify` would outlast a command timeout.
 verify-demo:
 	@python3 scripts/verify.py --rpc $(RPC) --require-keyless --bounty demo.sealed-dev-11010702.testnet
 
 ## The D5 production bounties only (demo = 5 levels paid, corpus = fakes + expiry), and FAIL unless each is keyless
-## on the global code hash of the committed contracts/bounty.wasm (0 access keys for life). `make verify` above also covers the keyed D3 throwaway.
+## on the global code hash of the committed contracts/bounty.wasm, created with no key (0 access keys for life). `make verify` above also covers the keyed D3 throwaway.
 D5_BOUNTIES := demo.sealed-dev-11010702.testnet corpus.sealed-dev-11010702.testnet
 verify-d5:
 	@python3 scripts/verify.py --rpc $(RPC) --require-keyless $(addprefix --bounty ,$(D5_BOUNTIES))
