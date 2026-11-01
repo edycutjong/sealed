@@ -7,7 +7,7 @@ bundle() records, for one commit:
   request_id — from OutLayer's `execution_requested` event
   resolve tx — the worker's `resolve_execution` / `submit_execution_output_and_resolve` for that request_id,
                signed by worker.outlayer.testnet (OutLayer's operator = its register contract) with an access key
-               the register contract added after checking the worker's TDX quote (llms-full.md:8268-8384)
+               the register contract added after checking the worker's TDX quote (https://app.outlayer.ai/docs/tee-attestation)
   worker key — view_access_key(operator, signing key) at the resolve block: exists, FunctionCall to outlayer
   deliver tx — DELIVERED → ft_transfer → on_paid (PAID), when there is one
 Usage: python3 scripts/evidence.py <label> <bounty> <hunter> <commit_tx> [deliver_tx]  (re-builds one bundle)"""
