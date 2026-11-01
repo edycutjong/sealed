@@ -1,0 +1,24 @@
+[package]
+name = "sealed-day0-probe"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+description = "Day-0 probe: a keyless contract that pins one verifier sha256 and asks OutLayer to run it"
+publish = false
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+# Its own workspace: built with cargo-near on the toolchain OutLayer's contracts pin.
+[workspace]
+
+[dependencies]
+near-sdk = "=5.9.0"
+
+[profile.release]
+codegen-units = 1
+opt-level = "z"
+lto = true
+debug = false
+panic = "abort"
+overflow-checks = true
