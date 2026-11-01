@@ -16,7 +16,7 @@ verifier inside a NEAR OutLayer TEE worker. The exploit stays sealed until the m
 | Bounty contract | `contracts/bounty/src/lib.rs` → `contracts/bounty.wasm` | Keyless NEP-141 escrow: commit, request the verifier on OutLayer, award, deliver, pay |
 | Test token | `contracts/test-token/src/lib.rs` | Fixed-supply NEP-141 standing in for USDC on testnet |
 | Deploy | `scripts/deploy_bounty_testnet.py` | One batch: create account, `UseGlobalContract(hash)`, `new` — no `AddKey` |
-| Hunter client | `scripts/hunter.py`, `scripts/hunter_agent.py` | Commit, store the sealed secrets on OutLayer, wait for the verdict, deliver |
+| Hunter client | `scripts/hunter.py` · `scripts/hunter_agent.py` | `hunter.py`: commit, store the sealed secrets on OutLayer, wait for the verdict, deliver · `hunter_agent.py`: an LLM proposes exploits and checks each locally against the same `verifier.wasm` |
 | Evidence | `corpus/evidence/*.json` (full tx bundles), `corpus/published/*.json`, `corpus/results.json`, `corpus/bench.json` | Everything the judge targets re-check |
 
 ## Commit to payout
@@ -25,10 +25,11 @@ verifier inside a NEAR OutLayer TEE worker. The exploit stays sealed until the m
 hunter                bounty (keyless)            token            OutLayer (TEE worker)
   │ commit(h, inv, to) + bond + deposit │                     │                     │
   ├──────────────────────────►│ checks: bond, claim pending,   │                     │
-  │                           │ invariant paid, pool short     │                     │
+  │                           │ invariant paid, pool short;    │                     │
+  │                           │ reserve amount                 │                     │
   │                           ├── storage_balance_of(to) ─────►│                     │
   │                           │◄── on_payout_checked ──────────┤                     │
-  │                           │ PENDING; reserve amount        │                     │
+  │                           │ PENDING (slot taken)           │                     │
   │                           ├── request_execution(WasmUrl+hash, input, secrets_ref c-<h[..8]>, limits) ──►│
   │                           │                                │   verifier.wasm: EXPLOIT/SALT/EPH_SK from │
   │                           │                                │   the hunter's secrets → verdict JSON     │
@@ -41,8 +42,8 @@ hunter                bounty (keyless)            token            OutLayer (TEE
 ```
 
 - `commit` takes the commit hash, the invariant and a payout account; it refuses for a short bond, a claim pending, an
-  invariant already paid, or a pool short (`contracts/bounty/src/lib.rs:241`, reasons at `:254-261`). Every refusal is a
-  successful tx with a `REFUSED` log, never a panic.
+  invariant already paid, or a pool short (`contracts/bounty/src/lib.rs:241`, reasons at `:254-261`). Every guard refusal
+  is a successful tx with a `REFUSED` log; malformed input (an unknown invariant, a non-hex hash) panics.
 - The payout account's token registration is checked before the slot is taken (`storage_balance_of`, `:301`;
   callback `on_payout_checked`, `:310`), so the first transfer normally succeeds.
 - The OutLayer request pins the verifier by hash (`WasmUrl.hash = verifier_wasm_hash`, `:657`) and names the hunter's
@@ -65,7 +66,7 @@ hunter                bounty (keyless)            token            OutLayer (TEE
 - `h_exploit = sha256(EXPLOIT ‖ hunter ‖ SALT)` — must equal the on-chain commit hash.
 - `execute` (`:289`): the exploit txs run from the snapshot's `player`, then the snapshot's `validator` calls
   `validateInstance(instance, player)` on the level factory; `broken` is that call's boolean. No Rust-side predicate.
-- `enc = crypto_box_seal({"exploit": base64(EXPLOIT), "salt", "hunter"}, protocol_enc_pk)` (`seal.rs:12`) with the
+- `enc = crypto_box_seal({"exploit": base64(EXPLOIT), "salt", "hunter"}, protocol_enc_pk)` (`seal.rs:23`; plaintext layout `:12`) with the
   ephemeral key taken from `EPH_SK`, so
   native, wasmtime and the worker produce identical bytes (`verifier/src/seal.rs:1-5`); `h_enc = sha256(enc)`.
 - Bounds (`:20-32`): 600 000 gas for all exploit txs, 500 000 for `validateInstance`, ≤ 4 txs, ≤ 24 KiB calldata, no
@@ -77,7 +78,7 @@ hunter                bounty (keyless)            token            OutLayer (TEE
 
 | Id | Rule | Where it is tested |
 |---|---|---|
-| I1 | USDC conservation: pool + escrow + paid = funded − withdrawn | `contracts/itests/tests/bounty.rs:165`, asserted after every transition |
+| I1 | USDC conservation: pool + escrow + paid = funded − withdrawn | `contracts/itests/tests/bounty.rs:165` (`assert_conservation`, called throughout the sandbox tests) |
 | I2 / I2b | One payout per invariant; a refused commit releases its reservation | `bounty.rs:574`, `:257`, `:486` |
 | I3 | At most one pending verdict per invariant | `bounty.rs:363` |
 | I4 | `withdraw_pool` never moves reserved or escrowed USDC, and only after the timelock | `bounty.rs:383`; `lib.rs:552` |
@@ -90,12 +91,12 @@ hunter                bounty (keyless)            token            OutLayer (TEE
 
 | Target | Script | Re-checks |
 |---|---|---|
-| `make replay` | `scripts/verify_offline.py` | each published commit under wasmtime from the committed wasm (hash-checked) = the on-chain verdict |
-| `make verify` / `verify-d5` | `scripts/verify.py` | per commit, from the archival RPC: pinned hash (bounty's live state), the resolve tx went to the bounty's OutLayer contract from the operator OutLayer's config named at that block, with a key scoped to it; the bundle equals the chain; verdict, `h_enc`, `PAID` for this commit id; `view_commit` status matches the line; the bundle set equals `corpus/results.json` runs, each commit once; `verify-d5` adds I6 |
+| `make replay` | `scripts/verify_offline.py` | each published commit under wasmtime from the committed wasm whose sha256 is the hash its bounty pinned (`verifier.wasm`, or `verifiers/<sha>.wasm` for the earlier D3 build) = the on-chain verdict |
+| `make verify` / `verify-d5` | `scripts/verify.py` | per commit, from the archival RPC: pinned hash (bounty's live state), the resolve tx went to the bounty's OutLayer contract from the operator OutLayer's config named at that block, with a key scoped to it; the bundle equals the chain; verdict, `h_enc`, `PAID` for this commit id; `view_commit` status matches the line; the bundle set equals `corpus/results.json` runs, each commit once, and covers every commit id the bounty holds on chain (`view_state.commits`); `verify-d5` adds I6 |
 | `make corpus` | `scripts/corpus_check.py` | all 52 corpus items against their golden verdicts |
 | `make refusals` | `scripts/refusals.py` | the 6 refusal kinds seen on chain, with tx hashes |
 | `make bench` / `bench-chain` | `scripts/bench.py` | latency p50/p95 and resources vs limits, recomputed from the bundles (`bench-chain` re-reads the chain) |
-| `make test` | `verifier/tests/golden.rs`, `contracts/itests/tests/bounty.rs` | golden verdicts native = wasmtime; the contract in a near-workspaces sandbox |
+| `make test` | `verifier/tests/golden.rs`, `contracts/bounty/src/lib.rs` unit tests, `contracts/itests/tests/bounty.rs` | golden verdicts native = wasmtime; contract unit tests (mocked context); the contract in a near-workspaces sandbox |
 
 ## Limits
 
@@ -114,7 +115,7 @@ hunter                bounty (keyless)            token            OutLayer (TEE
   verdict long before the 30-minute floor). The `AwaitingRegistration` branch has a unit test with a mocked context
   (`lib.rs:792`); the dangling-`Pending` branch is covered by code review only (`bounty.rs:545-549`, `:595-599`). The
   yield-timeout `null` path itself was not observed on a live testnet run. The 30-minute clock starts at `commit`,
-  which is one or two blocks before the request.
+  about a second before the request (`corpus/bench.json`: commit→verdict p50 8.48 s vs request→verdict p50 7.27 s).
 - **Griefing.** A commit holds its invariant for one verdict (p95 12.15 s commit→verdict, `corpus/bench.json`), and
   other invariants are untouched (I4). A non-verdict refunds the bond once per `(hunter, invariant)` per 24 h
   (`lib.rs:415-443`), so a set of fresh accounts can keep one invariant busy at the cost of the OutLayer fee and gas per
@@ -122,7 +123,7 @@ hunter                bounty (keyless)            token            OutLayer (TEE
   before its registration callback refunds it in full.
 - **Storage.** Every commit that passes the guards is stored for good (`commits` is append-only, `lib.rs:151`), and
   each `(hunter, invariant)` that gets an infra refund keeps one timestamp; the bounty account pays that storage from
-  its own NEAR balance (4 NEAR on the demo bounty, ~0.004 NEAR per stored commit). A spammer who commits with an
+  its own NEAR balance (4 NEAR on the demo bounty on 1 Nov; a stored commit is roughly 350 B ≈ 0.0035 NEAR, an estimate). A spammer who commits with an
   unregistered payout account is refunded in full and pays only gas, so a bounty can be run out of storage balance;
   anyone can top a keyless bounty up with a plain NEAR transfer. Charging storage to the hunter needs a contract change
   (not made: it would replace the global code hash the testnet evidence pins).

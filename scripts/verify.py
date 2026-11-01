@@ -18,7 +18,8 @@ bundle, label `RECORDED`). Each commit yields one line with these checks:
   paid     (paid) on_paid logged PAID for THIS commit id and the awarded amount
   status   (online) view_commit says the commit settled the way the line claims (Paid / Refused / Voided), so a
            bundle cannot hide a payout by omitting its deliver tx
-The bundle set itself must equal the runs in corpus/results.json, each commit tx once (else FAIL before any check).
+The bundle set itself must equal the runs in corpus/results.json, each commit tx once (else FAIL before any check),
+and online each bundled bounty's commit ids must be exactly 0..view_state.commits-1 (chain-anchored completeness).
 Exit 0 only if ≥ 1 Paid line exists and every payout line is CHAIN-CHECKED (empty bundle → 1; offline or rate-limited → 2)."""
 import argparse, base64, glob, hashlib, json, os, sys
 
@@ -120,7 +121,8 @@ def chain_status(bounty, cid, url):
 
 
 STATUS_OF = {"PAID": lambda s: s == "Paid", "VOIDED": lambda s: s == "Voided",
-             "REFUSED": lambda s: isinstance(s, dict) and "Refused" in s, "AWARDED": lambda s: s == "Awarded"}
+             "REFUSED": lambda s: isinstance(s, dict) and "Refused" in s, "AWARDED": lambda s: s == "Awarded",
+             "DELIVERED": lambda s: s == "Delivered"}  # delivered, payout failed, awaiting retry_payout
 
 
 def one(ev, online, url):
@@ -188,7 +190,8 @@ def one(ev, online, url):
     refused = any(l.startswith("REFUSED ") for l in blog)
     checks.append(("verdict", isinstance(out, dict) and bool(out.get("broken")) == awarded and (awarded or refused)))
     paid_logs = [l for l in dlog if l.startswith("PAID ")]
-    kind = "PAID" if paid_logs else ("REFUSED" if refused else "AWARDED")
+    delivered = any(l.startswith("DELIVERED ") for l in dlog)
+    kind = "PAID" if paid_logs else ("REFUSED" if refused else ("DELIVERED" if delivered else "AWARDED"))
     if ev.get("expire_tx") and not paid_logs:
         # Awarded, never delivered, voided by `expire` after deliver_by: escrow back to the pool, bond slashed.
         elog = logs(near.tx(ev["expire_tx"], ev["expire_signer"], url)["result"], ev["bounty"]) if online else ev["expire_logs"]
@@ -211,7 +214,10 @@ def one(ev, online, url):
         # prove. A paid commit with its deliver fields deleted would otherwise print a clean AWARDED line.
         cid = next((l.split()[1] for l in blog if l.startswith("COMMIT ")), None)
         st = chain_status(ev["bounty"], cid, url) if cid is not None else None
-        checks.append(("status", st is not None and STATUS_OF.get(kind, lambda s: False)(st)))
+        good = st is not None and STATUS_OF.get(kind, lambda s: False)(st)
+        # A non-terminal bundle (AWARDED / DELIVERED) whose commit has since settled is stale, not forged — but it
+        # proves less than the chain now holds, so it still fails, with the chain status named for a re-bundle.
+        checks.append(("status" if good else f"status (chain says {json.dumps(st)}; re-bundle)", good))
     fails = [n for n, g in checks if not g]
     return kind, checks, fails
 
@@ -276,6 +282,22 @@ def main():
             continue
         print(("INFO " if ok else "FAIL ") + line_s)
         any_fail |= not ok
+    if online:
+        # Completeness against the chain, not just against corpus/results.json: each bundled bounty's commit ids
+        # must be exactly 0..view_state.commits-1, so dropping a bundle (and its results.json row) still FAILs.
+        for bounty in sorted({ev["bounty"] for ev in evs}):
+            ids = sorted(next((int(l.split()[1]) for l in ev["bounty_logs"] if l.startswith("COMMIT ")), -1)
+                         for ev in evs if ev["bounty"] == bounty)
+            try:
+                n = int(live_state(bounty, a.rpc)["commits"])
+            except (OSError, KeyError, ValueError) as e:
+                print(f"RPC-ERROR bounty {bounty}: commit count not re-checked ({e})")
+                n_unb += 1
+                continue
+            ok = ids == list(range(n))
+            print(("INFO " if ok else "FAIL ") + f"bounty {bounty}: {n} commits on chain, bundles cover "
+                  + (f"all {n}" if ok else f"ids {ids}"))
+            any_fail |= not ok
     for b in bundles:
         ev = json.load(open(b))
         row_online = online
