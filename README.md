@@ -78,7 +78,7 @@ Full walk-through with `file:line` for every claim: [ARCHITECTURE.md](ARCHITECTU
 |---|---|---|
 | `request_execution` | the bounty requests the verifier, pinned by hash, with the hunter's secrets profile | `contracts/bounty/src/lib.rs:334` (call), `:657` (hash pin) |
 | `resolve_execution` | the worker's call resumes the yield into `on_verdict`, which decides AWARDED or REFUSED | `contracts/bounty/src/lib.rs:343` |
-| `store_secrets` | the hunter stores the exploit as an OutLayer encrypted secret bound to the pinned wasm hash | `scripts/hunter.py:63-75` |
+| `store_secrets` | the hunter stores the exploit as an OutLayer encrypted secret bound to the pinned wasm hash | `scripts/hunter.py:63-76` |
 | `get_config` | `make verify` anchors the worker to OutLayer's operator at the resolve block | `scripts/verify.py:107` |
 | Global contracts | the bounty runs on a code hash with no access key (I6); the earlier D3 throwaway bounty (2 of the 29 runs) is keyed | `scripts/deploy_bounty_testnet.py:115` |
 
