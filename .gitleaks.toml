@@ -1,0 +1,7 @@
+# Default rules, minus lockfile checksums (sha256 strings trip generic-api-key).
+[extend]
+useDefault = true
+
+[allowlist]
+description = "lockfile checksums"
+paths = ['''(^|/)Cargo\.lock$''']
