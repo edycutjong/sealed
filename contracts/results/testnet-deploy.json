@@ -1,10 +1,10 @@
 {
-  "note": "P1b first testnet deploy of the bounty contract (D2). Keyed subaccount for iteration; the PRODUCTION bounty is created keyless on the global-contract hash (G9 proved a global-hash account has 0 access keys). The verifier url+hash pin the D1 committed verifier (92a4681d); P1c re-uploads those exact bytes before any real run. Bytes are wasm-opt -Oz of the path-remapped release build (no /Users paths).",
+  "note": "P1b first testnet deploy of the bounty contract (D2). Keyed subaccount for iteration; the PRODUCTION bounty is created keyless on the global-contract hash (G9 proved a global-hash account has 0 access keys). The verifier url+hash pin the D1 committed verifier (92a4681d); P1c re-uploads those exact bytes before any real run. Bytes are wasm-opt -Oz of the path-remapped release build (no /Users paths). QA round-2 fixes applied (secrets_profile from commit hash; deliver = hunter-only + log-refusals; withdraw rollback callback; Failed-branch deposit refund; h_enc validation; exploit-invalid reason). Final bytes ba56d776.",
   "network": "testnet",
   "at": "2026-11-01",
   "bounty_account": "b1.sealed-dev-11010702.testnet",
-  "bounty_wasm_sha256": "72cd30291a4fac5a697c404ebee6aeee26d925e8657f2aabe6679f172931258f",
-  "bounty_wasm_bytes": 218398,
+  "bounty_wasm_sha256": "7cb5a845d2bb5809c19ef5019ca2bdf5b936f1784e4dd31310d03b874b4a7bd0",
+  "bounty_wasm_bytes": 221497,
   "create_account_tx": "BRt8Z3pFXsBAMvMqgH5BSvuzPVKGG2bbQ18YCZ9PVSAg",
   "deploy_tx": "FBZF12dJ9wG9FJmu1y6Yjnyt9d8wBD8v1GxsX1VRWhzT",
   "init_tx": "8L3U89aU3uKqr6v5jq9mj2KFPZeF92D1oszpiB1fkQeJ",
@@ -17,5 +17,7 @@
     "invariant": "fallback-owner-drained Open"
   },
   "onchain_code_hash_bs58": "8j8wvbAWf3G92wJAbTy6eyMHCVmnvqUHtN7JPzKGgCsg",
-  "redeploy_remapped_tx": "7enfddxsmnNrL1PtufuWG3cstz8iMw4uLusyfNoPz2ZX"
+  "redeploy_remapped_tx": "7enfddxsmnNrL1PtufuWG3cstz8iMw4uLusyfNoPz2ZX",
+  "redeploy_after_qa_tx": "6zx3oad5H5vKsB4TFzeSrpCKCCh5rtK5EKAksvQMHNKE",
+  "final_deploy_tx": "6zMDJcAfPsJ18eoHSAuCi5X4WcqLwrhkeXVaTrvVDQwz"
 }

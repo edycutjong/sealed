@@ -245,31 +245,25 @@ impl Bounty {
             Some(i) => i,
             None => env::panic_str("unknown invariant"),
         };
-        require!(commit_hash.len() == 64, "commit_hash is 32-byte hex");
+        require!(commit_hash.len() == 64 && commit_hash.bytes().all(|b| b.is_ascii_hexdigit()), "commit_hash is 32-byte hex");
         let inv = self.invariants[idx].clone();
         let min = inv.bond.saturating_add(self.outlayer_deposit);
 
-        // Guard refusals: refund everything, reserve nothing.
-        let refuse = |why: &str| -> Option<&'static str> {
-            env::log_str(&format!("REFUSED: {why}"));
-            None
-        };
-        let bad = if attached < min {
-            refuse("bond").map(|_| ());
-            Some(())
-        } else if !matches!(inv.state, InvState::Open | InvState::Pending(_)) {
-            env::log_str("REFUSED: invariant already paid");
-            Some(())
+        // Guard refusals: log, refund everything, reserve nothing. A Pending invariant is "claim pending";
+        // an Awarded/Delivered/Paid one is "invariant already paid".
+        let why = if attached < min {
+            Some("bond")
         } else if matches!(inv.state, InvState::Pending(_)) {
-            env::log_str("REFUSED: claim pending");
-            Some(())
+            Some("claim pending")
+        } else if !matches!(inv.state, InvState::Open) {
+            Some("invariant already paid")
         } else if self.pool.saturating_sub(self.reserved) < inv.amount.0 {
-            env::log_str("REFUSED: pool short");
-            Some(())
+            Some("pool short")
         } else {
             None
         };
-        if bad.is_some() {
+        if let Some(why) = why {
+            env::log_str(&format!("REFUSED: {why}"));
             if attached.as_yoctonear() > 0 {
                 Promise::new(hunter).transfer(attached);
             }
@@ -279,12 +273,15 @@ impl Bounty {
         let bond = inv.bond;
         let deposit = attached.saturating_sub(bond); // ≥ outlayer_deposit by the `min` guard
         let commit_id = self.commits.len();
+        // Profile the hunter used in `store_secrets` BEFORE this call — derived from the commit hash it
+        // already knows, never the commit index (which it cannot predict and which races concurrently).
+        let secrets_profile = format!("c-{}", &commit_hash[..8]);
         self.commits.push(&Commit {
             hunter: hunter.clone(),
             commit_hash,
             invariant_id: invariant_id.clone(),
             payout_to: payout_to.clone(),
-            secrets_profile: format!("c-{}", &self.commits.len().to_string()),
+            secrets_profile,
             at_ns: now(),
             bond,
             deposit,
@@ -350,16 +347,18 @@ impl Bounty {
             return;
         }
         let idx = self.inv_index(&c.invariant_id);
+        // The worker ran only when a real verdict comes back. A `Failed` promise means `request_execution`
+        // itself failed (the deposit bounced to this account, never reaching a worker) — refund it too.
         let bytes = match env::promise_result(0) {
             PromiseResult::Successful(b) => b,
-            PromiseResult::Failed => return self.no_verdict(commit_id, &mut c, idx),
+            PromiseResult::Failed => return self.no_verdict(commit_id, &mut c, idx, true),
         };
         // Every non-verdict (worker-answered failure, yield timeout, stale run) arrives as a SUCCESSFUL
         // promise whose bytes are JSON `null` (OutLayer `on_execution_response`). One rule for all of them.
         let verdict: Option<Value> = serde_json::from_slice::<Value>(&bytes).ok().and_then(find_verdict);
         let v = match verdict {
             Some(v) => v,
-            None => return self.no_verdict(commit_id, &mut c, idx),
+            None => return self.no_verdict(commit_id, &mut c, idx, false),
         };
 
         let inv = self.invariants[idx].clone();
@@ -368,17 +367,25 @@ impl Bounty {
         let h_snapshot = v.get("h_snapshot").and_then(|x| x.as_str()).unwrap_or("");
         let v_inv = v.get("invariant_id").and_then(|x| x.as_str()).unwrap_or("");
         let h_enc = v.get("h_enc").and_then(|x| x.as_str()).unwrap_or("");
+        let err = v.get("err").and_then(|x| x.as_str());
         let want_snap = &self.snapshot_hashes[inv.target as usize];
+        let h_enc_ok = h_enc.len() == 64 && h_enc.bytes().all(|b| b.is_ascii_hexdigit());
 
         // Hunter-caused refusals (I7 binding): slash the bond; the worker ran, so the OutLayer deposit is gone.
-        let reason = if !broken {
-            Some("no invariant broken")
+        let reason: Option<String> = if !broken {
+            // The verifier already phrases decode/secret faults (e.g. "exploit invalid: too many txs",
+            // "secret missing"); surface its `err` verbatim, or "no invariant broken" for a clean no-break.
+            Some(err.map(|e| e.to_string()).unwrap_or_else(|| "no invariant broken".into()))
         } else if h_exploit != c.commit_hash {
-            Some("commit mismatch")
+            Some("commit mismatch".into())
         } else if v_inv != c.invariant_id {
-            Some("wrong invariant")
+            Some("wrong invariant".into())
         } else if h_snapshot != want_snap.as_str() {
-            Some("snapshot mismatch")
+            Some("snapshot mismatch".into())
+        } else if !h_enc_ok {
+            // A broken-but-malformed verdict (no valid h_enc) could never be delivered; reject it as a fault
+            // rather than awarding an undeliverable escrow that only `expire` could clear.
+            Some("malformed h_enc".into())
         } else {
             None
         };
@@ -386,7 +393,7 @@ impl Bounty {
             self.reserved -= inv.amount.0;
             self.slash(&mut c);
             self.invariants[idx].state = InvState::Open;
-            c.status = CommitStatus::Refused(why.into());
+            c.status = CommitStatus::Refused(why.clone());
             self.commits.replace(commit_id, &c);
             env::log_str(&format!("REFUSED {commit_id} {why}"));
             return;
@@ -407,10 +414,12 @@ impl Bounty {
 
     /// `verifier unavailable`: refund the bond once per `(hunter, invariant)` per 24 h, else slash. A
     /// no-verdict arriving ≥ 10 min after the request refunds in full and never counts toward the cap.
-    fn no_verdict(&mut self, commit_id: u64, c: &mut Commit, idx: usize) {
+    /// `deposit_bounced` = the `request_execution` promise itself failed, so the OutLayer deposit came back
+    /// to this account (no worker ran) and is refunded alongside the bond.
+    fn no_verdict(&mut self, commit_id: u64, c: &mut Commit, idx: usize, deposit_bounced: bool) {
         let amount = self.invariants[idx].amount.0;
         self.reserved -= amount;
-        self.invariants[idx].state = InvState::Open;
+        self.reopen(idx, commit_id);
         let late = now().saturating_sub(c.at_ns) >= LATE_NOVERDICT_NS;
         let key = refund_key(&c.hunter, &c.invariant_id);
         let last = self.infra_refunds.get(&key);
@@ -427,7 +436,18 @@ impl Bounty {
             c.status = CommitStatus::Refused("verifier unavailable".into());
             env::log_str(&format!("REFUSED {commit_id} verifier unavailable (repeat within 24h: slashed)"));
         }
+        if deposit_bounced && c.deposit.as_yoctonear() > 0 {
+            Promise::new(c.hunter.clone()).transfer(c.deposit);
+        }
         self.commits.replace(commit_id, c);
+    }
+
+    /// Reopen an invariant only if THIS commit still holds its slot, so a no-verdict/stale on one commit can
+    /// never clobber another commit's Pending/Awarded state on the same invariant.
+    fn reopen(&mut self, idx: usize, commit_id: u64) {
+        if matches!(self.invariants[idx].state, InvState::Pending(id) if id == commit_id) {
+            self.invariants[idx].state = InvState::Open;
+        }
     }
 
     /// Anyone, after `stale_after_ns`: unstick a commit whose callback never ran. Full refund, never counted.
@@ -441,7 +461,7 @@ impl Bounty {
             }
             CommitStatus::Pending => {
                 self.reserved -= self.invariants[idx].amount.0;
-                self.invariants[idx].state = InvState::Open;
+                self.reopen(idx, commit_id);
                 self.return_bond(&mut c);
                 c.status = CommitStatus::Refused("verifier unavailable".into());
                 self.commits.replace(commit_id, &c);
@@ -458,10 +478,16 @@ impl Bounty {
     pub fn deliver(&mut self, commit_id: u64, enc: near_sdk::json_types::Base64VecU8) {
         let mut c = self.commits.get(commit_id).expect("commit");
         require!(c.status == CommitStatus::Awarded, "commit is not awarded");
+        require!(env::predecessor_account_id() == c.hunter, "only the hunter may deliver");
         let want = c.h_enc.clone().expect("awarded commit has h_enc");
-        require!(now() <= c.deliver_by_ns.expect("awarded commit has deliver_by"), "delivery expired");
+        // delivery expired / delivery mismatch are on-chain refusal kinds: success + log, no state change.
+        if now() > c.deliver_by_ns.expect("awarded commit has deliver_by") {
+            return env::log_str(&format!("REFUSED {commit_id} delivery expired"));
+        }
         let got = hex::encode(env::sha256(&enc.0));
-        require!(got == want, "delivery mismatch");
+        if got != want {
+            return env::log_str(&format!("REFUSED {commit_id} delivery mismatch"));
+        }
         let idx = self.inv_index(&c.invariant_id);
         c.status = CommitStatus::Delivered;
         c.paying = true;
@@ -535,14 +561,27 @@ impl Bounty {
         }
         self.pool -= amount.0;
         self.withdrawn_total += amount.0;
-        Promise::new(self.token.clone()).function_call(
-            "ft_transfer".to_string(),
-            json!({ "receiver_id": self.protocol, "amount": amount }).to_string().into_bytes(),
-            ONE_YOCTO,
-            FT_GAS,
-        );
+        Promise::new(self.token.clone())
+            .function_call(
+                "ft_transfer".to_string(),
+                json!({ "receiver_id": self.protocol, "amount": amount }).to_string().into_bytes(),
+                ONE_YOCTO,
+                FT_GAS,
+            )
+            .then(Self::ext(env::current_account_id()).with_static_gas(FT_GAS).on_withdrawn(amount));
         env::log_str(&format!("WITHDRAW_POOL {}", amount.0));
         true
+    }
+
+    /// Restore the ledger if the withdrawal transfer failed (protocol unregistered / blacklisted), so the
+    /// USDC is never counted as withdrawn while it is still in the token account (I1).
+    #[private]
+    pub fn on_withdrawn(&mut self, amount: U128, #[callback_result] res: Result<(), PromiseError>) {
+        if res.is_err() {
+            self.pool += amount.0;
+            self.withdrawn_total -= amount.0;
+            env::log_str(&format!("WITHDRAW_POOL FAILED {}; pool restored", amount.0));
+        }
     }
 
     /// Protocol only: sweep the slashed NEAR ledger. Never frozen — it does not touch the hunter-facing pool.
@@ -691,4 +730,100 @@ mod hex {
 fn _assert_imports() {
     let _ = GasWeight(1);
     fn _b<T: BorshSerialize + BorshDeserialize>() {}
+}
+
+#[cfg(test)]
+mod unit {
+    //! Unit coverage for the money-moving branches the near-workspaces sandbox cannot reach, because there
+    //! a commit's callbacks always run (the `.then` gas is reserved up front). In `testing_env!` the
+    //! cross-contract callbacks do NOT auto-run, so a commit sits in `AwaitingRegistration` exactly as it
+    //! would if a top-level gas starvation stopped `on_payout_checked` — which is what `release_stale`
+    //! defends. Here we drive that branch end to end and assert the ledger.
+    use super::*;
+    use near_sdk::test_utils::{accounts, VMContextBuilder};
+    use near_sdk::{testing_env, NearToken};
+
+    fn ctx(pred: AccountId, deposit: NearToken, ts: u64) -> VMContextBuilder {
+        let mut b = VMContextBuilder::new();
+        b.current_account_id(accounts(0)).predecessor_account_id(pred).attached_deposit(deposit).block_timestamp(ts);
+        b
+    }
+
+    fn cfg() -> Config {
+        Config {
+            protocol: accounts(1),
+            protocol_enc_pk: "7b".repeat(32),
+            token: accounts(2),
+            outlayer: accounts(3),
+            verifier_wasm_hash: "92".repeat(32),
+            verifier_wasm_url: "https://example.invalid/v.wasm".into(),
+            snapshot_hashes: vec!["57".repeat(32)],
+            invariants: vec![InvariantCfg { id: "inv-a".into(), target: 0, amount: U128(1_000_000), bond: NearToken::from_millinear(500) }],
+            bond_floor: NearToken::from_millinear(500),
+            outlayer_deposit: NearToken::from_millinear(100),
+            deliver_ttl_ns: 3_600_000_000_000,
+            timelock_ns: 0,
+            max_instructions: 2_000_000_000,
+            max_memory_mb: 512,
+            max_execution_seconds: 120,
+            stale_after_ns: 0,
+        }
+    }
+
+    fn funded() -> Bounty {
+        testing_env!(ctx(accounts(1), NearToken::from_yoctonear(0), 0).build());
+        let mut c = Bounty::new(cfg());
+        // Fund the pool as the token would via ft_on_transfer.
+        testing_env!(ctx(accounts(2), NearToken::from_yoctonear(0), 0).build());
+        c.ft_on_transfer(accounts(1), U128(1_000_000), String::new());
+        c
+    }
+
+    #[test]
+    fn release_stale_refunds_a_stuck_awaiting_registration_commit() {
+        let mut c = funded();
+        let hunter = accounts(4);
+        let bond_plus_dep = NearToken::from_millinear(600);
+        // commit: in testing_env the storage_balance_of callback never runs → stays AwaitingRegistration.
+        testing_env!(ctx(hunter.clone(), bond_plus_dep, 1_000).build());
+        c.commit("a".repeat(64), "inv-a".into(), accounts(5));
+        let commit = c.view_commit(0).unwrap();
+        assert!(matches!(commit.status, CommitStatus::AwaitingRegistration));
+        assert_eq!(c.reserved, 1_000_000, "the amount is reserved at commit");
+        assert_eq!(c.bonds_held, NearToken::from_millinear(500).as_yoctonear());
+
+        // Past the (floored 30-min) window, anyone unsticks it; full refund, slot never taken.
+        let t = RELEASE_STALE_FLOOR_NS + 2_000;
+        testing_env!(ctx(accounts(0), NearToken::from_yoctonear(0), t).build());
+        c.release_stale(0);
+        let commit = c.view_commit(0).unwrap();
+        assert!(matches!(commit.status, CommitStatus::Refused(_)));
+        assert_eq!(c.reserved, 0, "reservation released");
+        assert_eq!(c.bonds_held, 0, "bond returned, not slashed");
+        assert_eq!(c.slashed, 0);
+        assert!(matches!(c.invariants[0].state, InvState::Open));
+        // I1 USDC conservation holds: pool + escrow + paid == funded - withdrawn.
+        assert_eq!(c.pool + c.escrow + c.paid_total, c.funded_total - c.withdrawn_total);
+    }
+
+    #[test]
+    fn release_stale_before_the_window_panics() {
+        let mut c = funded();
+        testing_env!(ctx(accounts(4), NearToken::from_millinear(600), 1_000).build());
+        c.commit("b".repeat(64), "inv-a".into(), accounts(5));
+        testing_env!(ctx(accounts(0), NearToken::from_yoctonear(0), 2_000).build());
+        let r = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| c.release_stale(0)));
+        assert!(r.is_err(), "release_stale before stale_after must panic");
+    }
+
+    #[test]
+    fn commit_below_bond_floor_reserves_nothing() {
+        let mut c = funded();
+        testing_env!(ctx(accounts(4), NearToken::from_millinear(300), 1_000).build());
+        c.commit("c".repeat(64), "inv-a".into(), accounts(5));
+        assert_eq!(c.reserved, 0);
+        assert_eq!(c.bonds_held, 0);
+        assert_eq!(c.commits.len(), 0, "a guard refusal records no commit");
+        assert!(matches!(c.invariants[0].state, InvState::Open));
+    }
 }

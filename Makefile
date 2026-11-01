@@ -34,6 +34,9 @@ contracts-wasm:
 	@echo -n "paths leaked: "; strings contracts/bounty.wasm | grep -c '/Users/' || true
 	shasum -a 256 contracts/bounty.wasm
 
-## near-workspaces sandbox tests for the bounty (I1–I8). Needs the wasms built first.
+## Contract unit tests (native host) + near-workspaces sandbox tests for the bounty (I1–I8). The wasm the
+## worker/judge runs is built on 1.85.0 (near-sys 0.2.4); the native unit tests use a newer toolchain only
+## because near-sdk's `unit-testing` feature pulls deps that require rustc ≥ 1.88 — it never touches the wasm.
 test-contracts: contracts-wasm
+	cd contracts && cargo +1.97.1 test -p bounty
 	cd contracts/itests && cargo test --test bounty -- --test-threads=4

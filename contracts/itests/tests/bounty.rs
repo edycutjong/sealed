@@ -207,6 +207,7 @@ async fn happy_path_commit_award_deliver_pay() -> anyhow::Result<()> {
     e.assert_conservation().await?;
 
     // I8: the exploit becomes public, and the escrow owed, only in a deliver whose sha256(enc) == h_enc.
+    // A mismatch is an on-chain refusal (success + log), leaving the commit Awarded and nothing paid.
     use base64::{engine::general_purpose::STANDARD, Engine};
     let wrong = e
         .hunter
@@ -214,8 +215,21 @@ async fn happy_path_commit_award_deliver_pay() -> anyhow::Result<()> {
         .args_json(json!({ "commit_id": 0u64, "enc": STANDARD.encode(b"not the exploit") }))
         .gas(Gas::from_tgas(100))
         .transact()
+        .await?
+        .into_result()?;
+    assert!(wrong.logs().join("\n").contains("delivery mismatch"), "logs: {:?}", wrong.logs());
+    assert_eq!(status(&e.commit_view(0).await?), "Awarded", "mismatch leaves the award intact");
+    assert_eq!(e.token_balance(&e.payout).await?, 0);
+
+    // Only the hunter may deliver (even with the right enc).
+    let stranger = e.worker.dev_create_account().await?;
+    let bad = stranger
+        .call(e.bounty.id(), "deliver")
+        .args_json(json!({ "commit_id": 0u64, "enc": STANDARD.encode(&enc) }))
+        .gas(Gas::from_tgas(100))
+        .transact()
         .await?;
-    assert!(format!("{:?}", wrong.into_result().err()).contains("delivery mismatch"), "wrong enc must be refused");
+    assert!(format!("{:?}", bad.into_result().err()).contains("only the hunter may deliver"));
 
     e.hunter
         .call(e.bounty.id(), "deliver")
@@ -227,10 +241,14 @@ async fn happy_path_commit_award_deliver_pay() -> anyhow::Result<()> {
 
     let c = e.commit_view(0).await?;
     assert_eq!(status(&c), "Paid", "{c}");
+    // The profile the worker is handed is derived from the commit hash the hunter knew before committing.
+    assert_eq!(c["secrets_profile"].as_str().unwrap(), format!("c-{}", &ch[..8]));
     assert_eq!(e.token_balance(&e.payout).await?, AMOUNT);
     let s = e.state().await?;
     assert_eq!(s["escrow"].as_str().unwrap(), "0");
     assert_eq!(s["paid_total"].as_str().unwrap(), AMOUNT.to_string());
+    assert_eq!(s["bonds_held"].as_str().unwrap(), "0", "a paid commit's bond is returned");
+    assert_eq!(s["slashed"].as_str().unwrap(), "0");
     assert_eq!(e.inv_state("inv-a").await?, "Paid");
     e.assert_conservation().await?;
     Ok(())
@@ -268,6 +286,30 @@ async fn commit_mismatch_is_refused() -> anyhow::Result<()> {
     e.commit(&e.hunter, &ch, "inv-a", &e.payout).await?;
     let c = e.commit_view(0).await?;
     assert_eq!(refused_reason(&c), "commit mismatch", "{c}");
+    let s = e.state().await?;
+    assert_eq!(s["reserved"].as_str().unwrap(), "0");
+    assert_eq!(s["slashed"].as_str().unwrap(), BOND.as_yoctonear().to_string(), "I7 breach is slashed");
+    assert_eq!(s["bonds_held"].as_str().unwrap(), "0");
+    assert_eq!(e.inv_state("inv-a").await?, "Open");
+    e.assert_conservation().await?;
+    Ok(())
+}
+
+// I7 binding: a verdict carrying the wrong invariant_id is refused "wrong invariant" and slashed.
+#[tokio::test]
+async fn wrong_invariant_is_refused() -> anyhow::Result<()> {
+    let e = setup(0, 3_600_000_000_000, 1_800_000_000_000_000).await?;
+    e.fund(AMOUNT).await?;
+    let ch = "a1".repeat(32);
+    // broken + right h_exploit + right snapshot, but the verdict names a different invariant.
+    e.arm(json!({"mode":"verdict","verdict":{
+        "v":1,"broken":true,"invariant_id":"inv-b","h_exploit":ch,"h_snapshot":SNAP0,
+        "h_enc":"ab".repeat(32),"gas_used":1u64,"err":Value::Null
+    }})).await?;
+    e.commit(&e.hunter, &ch, "inv-a", &e.payout).await?;
+    let c = e.commit_view(0).await?;
+    assert_eq!(refused_reason(&c), "wrong invariant", "{c}");
+    assert_eq!(e.state().await?["slashed"].as_str().unwrap(), BOND.as_yoctonear().to_string());
     assert_eq!(e.inv_state("inv-a").await?, "Open");
     e.assert_conservation().await?;
     Ok(())
@@ -283,6 +325,37 @@ async fn snapshot_mismatch_is_refused() -> anyhow::Result<()> {
     e.commit(&e.hunter, &ch, "inv-a", &e.payout).await?;
     let c = e.commit_view(0).await?;
     assert_eq!(refused_reason(&c), "snapshot mismatch", "{c}");
+    let s = e.state().await?;
+    assert_eq!(s["slashed"].as_str().unwrap(), BOND.as_yoctonear().to_string());
+    assert_eq!(s["bonds_held"].as_str().unwrap(), "0");
+    assert_eq!(s["reserved"].as_str().unwrap(), "0");
+    e.assert_conservation().await?;
+    Ok(())
+}
+
+// delivery expired: past deliver_by, a correct enc is refused (success + log); the award can then be expired.
+#[tokio::test]
+async fn delivery_after_deadline_is_refused() -> anyhow::Result<()> {
+    let e = setup(0, 1, 1_800_000_000_000_000).await?; // deliver_ttl 1 ns
+    e.fund(AMOUNT).await?;
+    let ch = "e1".repeat(32);
+    let enc = b"late".to_vec();
+    e.arm_award(&ch, "inv-a", SNAP0, &sha256_hex(&enc)).await?;
+    e.commit(&e.hunter, &ch, "inv-a", &e.payout).await?;
+    assert_eq!(status(&e.commit_view(0).await?), "Awarded");
+    e.worker.fast_forward(2).await?;
+    use base64::{engine::general_purpose::STANDARD, Engine};
+    let r = e
+        .hunter
+        .call(e.bounty.id(), "deliver")
+        .args_json(json!({ "commit_id": 0u64, "enc": STANDARD.encode(&enc) }))
+        .gas(Gas::from_tgas(100))
+        .transact()
+        .await?
+        .into_result()?;
+    assert!(r.logs().join("\n").contains("delivery expired"), "logs: {:?}", r.logs());
+    assert_eq!(status(&e.commit_view(0).await?), "Awarded", "still awarded; nothing paid");
+    assert_eq!(e.token_balance(&e.payout).await?, 0);
     e.assert_conservation().await?;
     Ok(())
 }
@@ -433,7 +506,7 @@ async fn awarded_commit_expires() -> anyhow::Result<()> {
     let e = setup(0, 1, 1_800_000_000_000_000).await?; // deliver_ttl 1 ns
     e.fund(AMOUNT).await?;
     let ch = "8".repeat(64);
-    e.arm_award(&ch, "inv-a", SNAP0, &"00".to_string()).await?;
+    e.arm_award(&ch, "inv-a", SNAP0, &"ab".repeat(32)).await?;
     e.commit(&e.hunter, &ch, "inv-a", &e.payout).await?;
     assert_eq!(status(&e.commit_view(0).await?), "Awarded");
     e.worker.fast_forward(2).await?;
@@ -504,7 +577,7 @@ async fn commit_on_awarded_invariant_is_refused() -> anyhow::Result<()> {
     let e = setup(0, 3_600_000_000_000, 1_800_000_000_000_000).await?;
     e.fund(AMOUNT + AMOUNT).await?;
     let ch = "3".repeat(64);
-    e.arm_award(&ch, "inv-a", SNAP0, &"00".to_string()).await?;
+    e.arm_award(&ch, "inv-a", SNAP0, &"ab".repeat(32)).await?;
     e.commit(&e.hunter, &ch, "inv-a", &e.payout).await?;
     assert_eq!(status(&e.commit_view(0).await?), "Awarded");
 
@@ -581,5 +654,24 @@ async fn pool_short_is_refused() -> anyhow::Result<()> {
     assert_eq!(e.inv_state("inv-a").await?, "Open");
     // No commit was recorded past guard? A guard refusal still records nothing in commits.
     assert_eq!(e.state().await?["commits"].as_u64().unwrap(), 0);
+    Ok(())
+}
+
+// A verdict with broken:false AND an `err` (the verifier's decode/secret error) is surfaced as the spec's
+// "exploit invalid: <err>" refusal, and slashed.
+#[tokio::test]
+async fn exploit_invalid_reason_is_surfaced() -> anyhow::Result<()> {
+    let e = setup(0, 3_600_000_000_000, 1_800_000_000_000_000).await?;
+    e.fund(AMOUNT).await?;
+    let ch = "cd".repeat(32);
+    e.arm(json!({"mode":"verdict","verdict":{
+        "v":1,"broken":false,"invariant_id":"inv-a","h_exploit":ch,"h_snapshot":SNAP0,
+        "h_enc":"ab".repeat(32),"gas_used":0u64,"err":"exploit invalid: too many txs"
+    }})).await?;
+    e.commit(&e.hunter, &ch, "inv-a", &e.payout).await?;
+    let c = e.commit_view(0).await?;
+    assert_eq!(refused_reason(&c), "exploit invalid: too many txs", "{c}");
+    assert_eq!(e.state().await?["slashed"].as_str().unwrap(), BOND.as_yoctonear().to_string());
+    e.assert_conservation().await?;
     Ok(())
 }
