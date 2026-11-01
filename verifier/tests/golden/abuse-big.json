@@ -1,0 +1,1 @@
+{"v":1,"broken":false,"invariant_id":"fallback-owner-drained","h_exploit":"1b372cbc16d07952ab5e1dc2749efb9158d857b8446fa7c2cb703f36156934b5","h_snapshot":"57263dfb780961cfb0391a49684340ba627e7e39159b1d513fd2e2861c60a073","h_enc":"437cb77a2e77323d620408d8cb705e6fe9721ca2ff7e7458e978f14303c4dacc","gas_used":0,"err":"exploit invalid: calldata too large"}
