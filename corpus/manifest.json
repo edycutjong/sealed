@@ -233,6 +233,141 @@
    }
   },
   {
+   "name": "llm-grok-fallback",
+   "category": "llm",
+   "level": "fallback",
+   "target": 0,
+   "invariant_id": "fallback-owner-drained",
+   "vector": "corpus/vectors/llm-grok-fallback.json",
+   "expect": null
+  },
+  {
+   "name": "llm-grok-telephone",
+   "category": "llm",
+   "level": "telephone",
+   "target": 1,
+   "invariant_id": "telephone-owner-taken",
+   "vector": "corpus/vectors/llm-grok-telephone.json",
+   "expect": null
+  },
+  {
+   "name": "llm-grok-delegation",
+   "category": "llm",
+   "level": "delegation",
+   "target": 2,
+   "invariant_id": "delegation-owner-taken",
+   "vector": "corpus/vectors/llm-grok-delegation.json",
+   "expect": null
+  },
+  {
+   "name": "llm-grok-force",
+   "category": "llm",
+   "level": "force",
+   "target": 3,
+   "invariant_id": "force-balance-nonzero",
+   "vector": "corpus/vectors/llm-grok-force.json",
+   "expect": null
+  },
+  {
+   "name": "llm-grok-king",
+   "category": "llm",
+   "level": "king",
+   "target": 4,
+   "invariant_id": "king-throne-locked",
+   "vector": "corpus/vectors/llm-grok-king.json",
+   "expect": null
+  },
+  {
+   "name": "llm-muse-fallback",
+   "category": "llm",
+   "level": "fallback",
+   "target": 0,
+   "invariant_id": "fallback-owner-drained",
+   "vector": "corpus/vectors/llm-muse-fallback.json",
+   "expect": null
+  },
+  {
+   "name": "llm-muse-telephone",
+   "category": "llm",
+   "level": "telephone",
+   "target": 1,
+   "invariant_id": "telephone-owner-taken",
+   "vector": "corpus/vectors/llm-muse-telephone.json",
+   "expect": null
+  },
+  {
+   "name": "llm-muse-delegation",
+   "category": "llm",
+   "level": "delegation",
+   "target": 2,
+   "invariant_id": "delegation-owner-taken",
+   "vector": "corpus/vectors/llm-muse-delegation.json",
+   "expect": null
+  },
+  {
+   "name": "llm-muse-force",
+   "category": "llm",
+   "level": "force",
+   "target": 3,
+   "invariant_id": "force-balance-nonzero",
+   "vector": "corpus/vectors/llm-muse-force.json",
+   "expect": null
+  },
+  {
+   "name": "llm-muse-king",
+   "category": "llm",
+   "level": "king",
+   "target": 4,
+   "invariant_id": "king-throne-locked",
+   "vector": "corpus/vectors/llm-muse-king.json",
+   "expect": null
+  },
+  {
+   "name": "llm-qwen-fallback",
+   "category": "llm",
+   "level": "fallback",
+   "target": 0,
+   "invariant_id": "fallback-owner-drained",
+   "vector": "corpus/vectors/llm-qwen-fallback.json",
+   "expect": null
+  },
+  {
+   "name": "llm-qwen-telephone",
+   "category": "llm",
+   "level": "telephone",
+   "target": 1,
+   "invariant_id": "telephone-owner-taken",
+   "vector": "corpus/vectors/llm-qwen-telephone.json",
+   "expect": null
+  },
+  {
+   "name": "llm-qwen-delegation",
+   "category": "llm",
+   "level": "delegation",
+   "target": 2,
+   "invariant_id": "delegation-owner-taken",
+   "vector": "corpus/vectors/llm-qwen-delegation.json",
+   "expect": null
+  },
+  {
+   "name": "llm-qwen-force",
+   "category": "llm",
+   "level": "force",
+   "target": 3,
+   "invariant_id": "force-balance-nonzero",
+   "vector": "corpus/vectors/llm-qwen-force.json",
+   "expect": null
+  },
+  {
+   "name": "llm-qwen-king",
+   "category": "llm",
+   "level": "king",
+   "target": 4,
+   "invariant_id": "king-throne-locked",
+   "vector": "corpus/vectors/llm-qwen-king.json",
+   "expect": null
+  },
+  {
    "name": "abuse-big",
    "category": "abuse",
    "level": "fallback",

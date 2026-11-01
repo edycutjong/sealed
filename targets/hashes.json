@@ -1,0 +1,78 @@
+{
+ "v": 1,
+ "ethernaut_commit": "d05643a40aa98c45d66247c69ffceab8f44dd8cb",
+ "solc": "0.8.24 (every kept level's pragma is ^0.8.0; levels/foundry.toml)",
+ "note": "snapshot_sha256 is what a bounty pins in snapshot_hashes[target]; the verifier embeds the same bytes (verifier/src/lib.rs SNAPSHOTS).",
+ "levels": [
+  {
+   "target": 0,
+   "level": "fallback",
+   "scope": "MVP",
+   "invariant_id": "fallback-owner-drained",
+   "snapshot": "verifier/snapshots/fallback.json",
+   "snapshot_sha256": "57263dfb780961cfb0391a49684340ba627e7e39159b1d513fd2e2861c60a073",
+   "factory": "0x5dddfce53ee040d9eb21afbc0ae1bb4dbb0ba643",
+   "instance": "0xd3264fed42a0dc00663d0aa2b0abb90a19b347f2",
+   "sources": {
+    "levels/src/ethernaut/Fallback.sol": "f1999ba65da738e55792593fe7e86c81f862da783d1def120738b7e6c5d98675",
+    "levels/src/ethernaut/FallbackFactory.sol": "d59713f6dd3b6745e71ea88808b12fac7cff5ecef47c2ef3dfc22c678d3906fc"
+   }
+  },
+  {
+   "target": 1,
+   "level": "telephone",
+   "scope": "MVP",
+   "invariant_id": "telephone-owner-taken",
+   "snapshot": "verifier/snapshots/telephone.json",
+   "snapshot_sha256": "ea453b09587b26b936fa25a9fcc8a8ab55ff2dabb830168f7586a92eb822a265",
+   "factory": "0x5dddfce53ee040d9eb21afbc0ae1bb4dbb0ba643",
+   "instance": "0xd3264fed42a0dc00663d0aa2b0abb90a19b347f2",
+   "sources": {
+    "levels/src/ethernaut/Telephone.sol": "0e75050ce89c2317a5ca14434cbeead8ceca6f515afe567e0999f3dde962d9df",
+    "levels/src/ethernaut/TelephoneFactory.sol": "7df90946262b971b5464fe9b65976ea255a2a61549b779ced7430dfef554fdfa"
+   }
+  },
+  {
+   "target": 2,
+   "level": "delegation",
+   "scope": "MVP",
+   "invariant_id": "delegation-owner-taken",
+   "snapshot": "verifier/snapshots/delegation.json",
+   "snapshot_sha256": "b484da9bb0b5bf3d47b821252fa4871cdee97bb8d22f0af9e6762ba2928840bf",
+   "factory": "0x5dddfce53ee040d9eb21afbc0ae1bb4dbb0ba643",
+   "instance": "0x1780ddd8723ddc88d5def27cc1dfb16a73077434",
+   "sources": {
+    "levels/src/ethernaut/Delegation.sol": "58a848dbe49be90277c5b03ad467c7145a6b1351893f0cc43c9b31597c7e3469",
+    "levels/src/ethernaut/DelegationFactory.sol": "acb3aa84052e55be1936f4af9144bcd4d369556454fe92c5132defb78ef1522b"
+   }
+  },
+  {
+   "target": 3,
+   "level": "force",
+   "scope": "stretch",
+   "invariant_id": "force-balance-nonzero",
+   "snapshot": "verifier/snapshots/force.json",
+   "snapshot_sha256": "79c8b78d1fd1c84592d49da97747d6f839f0ba49b4f0988db7f8b13831aaa271",
+   "factory": "0x5dddfce53ee040d9eb21afbc0ae1bb4dbb0ba643",
+   "instance": "0xd3264fed42a0dc00663d0aa2b0abb90a19b347f2",
+   "sources": {
+    "levels/src/ethernaut/Force.sol": "dc492af8a50c1eb3826ee3d8b49c67b42ec0c835dcd2666dfc80a18866897269",
+    "levels/src/ethernaut/ForceFactory.sol": "d385329769659f408501205c25448c1fedf2d001ee4eafdf691d1811970274d8"
+   }
+  },
+  {
+   "target": 4,
+   "level": "king",
+   "scope": "stretch",
+   "invariant_id": "king-throne-locked",
+   "snapshot": "verifier/snapshots/king.json",
+   "snapshot_sha256": "1afa7e241f6bd5ad31733389d4b7248c9837a7d55fd78009d9525009ade423ce",
+   "factory": "0x5dddfce53ee040d9eb21afbc0ae1bb4dbb0ba643",
+   "instance": "0xd3264fed42a0dc00663d0aa2b0abb90a19b347f2",
+   "sources": {
+    "levels/src/ethernaut/King.sol": "f4f7e1d27b7dd50512ec7002e72ac6fde6939bd264f84d0fcb715ef5969964f8",
+    "levels/src/ethernaut/KingFactory.sol": "4b7bc29d561c7688b020c9a5445963ce459ea57562a4f8bbffb7b4a4704afb7a"
+   }
+  }
+ ]
+}

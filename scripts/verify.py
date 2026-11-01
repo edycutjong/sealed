@@ -163,8 +163,12 @@ def main():
     ap.add_argument("--rpc", default=near.ARCHIVAL)
     ap.add_argument("--require-keyless", action="store_true",
                     help="fail if any bounty is keyed / not on a global-contract hash (the D5+ judged bounty)")
+    ap.add_argument("--bounty", action="append", default=[],
+                    help="only this bounty's bundles (repeatable); default: every bundle in corpus/evidence/")
     a = ap.parse_args()
     bundles = sorted(glob.glob(os.path.join(ROOT, "corpus", "evidence", "*.json")))
+    if a.bounty:
+        bundles = [b for b in bundles if json.load(open(b))["bounty"] in a.bounty]
     if not bundles:
         print("verify: empty bundle (no corpus/evidence/*.json)")
         return 1
