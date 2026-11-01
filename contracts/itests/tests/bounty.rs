@@ -206,7 +206,7 @@ async fn happy_path_commit_award_deliver_pay() -> anyhow::Result<()> {
     assert_eq!(s["reserved"].as_str().unwrap(), "0");
     e.assert_conservation().await?;
 
-    // I8: the exploit becomes public, and the escrow owed, only in a deliver whose sha256(enc) == h_enc.
+    // I8: the sealed exploit is published, and the escrow paid, only in a deliver whose sha256(enc) == h_enc.
     // A mismatch is an on-chain refusal (success + log), leaving the commit Awarded and nothing paid.
     use base64::{engine::general_purpose::STANDARD, Engine};
     let wrong = e

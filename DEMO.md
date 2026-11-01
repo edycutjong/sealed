@@ -53,7 +53,8 @@ make baseline   # what LLM-only triage would pay (not NEAR AI Cloud models; see 
 ```
 
 LLM-only triage would pay 1, 3 and 3 of the 21 fakes (three text-only models, one run each, no code execution: muse-wonder-1.0,
-nemotron-3-ultra, qwen3.8-omni-flash) and 12, 12 and 11 of the 15 real exploits. The executing verifier paid 0 of the 21 fakes and 5 of 5 real exploits on the demo bounty.
+nemotron-3-ultra, qwen3.8-omni-flash) and 12, 12 and 11 of the 15 submissions that
+really break a level (offline golden verdicts). The executing verifier paid 0 of the 21 fakes and 5 of 5 real exploits on the demo bounty.
 
 ## Limits
 

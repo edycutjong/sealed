@@ -107,7 +107,7 @@ Testnet only; no wallet is needed to check any of it. Every hash is in `corpus/r
 | Request → verdict | p50 7.27 s · p95 10.85 s (29 runs) | `corpus/bench.json`, `make bench` |
 | Heaviest real run | 7 371 260 instructions (0.37% of the 2e9 limit) | `corpus/results.json` |
 | Heaviest fake | 479 555 711 instructions (23.98% of the limit) | `corpus/bench.json` |
-| LLM-only triage on the same corpus (fakes it would pay, of 21) | muse-wonder-1.0 1 · nemotron-3-ultra 3 · qwen3.8-omni-flash 3; the same models would pay 12, 12 and 11 of the 15 real exploits | `make baseline` |
+| LLM-only triage on the same corpus (fakes it would pay, of 21) | muse-wonder-1.0 1 · nemotron-3-ultra 3 · qwen3.8-omni-flash 3; the same models would pay 12, 12 and 11 of the 15 submissions that really break a level | `make baseline` |
 
 The baseline models could not run code and are **not** NEAR AI Cloud; read its limits in
 [baseline/README.md](baseline/README.md) before quoting it.

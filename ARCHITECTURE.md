@@ -85,7 +85,7 @@ hunter                bounty (keyless)            token            OutLayer (TEE
 | I5 | Every request pins `verifier_wasm_hash`; only `new` sets it | `lib.rs:657`, `:192` |
 | I6 | The bounty account has zero access keys for life | `scripts/deploy_bounty_testnet.py:115`; `make verify-demo` / `verify-d5` check it on chain: 0 keys now, global code = the committed `contracts/bounty.wasm`, and a create tx with no AddKey; the contract has no call that adds a key or deploys code |
 | I7 | Awarded ⇒ `h_exploit`, `invariant_id`, `h_snapshot` all match the commit | `bounty.rs:279`, `:298`, `:318` |
-| I8 | The sealed exploit (encrypted to the protocol's key) is published, and the escrow paid, only in a `deliver` with `sha256(enc) == h_enc` | `bounty.rs:209`, `:436` |
+| I8 | The sealed exploit (encrypted to the protocol's key) is published, and the escrow paid, only in a `deliver` with `sha256(enc) == h_enc` | `lib.rs:487`; `bounty.rs:209`, `:436` |
 
 ## Judge targets → what they re-check
 
