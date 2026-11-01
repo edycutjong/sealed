@@ -64,7 +64,9 @@ def store_secrets(hunter, bounty, wasm_hash, profile, secrets):
     home = os.path.expanduser(f"~/.config/outlayer/home-{hunter.split('-11010702')[0].replace('sealed-', '')}")
     env = {**os.environ, "OUTLAYER_HOME": home, "OUTLAYER_NETWORK": "testnet"}
     # OUTLAYER_BIN: the stock CLI attaches a fixed 0.1 NEAR to `secrets set`; a row past ~10 KB stored needs more (1e19 yocto per byte), so an
-    # oversized EXPLOIT runs with a local build that reads SEALED_SECRETS_DEPOSIT_YOCTO (as on day 0, day0/secret.py).
+    # oversized EXPLOIT runs with a local build that reads SEALED_SECRETS_DEPOSIT_YOCTO (as on day 0, day0/secret.py):
+    # outlayer-cli @1cff0fa, src/commands/secrets.rs, the two `let deposit: u128 = 100_000_000_000_000_000_000_000`
+    # lines → `env::var("SEALED_SECRETS_DEPOSIT_YOCTO").ok().and_then(|v| v.parse().ok()).unwrap_or(<same>)`.
     p = subprocess.run([os.environ.get("OUTLAYER_BIN", "outlayer"), "secrets", "set", json.dumps(secrets), "--wasm-hash", wasm_hash,
                         "--profile", profile, "--access", f"whitelist:{hunter}", "--via", bounty],
                        env=env, capture_output=True, text=True)
