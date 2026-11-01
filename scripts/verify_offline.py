@@ -49,7 +49,8 @@ def run(inp, secrets, wasm=VERIFIER):
 
 def validate_call(stderr_lines):
     """The invariant check itself, from the verifier's trace: the EVM call validateInstance(instance, player) on the
-    level's factory and what it returned (1 = broken). None when the exploit was rejected before that call."""
+    level's factory and what it returned (1 = broken). None when the exploit was rejected before that call.
+    The verifier makes that call exactly once per run (lib.rs, after the exploit txs), so the first match is it."""
     for l in stderr_lines:
         m = re.match(r"trace: call (validateInstance\((0x[0-9a-f]+),(0x[0-9a-f]+)\)) from 0x[0-9a-f]+ "
                      r"on factory (0x[0-9a-f]+) -> (\w+) ?(0x[0-9a-f]*)?", l)
