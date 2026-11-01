@@ -13,7 +13,7 @@
 
 use near_sdk::borsh::{BorshDeserialize, BorshSerialize};
 use near_sdk::collections::{LookupMap, Vector};
-use near_sdk::json_types::U128;
+use near_sdk::json_types::{U128, U64};
 use near_sdk::serde::{Deserialize, Serialize};
 use near_sdk::serde_json::{self, json, Value};
 use near_sdk::{
@@ -680,6 +680,15 @@ impl Bounty {
             "bonds_held": U128(self.bonds_held),
             "slashed": U128(self.slashed),
             "verifier_wasm_hash": self.verifier_wasm_hash,
+            "verifier_wasm_url": self.verifier_wasm_url,
+            "protocol_enc_pk": self.protocol_enc_pk,
+            "outlayer": self.outlayer,
+            "snapshot_hashes": self.snapshot_hashes,
+            "bond_floor": self.bond_floor,
+            "outlayer_deposit": self.outlayer_deposit,
+            "deliver_ttl_ns": U64(self.deliver_ttl_ns),
+            "timelock_ns": U64(self.timelock_ns),
+            "created_at_ns": U64(self.created_at_ns),
             "invariants": self.invariants,
             "commits": self.commits.len(),
         })
