@@ -9,6 +9,10 @@ Two creation paths exist; this is the "factory":
   promise action, so this batch is issued from near-cli-rs / near-api, not from a factory *contract*. Day-0 G9
   proved a global-hash account comes up with 0 access keys (`day0/results/g9.json`).
 
+  This script's default (no `--keyed`): `--global-hash <bs58>` names the code (deployed once with
+  `near contract deploy-as-global use-file contracts/bounty.wasm as-global-hash …`), `--token-account` an existing
+  NEP-141 (a keyless account cannot create its own token sub-account), `--levels` the kept levels in target order.
+
 * ITERATION (this script's `--keyed`): a normal funded subaccount with a key, for fast redeploys during the
   build (P1b `b1`, the D3 throwaway `d3`). Never the bounty a judge or outside hunter touches.
 
@@ -92,7 +96,38 @@ def protocol_key(account):
     return json.load(open(path))["pk"]
 
 
+def snapshot_hash(level):
+    return sha(os.path.join(ROOT, "verifier", "snapshots", f"{level}.json"))
+
+
+def level_cfg(a):
+    """snapshot_hashes in the verifier's frozen target order + one invariant per kept level (corpus/manifest.json)."""
+    levels = json.load(open(os.path.join(ROOT, "corpus", "manifest.json")))["levels"]
+    keep = a.levels.split(",")
+    snaps = [snapshot_hash(l["level"]) for l in levels]
+    invs = [{"id": l["invariant_id"], "target": l["target"], "amount": a.amount, "bond": a.bond}
+            for l in levels if l["level"] in keep]
+    assert len(invs) == len(keep), f"unknown level in {keep}"
+    return snaps, invs
+
+
+def create_keyless(account, parent, near_amount, global_hash, init):
+    """ONE batch: CreateAccount, Transfer, UseGlobalContract(hash), FunctionCall new — and no AddKey (I6)."""
+    out = sh(["near", "transaction", "construct-transaction", parent, "receiver-id", account,
+              "add-action", "create-account",
+              "add-action", "transfer", f"{near_amount} NEAR",
+              "add-action", "use-global-contract", "use-global-hash", global_hash,
+              "with-init-call", "new", "json-args", json.dumps(init), "prepaid-gas", "100 Tgas",
+              "attached-deposit", "0 NEAR",
+              "skip", "network-config", "testnet", "sign-with-access-key-file", near.keyfile(parent), "send"])
+    t = txid(out)
+    if not t:
+        sys.exit(f"keyless create {account} failed:\n{out[-1500:]}")
+    return t
+
+
 def cfg(a, token):
+    snaps, invs = level_cfg(a) if a.levels else ([a.snapshot_hash], None)
     return {
         "protocol": a.protocol,
         "protocol_enc_pk": a.protocol_enc_pk,
@@ -100,12 +135,12 @@ def cfg(a, token):
         "outlayer": "outlayer.testnet",
         "verifier_wasm_hash": a.verifier_hash,
         "verifier_wasm_url": a.verifier_url or f"{BLOB}/{a.verifier_hash}.wasm",
-        "snapshot_hashes": [a.snapshot_hash],
-        "invariants": [{"id": "fallback-owner-drained", "target": 0, "amount": a.amount, "bond": a.bond}],
+        "snapshot_hashes": snaps,
+        "invariants": invs or [{"id": "fallback-owner-drained", "target": 0, "amount": a.amount, "bond": a.bond}],
         "bond_floor": a.bond,
         "outlayer_deposit": "100000000000000000000000",
-        "deliver_ttl_ns": 3_600_000_000_000,
-        "timelock_ns": 604_800_000_000_000,
+        "deliver_ttl_ns": int(a.deliver_ttl_s * 1e9),
+        "timelock_ns": int(a.timelock_s * 1e9),
         "max_instructions": 2_000_000_000,
         "max_memory_mb": 512,
         "max_execution_seconds": 120,
@@ -129,17 +164,31 @@ def main():
     ap.add_argument("--register", action="append", default=[], help="storage-register a payout account on the token")
     ap.add_argument("--fund", help="token units the protocol moves into the pool")
     ap.add_argument("--record", help="write the deploy record (JSON) here")
+    ap.add_argument("--levels", help="comma list of kept levels (corpus/manifest.json), e.g. fallback,telephone")
+    ap.add_argument("--global-hash", help="keyless path: bs58 hash of the bounty.wasm deployed as global code")
+    ap.add_argument("--token-account", help="existing NEP-141 the pool is in (keyless path)")
+    ap.add_argument("--deliver-ttl-s", type=float, default=3600)
+    ap.add_argument("--timelock-s", type=float, default=604800)
     a = ap.parse_args()
-    if not a.keyed:
-        print("Keyless global-hash creation is issued via near-cli batch; see this file's docstring and G9.", file=sys.stderr)
-        sys.exit(2)
+    if not a.keyed and not (a.global_hash and a.token_account and a.create):
+        sys.exit("keyless path needs --global-hash, --token-account and --create <NEAR>")
     a.verifier_hash = a.verifier_hash or sha(VERIFIER)
     a.protocol_enc_pk = a.protocol_enc_pk or protocol_key(a.account)
 
     rec = {"network": "testnet", "bounty_account": a.account, "protocol": a.protocol,
            "bounty_wasm_sha256": sha(BOUNTY_WASM), "bounty_wasm_bytes": os.path.getsize(BOUNTY_WASM)}
-    token = f"tusdc.{a.account}"
-    if a.create:
+    token = a.token_account or f"tusdc.{a.account}"
+    if not a.keyed:
+        import base58
+        assert base58.b58encode(bytes.fromhex(sha(BOUNTY_WASM))).decode() == a.global_hash, \
+            "global hash != sha256(contracts/bounty.wasm)"
+        c = cfg(a, token)
+        rec.update(config=c, global_hash=a.global_hash, keyless=True)
+        rec["create_tx"] = create_keyless(a.account, a.protocol, a.create, a.global_hash, {"cfg": c})
+        print("keyless bounty", a.account, rec["create_tx"])
+        keys = near.rpc("query", {"request_type": "view_access_key_list", "finality": "final", "account_id": a.account})
+        rec["access_keys"] = keys["result"]["keys"]
+    elif a.create:
         rec["create_account_tx"] = create(a.account, a.protocol, a.create)
         print("created", a.account, rec["create_account_tx"])
     if a.token:
@@ -148,10 +197,11 @@ def main():
         rec["token_deploy_tx"] = deploy(token, TOKEN_WASM, "new",
                                         {"owner": a.protocol, "total_supply": TOKEN_SUPPLY, "decimals": 6})
         print("token", token, rec["token_deploy_tx"])
-    c = cfg(a, token)
-    rec["config"] = c
-    rec["deploy_tx"] = deploy(a.account, BOUNTY_WASM, "new", {"cfg": c})
-    print("bounty", a.account, rec["deploy_tx"])
+    if a.keyed:
+        c = cfg(a, token)
+        rec["config"] = c
+        rec["deploy_tx"] = deploy(a.account, BOUNTY_WASM, "new", {"cfg": c})
+        print("bounty", a.account, rec["deploy_tx"])
     rec["register_txs"] = {}
     for acct in [a.account] + a.register:
         rec["register_txs"][acct] = near.call(a.protocol, token, "storage_deposit",

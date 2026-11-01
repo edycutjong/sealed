@@ -1,0 +1,136 @@
+{
+ "network": "testnet",
+ "bounty_account": "corpus.sealed-dev-11010702.testnet",
+ "protocol": "sealed-dev-11010702.testnet",
+ "bounty_wasm_sha256": "5d79f36dc7e316ebdda192797dbfd4c1cb6a29c7a2a6b5ec68240b07575f2523",
+ "bounty_wasm_bytes": 222745,
+ "config": {
+  "protocol": "sealed-dev-11010702.testnet",
+  "protocol_enc_pk": "9110d7d50b64d770c267f401786ebfc1ce5861b55c25a8eb50916aa253b3b316",
+  "token": "tusdc.d3.sealed-dev-11010702.testnet",
+  "outlayer": "outlayer.testnet",
+  "verifier_wasm_hash": "d2972cd2659c2ad4fe799511a40dfef620c0ed8154001a9b53afcfcb3aa7b1d0",
+  "verifier_wasm_url": "https://6pa7yka0ghwew5xh.public.blob.vercel-storage.com/wasm/d2972cd2659c2ad4fe799511a40dfef620c0ed8154001a9b53afcfcb3aa7b1d0.wasm",
+  "snapshot_hashes": [
+   "57263dfb780961cfb0391a49684340ba627e7e39159b1d513fd2e2861c60a073",
+   "ea453b09587b26b936fa25a9fcc8a8ab55ff2dabb830168f7586a92eb822a265",
+   "b484da9bb0b5bf3d47b821252fa4871cdee97bb8d22f0af9e6762ba2928840bf",
+   "79c8b78d1fd1c84592d49da97747d6f839f0ba49b4f0988db7f8b13831aaa271",
+   "1afa7e241f6bd5ad31733389d4b7248c9837a7d55fd78009d9525009ade423ce"
+  ],
+  "invariants": [
+   {
+    "id": "fallback-owner-drained",
+    "target": 0,
+    "amount": "1000000000",
+    "bond": "500000000000000000000000"
+   },
+   {
+    "id": "telephone-owner-taken",
+    "target": 1,
+    "amount": "1000000000",
+    "bond": "500000000000000000000000"
+   },
+   {
+    "id": "delegation-owner-taken",
+    "target": 2,
+    "amount": "1000000000",
+    "bond": "500000000000000000000000"
+   },
+   {
+    "id": "force-balance-nonzero",
+    "target": 3,
+    "amount": "1000000000",
+    "bond": "500000000000000000000000"
+   },
+   {
+    "id": "king-throne-locked",
+    "target": 4,
+    "amount": "1000000000",
+    "bond": "500000000000000000000000"
+   }
+  ],
+  "bond_floor": "500000000000000000000000",
+  "outlayer_deposit": "100000000000000000000000",
+  "deliver_ttl_ns": 120000000000,
+  "timelock_ns": 600000000000,
+  "max_instructions": 2000000000,
+  "max_memory_mb": 512,
+  "max_execution_seconds": 120,
+  "stale_after_ns": 1800000000000
+ },
+ "global_hash": "7HtmeswBuR9JLCcU31QCioUGEmudjyYrNcbAr1jghRUv",
+ "keyless": true,
+ "create_tx": "GWgM5NCLY75JQyUhnRXXaP1Uhs49aUYM3hxLocpuoRou",
+ "access_keys": [],
+ "register_txs": {
+  "corpus.sealed-dev-11010702.testnet": "13tyXdGitgHXiFRuLfHLb3YoPmbniN8GZd8AfHpAv47w"
+ },
+ "fund_tx": "PYq5JsFKBbsFfErtoZQnM8BbSpLR1NFYJR11ETbwLRv",
+ "view_state": {
+  "bond_floor": "500000000000000000000000",
+  "bonds_held": "0",
+  "commits": 0,
+  "created_at_ns": "1793507838677956661",
+  "deliver_ttl_ns": "120000000000",
+  "escrow": "0",
+  "funded_total": "5000000000",
+  "invariants": [
+   {
+    "amount": "1000000000",
+    "bond": "500000000000000000000000",
+    "id": "fallback-owner-drained",
+    "state": "Open",
+    "target": 0
+   },
+   {
+    "amount": "1000000000",
+    "bond": "500000000000000000000000",
+    "id": "telephone-owner-taken",
+    "state": "Open",
+    "target": 1
+   },
+   {
+    "amount": "1000000000",
+    "bond": "500000000000000000000000",
+    "id": "delegation-owner-taken",
+    "state": "Open",
+    "target": 2
+   },
+   {
+    "amount": "1000000000",
+    "bond": "500000000000000000000000",
+    "id": "force-balance-nonzero",
+    "state": "Open",
+    "target": 3
+   },
+   {
+    "amount": "1000000000",
+    "bond": "500000000000000000000000",
+    "id": "king-throne-locked",
+    "state": "Open",
+    "target": 4
+   }
+  ],
+  "outlayer": "outlayer.testnet",
+  "outlayer_deposit": "100000000000000000000000",
+  "paid_total": "0",
+  "pool": "5000000000",
+  "protocol": "sealed-dev-11010702.testnet",
+  "protocol_enc_pk": "9110d7d50b64d770c267f401786ebfc1ce5861b55c25a8eb50916aa253b3b316",
+  "reserved": "0",
+  "slashed": "0",
+  "snapshot_hashes": [
+   "57263dfb780961cfb0391a49684340ba627e7e39159b1d513fd2e2861c60a073",
+   "ea453b09587b26b936fa25a9fcc8a8ab55ff2dabb830168f7586a92eb822a265",
+   "b484da9bb0b5bf3d47b821252fa4871cdee97bb8d22f0af9e6762ba2928840bf",
+   "79c8b78d1fd1c84592d49da97747d6f839f0ba49b4f0988db7f8b13831aaa271",
+   "1afa7e241f6bd5ad31733389d4b7248c9837a7d55fd78009d9525009ade423ce"
+  ],
+  "timelock_ns": "600000000000",
+  "token": "tusdc.d3.sealed-dev-11010702.testnet",
+  "verifier_wasm_hash": "d2972cd2659c2ad4fe799511a40dfef620c0ed8154001a9b53afcfcb3aa7b1d0",
+  "verifier_wasm_url": "https://6pa7yka0ghwew5xh.public.blob.vercel-storage.com/wasm/d2972cd2659c2ad4fe799511a40dfef620c0ed8154001a9b53afcfcb3aa7b1d0.wasm",
+  "withdrawn_total": "0"
+ }
+}

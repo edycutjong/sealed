@@ -60,4 +60,23 @@ replay:
 verify:
 	@python3 scripts/verify.py --rpc $(RPC)
 
-.PHONY: replay verify
+## The D5 production bounties only (demo = 5 levels paid, corpus = fakes + expiry), and FAIL unless each is keyless
+## on the global-contract hash (0 access keys for life). `make verify` above also covers the keyed D3 throwaway.
+D5_BOUNTIES := demo.sealed-dev-11010702.testnet corpus.sealed-dev-11010702.testnet
+verify-d5:
+	@python3 scripts/verify.py --rpc $(RPC) --require-keyless $(addprefix --bounty ,$(D5_BOUNTIES))
+
+## Every corpus item (real, near-miss, wrong snapshot, malformed, abuse, LLM-written) under wasmtime from the
+## committed verifier.wasm, against its golden + designed verdict. No credentials, no network, no Rust.
+corpus:
+	@python3 scripts/corpus_check.py
+
+## The 6 on-chain refusal kinds with their testnet tx hash and the bounty's log line (corpus/refusals.json).
+refusals:
+	@python3 scripts/refusals.py
+
+## Rebuild corpus/results.json (every testnet tx hash + summary counts) from the committed evidence; no network.
+results:
+	@python3 scripts/results.py
+
+.PHONY: replay verify verify-d5 corpus refusals results
