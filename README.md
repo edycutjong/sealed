@@ -101,7 +101,7 @@ Testnet only; no wallet is needed to check any of it. Every hash is in `corpus/r
 | Metric | Value | Where |
 |---|---|---|
 | Real exploits paid / submitted | 5 of 5 (demo bounty) | `corpus/results.json` |
-| Non-breaking submissions paid | 0 of 21 (21 of 21 refused; the 21 that ran on the demo and corpus bounties) | `corpus/results.json` |
+| Non-breaking submissions paid | 0 of 21 (21 of 21 refused; all 21 ran on the corpus bounty) | `corpus/results.json` |
 | Corpus | 52 items vs golden verdicts | `make corpus` |
 | Tests | 34: 11 verifier golden, 3 contract unit, 20 near-workspaces sandbox | `make test` |
 | Request → verdict | p50 7.27 s · p95 10.85 s (29 runs) | `corpus/bench.json`, `make bench` |
