@@ -1,0 +1,423 @@
+{
+ "v": 1,
+ "levels": [
+  {
+   "target": 0,
+   "level": "fallback",
+   "invariant_id": "fallback-owner-drained"
+  },
+  {
+   "target": 1,
+   "level": "telephone",
+   "invariant_id": "telephone-owner-taken"
+  },
+  {
+   "target": 2,
+   "level": "delegation",
+   "invariant_id": "delegation-owner-taken"
+  },
+  {
+   "target": 3,
+   "level": "force",
+   "invariant_id": "force-balance-nonzero"
+  },
+  {
+   "target": 4,
+   "level": "king",
+   "invariant_id": "king-throne-locked"
+  }
+ ],
+ "items": [
+  {
+   "name": "real-fallback",
+   "category": "real",
+   "level": "fallback",
+   "target": 0,
+   "invariant_id": "fallback-owner-drained",
+   "vector": "corpus/vectors/real-fallback.json",
+   "expect": {
+    "broken": true,
+    "err": null
+   }
+  },
+  {
+   "name": "real-telephone",
+   "category": "real",
+   "level": "telephone",
+   "target": 1,
+   "invariant_id": "telephone-owner-taken",
+   "vector": "corpus/vectors/real-telephone.json",
+   "expect": {
+    "broken": true,
+    "err": null
+   }
+  },
+  {
+   "name": "real-delegation",
+   "category": "real",
+   "level": "delegation",
+   "target": 2,
+   "invariant_id": "delegation-owner-taken",
+   "vector": "corpus/vectors/real-delegation.json",
+   "expect": {
+    "broken": true,
+    "err": null
+   }
+  },
+  {
+   "name": "real-force",
+   "category": "real",
+   "level": "force",
+   "target": 3,
+   "invariant_id": "force-balance-nonzero",
+   "vector": "corpus/vectors/real-force.json",
+   "expect": {
+    "broken": true,
+    "err": null
+   }
+  },
+  {
+   "name": "real-king",
+   "category": "real",
+   "level": "king",
+   "target": 4,
+   "invariant_id": "king-throne-locked",
+   "vector": "corpus/vectors/real-king.json",
+   "expect": {
+    "broken": true,
+    "err": null
+   }
+  },
+  {
+   "name": "nearmiss-fallback-no-receive",
+   "category": "near-miss",
+   "level": "fallback",
+   "target": 0,
+   "invariant_id": "fallback-owner-drained",
+   "vector": "corpus/vectors/nearmiss-fallback-no-receive.json",
+   "expect": {
+    "broken": false,
+    "err": null
+   }
+  },
+  {
+   "name": "nearmiss-telephone-direct",
+   "category": "near-miss",
+   "level": "telephone",
+   "target": 1,
+   "invariant_id": "telephone-owner-taken",
+   "vector": "corpus/vectors/nearmiss-telephone-direct.json",
+   "expect": {
+    "broken": false,
+    "err": null
+   }
+  },
+  {
+   "name": "nearmiss-delegation-wrong-contract",
+   "category": "near-miss",
+   "level": "delegation",
+   "target": 2,
+   "invariant_id": "delegation-owner-taken",
+   "vector": "corpus/vectors/nearmiss-delegation-wrong-contract.json",
+   "expect": {
+    "broken": false,
+    "err": null
+   }
+  },
+  {
+   "name": "nearmiss-force-transfer",
+   "category": "near-miss",
+   "level": "force",
+   "target": 3,
+   "invariant_id": "force-balance-nonzero",
+   "vector": "corpus/vectors/nearmiss-force-transfer.json",
+   "expect": {
+    "broken": false,
+    "err": null
+   }
+  },
+  {
+   "name": "nearmiss-king-eoa",
+   "category": "near-miss",
+   "level": "king",
+   "target": 4,
+   "invariant_id": "king-throne-locked",
+   "vector": "corpus/vectors/nearmiss-king-eoa.json",
+   "expect": {
+    "broken": false,
+    "err": null
+   }
+  },
+  {
+   "name": "noop-telephone",
+   "category": "near-miss",
+   "level": "telephone",
+   "target": 1,
+   "invariant_id": "telephone-owner-taken",
+   "vector": "corpus/vectors/noop-telephone.json",
+   "expect": {
+    "broken": false,
+    "err": null
+   }
+  },
+  {
+   "name": "wrong-snapshot-fallback-on-telephone",
+   "category": "wrong-snapshot",
+   "level": "telephone",
+   "target": 1,
+   "invariant_id": "telephone-owner-taken",
+   "vector": "corpus/vectors/wrong-snapshot-fallback-on-telephone.json",
+   "expect": {
+    "broken": false,
+    "err": null
+   }
+  },
+  {
+   "name": "wrong-snapshot-king-on-force",
+   "category": "wrong-snapshot",
+   "level": "force",
+   "target": 3,
+   "invariant_id": "force-balance-nonzero",
+   "vector": "corpus/vectors/wrong-snapshot-king-on-force.json",
+   "expect": {
+    "broken": false,
+    "err": null
+   }
+  },
+  {
+   "name": "malformed-not-json",
+   "category": "malformed",
+   "level": "telephone",
+   "target": 1,
+   "invariant_id": "telephone-owner-taken",
+   "vector": "corpus/vectors/malformed-not-json.json",
+   "expect": {
+    "broken": false,
+    "err": "exploit invalid: json"
+   }
+  },
+  {
+   "name": "malformed-bad-hex",
+   "category": "malformed",
+   "level": "telephone",
+   "target": 1,
+   "invariant_id": "telephone-owner-taken",
+   "vector": "corpus/vectors/malformed-bad-hex.json",
+   "expect": {
+    "broken": false,
+    "err": "exploit invalid: data"
+   }
+  },
+  {
+   "name": "malformed-bad-address",
+   "category": "malformed",
+   "level": "delegation",
+   "target": 2,
+   "invariant_id": "delegation-owner-taken",
+   "vector": "corpus/vectors/malformed-bad-address.json",
+   "expect": {
+    "broken": false,
+    "err": "exploit invalid: to"
+   }
+  },
+  {
+   "name": "malformed-too-many-txs",
+   "category": "malformed",
+   "level": "delegation",
+   "target": 2,
+   "invariant_id": "delegation-owner-taken",
+   "vector": "corpus/vectors/malformed-too-many-txs.json",
+   "expect": {
+    "broken": false,
+    "err": "exploit invalid: too many txs"
+   }
+  },
+  {
+   "name": "abuse-big",
+   "category": "abuse",
+   "level": "fallback",
+   "target": 0,
+   "invariant_id": "fallback-owner-drained",
+   "vector": "day0/abuse-big.json",
+   "expect": {
+    "broken": false
+   }
+  },
+  {
+   "name": "abuse-blake2f",
+   "category": "abuse",
+   "level": "fallback",
+   "target": 0,
+   "invariant_id": "fallback-owner-drained",
+   "vector": "day0/abuse-blake2f.json",
+   "expect": {
+    "broken": false
+   }
+  },
+  {
+   "name": "abuse-callself",
+   "category": "abuse",
+   "level": "fallback",
+   "target": 0,
+   "invariant_id": "fallback-owner-drained",
+   "vector": "day0/abuse-callself.json",
+   "expect": {
+    "broken": false
+   }
+  },
+  {
+   "name": "abuse-cdcopy",
+   "category": "abuse",
+   "level": "fallback",
+   "target": 0,
+   "invariant_id": "fallback-owner-drained",
+   "vector": "day0/abuse-cdcopy.json",
+   "expect": {
+    "broken": false
+   }
+  },
+  {
+   "name": "abuse-create",
+   "category": "abuse",
+   "level": "fallback",
+   "target": 0,
+   "invariant_id": "fallback-owner-drained",
+   "vector": "day0/abuse-create.json",
+   "expect": {
+    "broken": false
+   }
+  },
+  {
+   "name": "abuse-exp",
+   "category": "abuse",
+   "level": "fallback",
+   "target": 0,
+   "invariant_id": "fallback-owner-drained",
+   "vector": "day0/abuse-exp.json",
+   "expect": {
+    "broken": false
+   }
+  },
+  {
+   "name": "abuse-extcodecopy",
+   "category": "abuse",
+   "level": "fallback",
+   "target": 0,
+   "invariant_id": "fallback-owner-drained",
+   "vector": "day0/abuse-extcodecopy.json",
+   "expect": {
+    "broken": false
+   }
+  },
+  {
+   "name": "abuse-input",
+   "category": "abuse",
+   "level": "fallback",
+   "target": 0,
+   "invariant_id": "fallback-owner-drained",
+   "vector": "day0/abuse-input.json",
+   "expect": {
+    "broken": false
+   }
+  },
+  {
+   "name": "abuse-jumpdest",
+   "category": "abuse",
+   "level": "fallback",
+   "target": 0,
+   "invariant_id": "fallback-owner-drained",
+   "vector": "day0/abuse-jumpdest.json",
+   "expect": {
+    "broken": false
+   }
+  },
+  {
+   "name": "abuse-keccak",
+   "category": "abuse",
+   "level": "fallback",
+   "target": 0,
+   "invariant_id": "fallback-owner-drained",
+   "vector": "day0/abuse-keccak.json",
+   "expect": {
+    "broken": false
+   }
+  },
+  {
+   "name": "abuse-log",
+   "category": "abuse",
+   "level": "fallback",
+   "target": 0,
+   "invariant_id": "fallback-owner-drained",
+   "vector": "day0/abuse-log.json",
+   "expect": {
+    "broken": false
+   }
+  },
+  {
+   "name": "abuse-loop",
+   "category": "abuse",
+   "level": "fallback",
+   "target": 0,
+   "invariant_id": "fallback-owner-drained",
+   "vector": "day0/abuse-loop.json",
+   "expect": {
+    "broken": false
+   }
+  },
+  {
+   "name": "abuse-mcopy",
+   "category": "abuse",
+   "level": "fallback",
+   "target": 0,
+   "invariant_id": "fallback-owner-drained",
+   "vector": "day0/abuse-mcopy.json",
+   "expect": {
+    "broken": false
+   }
+  },
+  {
+   "name": "abuse-mem",
+   "category": "abuse",
+   "level": "fallback",
+   "target": 0,
+   "invariant_id": "fallback-owner-drained",
+   "vector": "day0/abuse-mem.json",
+   "expect": {
+    "broken": false
+   }
+  },
+  {
+   "name": "abuse-mulmod",
+   "category": "abuse",
+   "level": "fallback",
+   "target": 0,
+   "invariant_id": "fallback-owner-drained",
+   "vector": "day0/abuse-mulmod.json",
+   "expect": {
+    "broken": false
+   }
+  },
+  {
+   "name": "abuse-over",
+   "category": "abuse",
+   "level": "fallback",
+   "target": 0,
+   "invariant_id": "fallback-owner-drained",
+   "vector": "day0/abuse-over.json",
+   "expect": {
+    "broken": false
+   }
+  },
+  {
+   "name": "abuse-sstore",
+   "category": "abuse",
+   "level": "fallback",
+   "target": 0,
+   "invariant_id": "fallback-owner-drained",
+   "vector": "day0/abuse-sstore.json",
+   "expect": {
+    "broken": false
+   }
+  }
+ ]
+}

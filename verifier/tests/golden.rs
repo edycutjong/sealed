@@ -20,7 +20,11 @@ fn root() -> PathBuf {
 }
 
 fn input(name: &str) -> (Vec<u8>, Input) {
-    let raw = std::fs::read(root().join("day0").join(format!("{name}.json"))).expect("vector");
+    input_at(&format!("day0/{name}.json"))
+}
+
+fn input_at(rel: &str) -> (Vec<u8>, Input) {
+    let raw = std::fs::read(root().join(rel)).expect("vector");
     let input: Input = serde_json::from_slice(&raw).expect("vector parses");
     (raw, input)
 }
@@ -30,6 +34,26 @@ fn verdict(name: &str) -> (Input, Verdict, Vec<u8>) {
     let secrets = input.secrets.clone().expect("day-0 vectors carry their test secrets");
     let r = run(&input, &secrets, None).expect("run");
     (input, r.verdict, r.enc)
+}
+
+fn verdict_at(rel: &str) -> Verdict {
+    let (_, input) = input_at(rel);
+    let secrets = input.secrets.clone().expect("corpus vectors carry their test secrets");
+    run(&input, &secrets, None).expect("run").verdict
+}
+
+/// D4 corpus (`corpus/manifest.json`, written by scripts/mkcorpus.py): every non-abuse item, with its golden verdict
+/// in `tests/golden/corpus/` and, for hand-made items, the designed verdict (`expect`) asserted on top.
+fn corpus() -> Vec<(String, String, serde_json::Value)> {
+    let m: serde_json::Value =
+        serde_json::from_slice(&std::fs::read(root().join("corpus/manifest.json")).expect("manifest")).unwrap();
+    m["items"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .filter(|i| i["category"] != "abuse")
+        .map(|i| (i["name"].as_str().unwrap().into(), i["vector"].as_str().unwrap().into(), i["expect"].clone()))
+        .collect()
 }
 
 fn golden(name: &str, actual: &str) {
@@ -46,6 +70,32 @@ fn every_vector_matches_its_golden_verdict() {
     for name in VECTORS {
         let (_, v, _) = verdict(name);
         golden(&format!("{name}.json"), &serde_json::to_string(&v).unwrap());
+    }
+}
+
+#[test]
+fn corpus_matches_golden_and_designed_verdicts() {
+    let items = corpus();
+    assert!(items.len() >= 17, "corpus shrank: {}", items.len());
+    for (name, rel, expect) in items {
+        let v = verdict_at(&rel);
+        golden(&format!("corpus/{name}.json"), &serde_json::to_string(&v).unwrap());
+        assert!(v.gas_used <= verifier::EXPLOIT_GAS_BUDGET, "{name} gas {}", v.gas_used);
+        if expect.is_null() {
+            continue; // LLM-written: no designed verdict, the golden file records what the verifier says
+        }
+        assert_eq!(v.broken, expect["broken"].as_bool().unwrap(), "{name} broken");
+        assert_eq!(v.err.as_deref(), expect["err"].as_str(), "{name} err");
+    }
+}
+
+/// Every kept level: its real exploit breaks it and the no-op / near-miss does not (the level's own validateInstance).
+#[test]
+fn every_kept_level_breaks_only_for_its_real_exploit() {
+    for (i, level) in ["fallback", "telephone", "delegation", "force", "king"].iter().enumerate() {
+        let v = verdict_at(&format!("corpus/vectors/real-{level}.json"));
+        assert!(v.broken && v.err.is_none(), "{level}: real exploit must break the level");
+        assert_eq!(v.h_snapshot, hex::encode(sha256(&[SNAPSHOTS[i]])), "{level}: target index = snapshot order");
     }
 }
 
@@ -135,8 +185,10 @@ fn wasmtime_prints_the_native_verdicts() {
         return;
     }
     let wasm = root().join("verifier.wasm");
-    for name in VECTORS {
-        let (raw, _) = input(name);
+    let day0: Vec<(String, String)> = VECTORS.iter().map(|n| (n.to_string(), format!("day0/{n}.json"))).collect();
+    let all = day0.into_iter().chain(corpus().into_iter().map(|(n, rel, _)| (n, rel)));
+    for (name, rel) in all {
+        let (raw, _) = input_at(&rel);
         let mut child = Command::new("wasmtime")
             .arg("run")
             .arg(&wasm)
@@ -149,7 +201,7 @@ fn wasmtime_prints_the_native_verdicts() {
         assert!(out.status.success(), "{name}: wasmtime exit {:?}", out.status);
         let mut got: serde_json::Value = serde_json::from_slice(&out.stdout).unwrap();
         got.as_object_mut().unwrap().remove("lim");
-        let (_, v, _) = verdict(name);
+        let v = verdict_at(&rel);
         assert_eq!(serde_json::to_string(&got).unwrap(), serde_json::to_string(&v).unwrap(), "{name}");
     }
 }
