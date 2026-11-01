@@ -67,7 +67,7 @@ flowchart LR
 |---|---|
 | Verifier | Rust → WASI (`verifier.wasm`), revm, 5 Ethernaut snapshots at commit `d05643a4` |
 | Contract | near-sdk 5.9.0, NEP-141 escrow, NEAR global contract, zero access keys |
-| Execution | NEAR OutLayer (Intel TDX workers), pinned by wasm hash |
+| Execution | NEAR OutLayer TEE workers (documented as Intel TDX; this repo checks the worker key, not the quote), pinned by wasm hash |
 | Tooling | Python 3 scripts, `wasmtime`, archival RPC (FastNEAR) |
 
 Full walk-through with `file:line` for every claim: [ARCHITECTURE.md](ARCHITECTURE.md).
@@ -76,11 +76,11 @@ Full walk-through with `file:line` for every claim: [ARCHITECTURE.md](ARCHITECTU
 
 | OutLayer method | Used for | Code |
 |---|---|---|
-| `request_execution` | the bounty requests the verifier, pinned by hash, with the hunter's secrets profile | `contracts/bounty/src/lib.rs:657` |
-| `resolve_execution` | the worker's answer resumes the commit and decides AWARDED or REFUSED | `contracts/bounty/src/lib.rs:343` (`on_verdict`) |
-| `store_secrets` | the hunter stores the sealed exploit, readable only by the worker | `scripts/hunter.py` |
-| `get_config` | `make verify` anchors the worker to OutLayer's operator at the resolve block | `scripts/verify.py` |
-| Global contracts | the bounty runs on a code hash with no access key (I6) | `scripts/deploy_bounty_testnet.py:115` |
+| `request_execution` | the bounty requests the verifier, pinned by hash, with the hunter's secrets profile | `contracts/bounty/src/lib.rs:334` (call), `:657` (hash pin) |
+| `resolve_execution` | the worker's call resumes the yield into `on_verdict`, which decides AWARDED or REFUSED | `contracts/bounty/src/lib.rs:343` |
+| `store_secrets` | the hunter stores the exploit as an OutLayer encrypted secret bound to the pinned wasm hash | `scripts/hunter.py:63-75` |
+| `get_config` | `make verify` anchors the worker to OutLayer's operator at the resolve block | `scripts/verify.py:107` |
+| Global contracts | the bounty runs on a code hash with no access key (I6); the earlier D3 throwaway bounty (2 of the 29 runs) is keyed | `scripts/deploy_bounty_testnet.py:115` |
 
 ## ⛓️ Live Deployment
 
@@ -100,13 +100,13 @@ Testnet only; no wallet is needed to check any of it. Every hash is in `corpus/r
 | Metric | Value | Where |
 |---|---|---|
 | Real exploits paid / submitted | 5 of 5 (demo bounty) | `corpus/results.json` |
-| Non-breaking submissions paid | 0 of 21 (21 of 21 refused) | `corpus/results.json` |
+| Non-breaking submissions paid | 0 of 21 (21 of 21 refused; the 21 that ran on the demo and corpus bounties) | `corpus/results.json` |
 | Corpus | 52 items vs golden verdicts | `make corpus` |
 | Tests | 34: 11 verifier golden, 3 contract unit, 20 near-workspaces sandbox | `make test` |
 | Request → verdict | p50 7.27 s · p95 10.85 s (29 runs) | `corpus/bench.json`, `make bench` |
 | Heaviest real run | 7 371 260 instructions (0.37% of the 2e9 limit) | `corpus/results.json` |
 | Heaviest fake | 479 555 711 instructions (23.98% of the limit) | `corpus/bench.json` |
-| LLM-only triage on the same corpus (fakes paid, of 21) | muse-wonder-1.0 1 · nemotron-3-ultra 3 · qwen3.8-omni-flash 3 | `make baseline` |
+| LLM-only triage on the same corpus (fakes paid, of 21) | muse-wonder-1.0 1 · nemotron-3-ultra 3 · qwen3.8-omni-flash 3; the same models paid 12, 12 and 11 of the 15 real exploits | `make baseline` |
 
 The baseline models could not run code and are **not** NEAR AI Cloud; read its limits in
 [baseline/README.md](baseline/README.md) before quoting it.
@@ -116,12 +116,17 @@ The baseline models could not run code and are **not** NEAR AI Cloud; read its l
 | Control | Why it is load-bearing | Test |
 |---|---|---|
 | I1 conservation | pool + escrow + paid = funded − withdrawn after every call | `contracts/itests/tests/bounty.rs:165` |
-| I2 one payout per invariant | a duplicate commit cannot be paid twice | `bounty.rs:574`, `:257` |
+| I2 one payout per invariant | a duplicate commit cannot be paid twice | `bounty.rs:574`, `:486` |
+| I2b reservation released | a refused fake frees its reservation and reopens the invariant | `bounty.rs:257` |
 | I3 one verdict in flight | no race for the same invariant | `bounty.rs:363` |
 | I4 withdraw guard | the protocol cannot pull reserved or awarded USDC | `bounty.rs:383` |
 | I7 award matches the commit | a verdict for another exploit, invariant or snapshot is refused | `bounty.rs:279`, `:298`, `:318` |
-| I8 delivery hash | the protocol gets the exploit only when `sha256(enc) == h_enc` | `bounty.rs:209`, `:436` |
+| I8 delivery hash | the protocol gets the exploit only when `sha256(enc) == h_enc` | `bounty.rs:209` |
+| Failed payout | a failed `ft_transfer` leaves the escrow owed and `retry_payout` pays it | `bounty.rs:436` |
 | Fake exploits | a no-op, near-miss, wrong snapshot or abuse input is refused | `make corpus`, `verifier/tests/golden.rs` |
+
+The sandbox tests run the contract against a mock OutLayer and a mock token; the live worker is shown by the testnet runs
+(`make verify`).
 
 ### Honest limits (7)
 
@@ -136,7 +141,7 @@ The baseline models could not run code and are **not** NEAR AI Cloud; read its l
    one invariant busy for the cost of gas and the OutLayer fee.
 7. **No outside users yet.** The measured demo is our own hunter agent plus the fakes corpus.
 
-More detail for each: [ARCHITECTURE.md § Limits](ARCHITECTURE.md#limits).
+Detail for each, plus memory and seal-key reuse: [ARCHITECTURE.md § Limits](ARCHITECTURE.md#limits).
 
 ## 🚀 Getting Started
 
@@ -152,8 +157,8 @@ only needed to rebuild the verifier from source (`make verifier-check`).
 | `make doctor` | prerequisites present, `verifier.wasm` hash matches its pin | archival RPC ping |
 | `make replay` | every published commit re-run under wasmtime from the committed wasm its bounty pinned (sha256-checked) = its on-chain verdict | none |
 | `make replay INPUT=corpus/vectors/real-fallback.json` | the verdict for one tx list (yours: `{"target":0,"invariant_id":"…","txs":[…]}`) | none |
-| `make verify` | each of the 29 runs proven from chain data: pinned hash, attested worker key, verdict, `h_enc`, PAID; every commit on chain bundled; paid totals match | archival RPC, ~80 calls (2–6 min on the rate-limited public node; exit 2 = unreachable, not a failed check) |
-| `make verify-demo` | the same checks on the 5 paid demo-bounty runs | ~25 calls (~1.5 min) |
+| `make verify` | each of the 29 runs proven from chain data: pinned hash, attested worker key, verdict, `h_enc`, PAID; every commit on chain bundled; paid totals match | archival RPC, about 80 calls (a few minutes on a rate-limited node; exit 2 = unreachable, not a failed check) |
+| `make verify-demo` | the same checks on the 5 paid demo-bounty runs | about 25 calls (about 1.5 min) |
 | `make corpus` | all 52 corpus items vs their golden verdicts | none |
 | `make refusals` | the 6 on-chain refusal kinds with tx hashes | none |
 | `make bench` | request→verdict p50/p95, instructions / time / memory vs the enforced limits | none (`make bench-chain` re-reads the chain) |

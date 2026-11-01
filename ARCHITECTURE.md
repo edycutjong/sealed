@@ -131,5 +131,6 @@ hunter                bounty (keyless)            token            OutLayer (TEE
   (not made: it would replace the global code hash the testnet evidence pins).
 - **Seal key reuse.** The seal's nonce is derived from `EPH_SK` (`seal.rs:5`), so a hunter client must draw a fresh
   `EPH_SK` per commit; `scripts/hunter.py` draws 32 random bytes each time.
+- **No outside users yet.** The measured demo is our own hunter agent plus the fakes corpus.
 - **Testnet only.** The mainnet leg (`scripts/mainnet_leg.py`) prints the commands; it never signs and has not run.
 - **Baseline models.** `make baseline` used third-party models, not NEAR AI Cloud (`baseline/README.md`).
