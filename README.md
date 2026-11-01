@@ -15,7 +15,8 @@ Rust is only needed to rebuild the verifier from source (`make verifier-check`).
 | `make doctor` | prerequisites present, `verifier.wasm` hash matches its pin | archival RPC ping |
 | `make replay` | every published commit re-run under wasmtime from the committed wasm its bounty pinned (sha256-checked) = its on-chain verdict | none |
 | `make replay INPUT=corpus/vectors/real-fallback.json` | the verdict for one tx list (yours: `{"target":0,"invariant_id":"…","txs":[…]}`) | none |
-| `make verify` | each payout proven from chain data: pinned hash, attested worker key, verdict, `h_enc`, PAID | archival RPC (exit 2 = unreachable, not a failed check) |
+| `make verify` | each of the 29 runs proven from chain data: pinned hash, attested worker key, verdict, `h_enc`, PAID; every commit on chain bundled; paid totals match | archival RPC, ~80 calls (2–6 min on the rate-limited public node; exit 2 = unreachable, not a failed check) |
+| `make verify-demo` | the same checks on the 5 paid D5 demo-bounty runs | ~25 calls (~1.5 min) |
 | `make corpus` | all 52 corpus items vs their golden verdicts | none |
 | `make refusals` | the 6 on-chain refusal kinds with tx hashes | none |
 | `make bench` | request→verdict p50/p95, instructions / time / memory vs the enforced limits | none (`make bench-chain` re-reads the chain) |

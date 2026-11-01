@@ -10,9 +10,14 @@ KEYS = os.path.expanduser("~/.config/near/sealed-testnet")
 OUTLAYER = "outlayer.testnet"
 
 
+PACE_S = 0.0  # optional gap before every request; public archival nodes 429 a burst, and backoff costs far more
+
+
 def rpc(method, params, url=RPC):
     body = json.dumps({"jsonrpc": "2.0", "id": "d0", "method": method, "params": params}).encode()
     for attempt in range(8):
+        if PACE_S:
+            time.sleep(PACE_S)
         try:
             req = urllib.request.Request(url, body, {"content-type": "application/json"})
             r = json.load(urllib.request.urlopen(req, timeout=60))
