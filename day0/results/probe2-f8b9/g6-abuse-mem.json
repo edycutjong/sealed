@@ -1,0 +1,116 @@
+{
+ "label": "abuse-mem",
+ "input": "day0/abuse-mem.json",
+ "probe": "probe2.sealed-dev-11010702.testnet",
+ "signer": "sealed-hunter-a-11010702.testnet",
+ "request_tx": "ENyJjHg7SM4UkN5nmid4Co3QQVqTVkEByAso33p7pM38",
+ "requested_limits": {
+  "max_instructions": 2000000000,
+  "max_memory_mb": 512,
+  "max_execution_seconds": 120
+ },
+ "request_source": {
+  "WasmUrl": {
+   "build_target": "wasm32-wasip1",
+   "hash": "f8b9062ac22d9bf06768f240785a6e929ed9a3b2168d9a1b6a754f336f98f11f",
+   "url": "https://6pa7yka0ghwew5xh.public.blob.vercel-storage.com/wasm/f8b9062ac22d9bf06768f240785a6e929ed9a3b2168d9a1b6a754f336f98f11f-YGPHCnmcCJXbvg4fDq7ofPodEMnox4.wasm"
+  }
+ },
+ "secrets_ref": null,
+ "record": {
+  "id": 6,
+  "caller": "sealed-hunter-a-11010702.testnet",
+  "label": "abuse-mem",
+  "kind": "ok",
+  "raw": "\"{\\\"v\\\":1,\\\"broken\\\":false,\\\"invariant_id\\\":\\\"fallback-owner-drained\\\",\\\"h_exploit\\\":\\\"6c7c63de365710a762b7c6a393b3f502ecb82da04dd3d16fa110fa8eeb8caf70\\\",\\\"h_snapshot\\\":\\\"57263dfb780961cfb0391a49684340ba627e7e39159b1d513fd2e2861c60a073\\\",\\\"h_enc\\\":\\\"17abb90e29da0996f33c34e256830a12b77a6b7217192f39e535617602456c19\\\",\\\"gas_used\\\":120000000,\\\"err\\\":null,\\\"lim\\\":{\\\"i\\\":2000000000,\\\"m\\\":512,\\\"s\\\":120,\\\"mem\\\":9830400}}\\n\"",
+  "h_enc": "17abb90e29da0996f33c34e256830a12b77a6b7217192f39e535617602456c19",
+  "broken": false,
+  "requested_height": 275684341,
+  "requested_ns": 1793498855467894724,
+  "resolved_height": 275684353,
+  "resolved_ns": 1793498862721339756,
+  "delivered": false
+ },
+ "wall_s_client": 19.7,
+ "wall_s_chain": 7.3,
+ "blocks": 12,
+ "execution_completed": [
+  {
+   "standard": "near-outlayer",
+   "version": "1.0.0",
+   "event": "execution_completed",
+   "data": [
+    {
+     "sender_id": "sealed-hunter-a-11010702.testnet",
+     "code_source": {
+      "WasmUrl": {
+       "url": "https://6pa7yka0ghwew5xh.public.blob.vercel-storage.com/wasm/f8b9062ac22d9bf06768f240785a6e929ed9a3b2168d9a1b6a754f336f98f11f-YGPHCnmcCJXbvg4fDq7ofPodEMnox4.wasm",
+       "hash": "f8b9062ac22d9bf06768f240785a6e929ed9a3b2168d9a1b6a754f336f98f11f",
+       "build_target": "wasm32-wasip1"
+      }
+     },
+     "resources_used": {
+      "instructions": 34997879,
+      "time_ms": 1604,
+      "compile_time_ms": null
+     },
+     "success": true,
+     "error_message": null,
+     "payment_charged": "1160403400000000000000",
+     "payment_refunded": "48839596600000000000000",
+     "compilation_note": "Cached WASM from 2026-11-01T02:05:17.872516+00:00",
+     "timestamp": 1793498862193225456
+    }
+   ]
+  }
+ ],
+ "native_verdict": {
+  "v": 1,
+  "broken": false,
+  "invariant_id": "fallback-owner-drained",
+  "h_exploit": "6c7c63de365710a762b7c6a393b3f502ecb82da04dd3d16fa110fa8eeb8caf70",
+  "h_snapshot": "57263dfb780961cfb0391a49684340ba627e7e39159b1d513fd2e2861c60a073",
+  "h_enc": "17abb90e29da0996f33c34e256830a12b77a6b7217192f39e535617602456c19",
+  "gas_used": 120000000,
+  "err": null
+ },
+ "chain_verdict": {
+  "v": 1,
+  "broken": false,
+  "invariant_id": "fallback-owner-drained",
+  "h_exploit": "6c7c63de365710a762b7c6a393b3f502ecb82da04dd3d16fa110fa8eeb8caf70",
+  "h_snapshot": "57263dfb780961cfb0391a49684340ba627e7e39159b1d513fd2e2861c60a073",
+  "h_enc": "17abb90e29da0996f33c34e256830a12b77a6b7217192f39e535617602456c19",
+  "gas_used": 120000000,
+  "err": null,
+  "lim": {
+   "i": 2000000000,
+   "m": 512,
+   "s": 120,
+   "mem": 9830400
+  }
+ },
+ "match_native": true,
+ "wasmtime_verdict": {
+  "v": 1,
+  "broken": false,
+  "invariant_id": "fallback-owner-drained",
+  "h_exploit": "6c7c63de365710a762b7c6a393b3f502ecb82da04dd3d16fa110fa8eeb8caf70",
+  "h_snapshot": "57263dfb780961cfb0391a49684340ba627e7e39159b1d513fd2e2861c60a073",
+  "h_enc": "17abb90e29da0996f33c34e256830a12b77a6b7217192f39e535617602456c19",
+  "gas_used": 120000000,
+  "err": null,
+  "lim": {
+   "i": null,
+   "m": null,
+   "s": null,
+   "mem": 9830400
+  }
+ },
+ "verdict_sha256": {
+  "native": "3d435ddb182b7dfe2845b8f5f5f4c8058eb390ce1f180f413c878ca8446843a9",
+  "wasmtime": "3d435ddb182b7dfe2845b8f5f5f4c8058eb390ce1f180f413c878ca8446843a9",
+  "outlayer": "3d435ddb182b7dfe2845b8f5f5f4c8058eb390ce1f180f413c878ca8446843a9"
+ },
+ "three_of_three": true
+}

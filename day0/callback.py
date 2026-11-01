@@ -50,7 +50,7 @@ def main():
     ap.add_argument("--deliver", action="store_true")
     ap.add_argument("--signer", default="sealed-hunter-a-11010702.testnet")
     ap.add_argument("--secrets-ref")
-    ap.add_argument("--deposit", default="0.05 NEAR")
+    ap.add_argument("--deposit", help="default: OutLayer's estimate_execution_cost for these limits + input size, x1.5")
     ap.add_argument("--timeout", type=int, default=900)
     a = ap.parse_args()
 
@@ -61,10 +61,16 @@ def main():
     secrets_ref = json.loads(a.secrets_ref) if a.secrets_ref else None
     if secrets_ref is not None:
         sent.pop("secrets", None)
+    input_data = json.dumps(sent, separators=(",", ":"))
+    if a.deposit is None:
+        # input_data beyond the free bytes needs a storage hold on top of compute (returned at settlement)
+        est = int(near.view(near.OUTLAYER, "estimate_execution_cost",
+                            {"resource_limits": LIMITS, "input_len": len(input_data)}))
+        a.deposit = f"{est * 3 // 2} yoctonear"
     n0 = len(near.view(PROBE, "get_records"))
     t0 = time.time()
     txh = near.call(a.signer, PROBE, "request",
-                    {"label": a.label, "input_data": json.dumps(sent, separators=(",", ":")),
+                    {"label": a.label, "input_data": input_data,
                      "resource_limits": LIMITS, "secrets_ref": secrets_ref}, deposit=a.deposit)
     rec = None
     while time.time() - t0 < a.timeout:
@@ -79,7 +85,7 @@ def main():
     completed = near.events(txr, "execution_completed")
     out = {
         "label": a.label, "input": os.path.relpath(a.input, ROOT), "probe": PROBE, "signer": a.signer,
-        "request_tx": txh, "requested_limits": LIMITS,
+        "request_tx": txh, "requested_limits": LIMITS, "deposit": a.deposit,
         "request_source": (req_args or {}).get("source"), "secrets_ref": (req_args or {}).get("secrets_ref"),
         "record": rec, "wall_s_client": round(time.time() - t0, 1),
         "wall_s_chain": round((rec["resolved_ns"] - rec["requested_ns"]) / 1e9, 1) if rec else None,

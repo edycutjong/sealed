@@ -1,0 +1,54 @@
+{
+ "day0": "PASS",
+ "at": "2026-11-01T02:40Z",
+ "network": "testnet",
+ "verifier_sha256": "fb179c0067c9100256cc8033c23e21678985fcb4e8f3e94622c7969e85f22fd8",
+ "pinned_url": "https://6pa7yka0ghwew5xh.public.blob.vercel-storage.com/wasm/fb179c0067c9100256cc8033c23e21678985fcb4e8f3e94622c7969e85f22fd8.wasm",
+ "probe": "probe3.sealed-dev-11010702.testnet",
+ "checks": {
+  "G9": {
+   "result": "PASS",
+   "evidence": "results/g9.json (keyless account on global code; view_access_key_list [])"
+  },
+  "G1": {
+   "result": "PASS",
+   "evidence": "cargo build --release --target wasm32-wasip1 -p verifier: 1508650 B <= 10 MB"
+  },
+  "G2": {
+   "result": "PASS",
+   "evidence": "wasmtime + SEALED_TRACE=1: validateInstance(instance, player) on the Fallback factory -> broken:true"
+  },
+  "G0": {
+   "result": "PASS",
+   "evidence": "one sha256 fb179c0067c9100256cc8033c23e21678985fcb4e8f3e94622c7969e85f22fd8; served at https://6pa7yka0ghwew5xh.public.blob.vercel-storage.com/wasm/fb179c0067c9100256cc8033c23e21678985fcb4e8f3e94622c7969e85f22fd8.wasm; OutLayer worker fetched it, checked the hash, and every G3/G6 run below names it in execution_completed.code_source"
+  },
+  "G3": {
+   "result": "PASS",
+   "evidence": "results/g6-fallback.json verdict_sha256 native == wasmtime == outlayer (NEAR-mode TDX worker); open_enc.py (PyNaCl SealedBox) opens enc and recomputes the commit"
+  },
+  "G4": {
+   "result": "PASS",
+   "evidence": "results/g6-noop.json broken:false on all 3"
+  },
+  "G5": {
+   "result": "PASS",
+   "evidence": "results/g5.json: Fallback {'i': 0.37, 's': 1.91, 'mem': 0.28}% of the enforced limits"
+  },
+  "G5b": {
+   "result": "PASS",
+   "evidence": "results/g5.json: 15 runs, worst {'i': 23.98, 's': 1.95, 'mem': 0.46}% (abuse-keccak); first run on the 30 M-gas cap FAILED (abuse-loop hit 2e9 instructions, results/probe2-f8b9/g6-abuse-loop.json) -> cap lowered to 600 k exploit + 500 k validate gas, precompiles removed, opt-level 3; Fallback still broken:true on all 3"
+  },
+  "G6": {
+   "result": "PASS",
+   "evidence": "results/g6-fallback.json: probe callback got the real verdict (9.2 s, 16 blocks, 415 B <= 900); results/g6-deliver24k.json: 65820 B deliver accepted"
+  },
+  "G7": {
+   "result": "PASS",
+   "evidence": "results/g6-g7-ok.json broken:true from the keystore row (WasmHash accessor, access whitelist:A via probe); refused for signer B through the probe (g6-g7-neg-signer-b.json) and for A calling OutLayer directly (g7-neg-direct.json)"
+  },
+  "G7d": {
+   "result": "PASS (table changed)",
+   "evidence": "missing + oversized secret -> normal verdicts (g6-g7d-missing/oversized.json); undecryptable row -> worker-answered failure arriving as bytes null (g6-g7d-undecryptable.json), same arrival as url-down (g6-url-down.json) and, per OutLayer contract/src/execution.rs on_execution_response, yield timeout and stale runs; Err only if request_execution itself fails. Refusal table: every non-verdict -> capped refund (1 per hunter per invariant per 24 h), then slash"
+  }
+ }
+}

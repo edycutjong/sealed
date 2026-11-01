@@ -1,0 +1,105 @@
+{
+ "label": "g7-neg-signer-b",
+ "input": "day0/fallback.json",
+ "probe": "probe3.sealed-dev-11010702.testnet",
+ "signer": "sealed-hunter-b-11010702.testnet",
+ "request_tx": "4WH6sTgNRWbypR7rJVhNnSQ6aXhScrR66cR4YaqyYoos",
+ "requested_limits": {
+  "max_instructions": 2000000000,
+  "max_memory_mb": 512,
+  "max_execution_seconds": 120
+ },
+ "deposit": "19500300000000000000000 yoctonear",
+ "request_source": {
+  "WasmUrl": {
+   "build_target": "wasm32-wasip1",
+   "hash": "fb179c0067c9100256cc8033c23e21678985fcb4e8f3e94622c7969e85f22fd8",
+   "url": "https://6pa7yka0ghwew5xh.public.blob.vercel-storage.com/wasm/fb179c0067c9100256cc8033c23e21678985fcb4e8f3e94622c7969e85f22fd8.wasm"
+  }
+ },
+ "secrets_ref": {
+  "account_id": "sealed-hunter-a-11010702.testnet",
+  "profile": "c-c7b72912"
+ },
+ "record": {
+  "id": 16,
+  "caller": "sealed-hunter-b-11010702.testnet",
+  "label": "g7-neg-signer-b",
+  "kind": "ok",
+  "raw": "null",
+  "h_enc": null,
+  "broken": null,
+  "requested_height": 275686272,
+  "requested_ns": 1793499941788395581,
+  "resolved_height": 275686282,
+  "resolved_ns": 1793499947824154546,
+  "delivered": false
+ },
+ "wall_s_client": 17.3,
+ "wall_s_chain": 6.0,
+ "blocks": 10,
+ "execution_completed": [
+  {
+   "standard": "near-outlayer",
+   "version": "1.0.0",
+   "event": "execution_completed",
+   "data": [
+    {
+     "sender_id": "sealed-hunter-b-11010702.testnet",
+     "code_source": {
+      "WasmUrl": {
+       "url": "https://6pa7yka0ghwew5xh.public.blob.vercel-storage.com/wasm/fb179c0067c9100256cc8033c23e21678985fcb4e8f3e94622c7969e85f22fd8.wasm",
+       "hash": "fb179c0067c9100256cc8033c23e21678985fcb4e8f3e94622c7969e85f22fd8",
+       "build_target": "wasm32-wasip1"
+      }
+     },
+     "resources_used": {
+      "instructions": 0,
+      "time_ms": 0,
+      "compile_time_ms": null
+     },
+     "success": false,
+     "error_message": "Access denied by access condition \u2014 signer sealed-hunter-b-11010702.testnet, called from probe3.sealed-dev-11010702.testnet. Check the access conditions configured by the secret owner.",
+     "payment_charged": "1000000000000000000000",
+     "payment_refunded": "18500300000000000000000",
+     "compilation_note": null,
+     "timestamp": 1793499947383812706
+    }
+   ]
+  }
+ ],
+ "native_verdict": {
+  "v": 1,
+  "broken": true,
+  "invariant_id": "fallback-owner-drained",
+  "h_exploit": "c7b729125dc25e430172f01cfed0104bce3269d8494963318f8e54d9a8533ef8",
+  "h_snapshot": "57263dfb780961cfb0391a49684340ba627e7e39159b1d513fd2e2861c60a073",
+  "h_enc": "3d7951d7210a38e331aeaf19773e2458235631955717f129662792dac5eefdd7",
+  "gas_used": 106932,
+  "err": null
+ },
+ "chain_verdict": null,
+ "match_native": false,
+ "wasmtime_verdict": {
+  "v": 1,
+  "broken": true,
+  "invariant_id": "fallback-owner-drained",
+  "h_exploit": "c7b729125dc25e430172f01cfed0104bce3269d8494963318f8e54d9a8533ef8",
+  "h_snapshot": "57263dfb780961cfb0391a49684340ba627e7e39159b1d513fd2e2861c60a073",
+  "h_enc": "3d7951d7210a38e331aeaf19773e2458235631955717f129662792dac5eefdd7",
+  "gas_used": 106932,
+  "err": null,
+  "lim": {
+   "i": null,
+   "m": null,
+   "s": null,
+   "mem": 1507328
+  }
+ },
+ "verdict_sha256": {
+  "native": "b6586c81dfe45f30a5086dbe1267603ee7811adfa2f3047a5138a6cfe2a34050",
+  "wasmtime": "b6586c81dfe45f30a5086dbe1267603ee7811adfa2f3047a5138a6cfe2a34050",
+  "outlayer": null
+ },
+ "three_of_three": false
+}

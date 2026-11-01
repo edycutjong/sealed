@@ -1,0 +1,72 @@
+{
+ "label": "abuse-input",
+ "input": "day0/abuse-input.json",
+ "probe": "probe2.sealed-dev-11010702.testnet",
+ "signer": "sealed-hunter-a-11010702.testnet",
+ "request_tx": "FRgB53d5mDpuL7rSyDpkUYrnrvD4nSdAmRU2H84QHt6t",
+ "requested_limits": {
+  "max_instructions": 2000000000,
+  "max_memory_mb": 512,
+  "max_execution_seconds": 120
+ },
+ "request_source": {
+  "WasmUrl": {
+   "build_target": "wasm32-wasip1",
+   "hash": "f8b9062ac22d9bf06768f240785a6e929ed9a3b2168d9a1b6a754f336f98f11f",
+   "url": "https://6pa7yka0ghwew5xh.public.blob.vercel-storage.com/wasm/f8b9062ac22d9bf06768f240785a6e929ed9a3b2168d9a1b6a754f336f98f11f-YGPHCnmcCJXbvg4fDq7ofPodEMnox4.wasm"
+  }
+ },
+ "secrets_ref": null,
+ "record": {
+  "id": 4,
+  "caller": "sealed-hunter-a-11010702.testnet",
+  "label": "abuse-input",
+  "kind": "err",
+  "raw": null,
+  "h_enc": null,
+  "broken": null,
+  "requested_height": 275684269,
+  "requested_ns": 1793498815319574777,
+  "resolved_height": 275684271,
+  "resolved_ns": 1793498816528736261,
+  "delivered": false
+ },
+ "wall_s_client": 13.2,
+ "wall_s_chain": 1.2,
+ "blocks": 2,
+ "execution_completed": [],
+ "native_verdict": {
+  "v": 1,
+  "broken": false,
+  "invariant_id": "fallback-owner-drained",
+  "h_exploit": "1d99cd53b3dc9faf179ea907944c43ddcda64ed26d7c7642ed32a6d12ef96e54",
+  "h_snapshot": "57263dfb780961cfb0391a49684340ba627e7e39159b1d513fd2e2861c60a073",
+  "h_enc": "3f3b0a0fb72fdbbaf7172138d00143ec28b09ff2d25a2029d99d7ca378fdf4e2",
+  "gas_used": 414393,
+  "err": null
+ },
+ "chain_verdict": null,
+ "match_native": false,
+ "wasmtime_verdict": {
+  "v": 1,
+  "broken": false,
+  "invariant_id": "fallback-owner-drained",
+  "h_exploit": "1d99cd53b3dc9faf179ea907944c43ddcda64ed26d7c7642ed32a6d12ef96e54",
+  "h_snapshot": "57263dfb780961cfb0391a49684340ba627e7e39159b1d513fd2e2861c60a073",
+  "h_enc": "3f3b0a0fb72fdbbaf7172138d00143ec28b09ff2d25a2029d99d7ca378fdf4e2",
+  "gas_used": 414393,
+  "err": null,
+  "lim": {
+   "i": null,
+   "m": null,
+   "s": null,
+   "mem": 1769472
+  }
+ },
+ "verdict_sha256": {
+  "native": "c6324517059725cd0d035ab7e1d955fde252808c6d5feaaa31d88b7dfedc1947",
+  "wasmtime": "c6324517059725cd0d035ab7e1d955fde252808c6d5feaaa31d88b7dfedc1947",
+  "outlayer": null
+ },
+ "three_of_three": false
+}

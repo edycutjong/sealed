@@ -1,0 +1,116 @@
+{
+ "label": "abuse-over",
+ "input": "day0/abuse-over.json",
+ "probe": "probe2.sealed-dev-11010702.testnet",
+ "signer": "sealed-hunter-a-11010702.testnet",
+ "request_tx": "5s8okehEkNsjuywbSxXrPhvkfk75CZc7Fxn2XZWwDdXD",
+ "requested_limits": {
+  "max_instructions": 2000000000,
+  "max_memory_mb": 512,
+  "max_execution_seconds": 120
+ },
+ "request_source": {
+  "WasmUrl": {
+   "build_target": "wasm32-wasip1",
+   "hash": "f8b9062ac22d9bf06768f240785a6e929ed9a3b2168d9a1b6a754f336f98f11f",
+   "url": "https://6pa7yka0ghwew5xh.public.blob.vercel-storage.com/wasm/f8b9062ac22d9bf06768f240785a6e929ed9a3b2168d9a1b6a754f336f98f11f-YGPHCnmcCJXbvg4fDq7ofPodEMnox4.wasm"
+  }
+ },
+ "secrets_ref": null,
+ "record": {
+  "id": 7,
+  "caller": "sealed-hunter-a-11010702.testnet",
+  "label": "abuse-over",
+  "kind": "ok",
+  "raw": "\"{\\\"v\\\":1,\\\"broken\\\":false,\\\"invariant_id\\\":\\\"fallback-owner-drained\\\",\\\"h_exploit\\\":\\\"102cfbf9b247735f92b4ad3e0baa1a918d39398f73fa4ea928ece31d6eab8780\\\",\\\"h_snapshot\\\":\\\"57263dfb780961cfb0391a49684340ba627e7e39159b1d513fd2e2861c60a073\\\",\\\"h_enc\\\":\\\"9f496980c81dab25a3682346c50b0d790a96d1439b12775ec7dbac4251bda01b\\\",\\\"gas_used\\\":0,\\\"err\\\":\\\"exploit invalid: too many txs\\\",\\\"lim\\\":{\\\"i\\\":2000000000,\\\"m\\\":512,\\\"s\\\":120,\\\"mem\\\":1507328}}\\n\"",
+  "h_enc": "9f496980c81dab25a3682346c50b0d790a96d1439b12775ec7dbac4251bda01b",
+  "broken": false,
+  "requested_height": 275684380,
+  "requested_ns": 1793498877931312811,
+  "resolved_height": 275684393,
+  "resolved_ns": 1793498884411110747,
+  "delivered": false
+ },
+ "wall_s_client": 17.1,
+ "wall_s_chain": 6.5,
+ "blocks": 13,
+ "execution_completed": [
+  {
+   "standard": "near-outlayer",
+   "version": "1.0.0",
+   "event": "execution_completed",
+   "data": [
+    {
+     "sender_id": "sealed-hunter-a-11010702.testnet",
+     "code_source": {
+      "WasmUrl": {
+       "url": "https://6pa7yka0ghwew5xh.public.blob.vercel-storage.com/wasm/f8b9062ac22d9bf06768f240785a6e929ed9a3b2168d9a1b6a754f336f98f11f-YGPHCnmcCJXbvg4fDq7ofPodEMnox4.wasm",
+       "hash": "f8b9062ac22d9bf06768f240785a6e929ed9a3b2168d9a1b6a754f336f98f11f",
+       "build_target": "wasm32-wasip1"
+      }
+     },
+     "resources_used": {
+      "instructions": 10370174,
+      "time_ms": 1597,
+      "compile_time_ms": null
+     },
+     "success": true,
+     "error_message": null,
+     "payment_charged": "1159701000000000000000",
+     "payment_refunded": "48840299000000000000000",
+     "compilation_note": "Cached WASM from 2026-11-01T02:05:17.872516+00:00",
+     "timestamp": 1793498883915360467
+    }
+   ]
+  }
+ ],
+ "native_verdict": {
+  "v": 1,
+  "broken": false,
+  "invariant_id": "fallback-owner-drained",
+  "h_exploit": "102cfbf9b247735f92b4ad3e0baa1a918d39398f73fa4ea928ece31d6eab8780",
+  "h_snapshot": "57263dfb780961cfb0391a49684340ba627e7e39159b1d513fd2e2861c60a073",
+  "h_enc": "9f496980c81dab25a3682346c50b0d790a96d1439b12775ec7dbac4251bda01b",
+  "gas_used": 0,
+  "err": "exploit invalid: too many txs"
+ },
+ "chain_verdict": {
+  "v": 1,
+  "broken": false,
+  "invariant_id": "fallback-owner-drained",
+  "h_exploit": "102cfbf9b247735f92b4ad3e0baa1a918d39398f73fa4ea928ece31d6eab8780",
+  "h_snapshot": "57263dfb780961cfb0391a49684340ba627e7e39159b1d513fd2e2861c60a073",
+  "h_enc": "9f496980c81dab25a3682346c50b0d790a96d1439b12775ec7dbac4251bda01b",
+  "gas_used": 0,
+  "err": "exploit invalid: too many txs",
+  "lim": {
+   "i": 2000000000,
+   "m": 512,
+   "s": 120,
+   "mem": 1507328
+  }
+ },
+ "match_native": true,
+ "wasmtime_verdict": {
+  "v": 1,
+  "broken": false,
+  "invariant_id": "fallback-owner-drained",
+  "h_exploit": "102cfbf9b247735f92b4ad3e0baa1a918d39398f73fa4ea928ece31d6eab8780",
+  "h_snapshot": "57263dfb780961cfb0391a49684340ba627e7e39159b1d513fd2e2861c60a073",
+  "h_enc": "9f496980c81dab25a3682346c50b0d790a96d1439b12775ec7dbac4251bda01b",
+  "gas_used": 0,
+  "err": "exploit invalid: too many txs",
+  "lim": {
+   "i": null,
+   "m": null,
+   "s": null,
+   "mem": 1507328
+  }
+ },
+ "verdict_sha256": {
+  "native": "227fade2050c03e75a6a7611b2d6337db686976e38dcc4a0e16189a106ca938d",
+  "wasmtime": "227fade2050c03e75a6a7611b2d6337db686976e38dcc4a0e16189a106ca938d",
+  "outlayer": "227fade2050c03e75a6a7611b2d6337db686976e38dcc4a0e16189a106ca938d"
+ },
+ "three_of_three": true
+}

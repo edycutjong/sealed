@@ -3,7 +3,7 @@
 
 usage: secret.py ok | neg | fail
 
-ok    hunter A's row (WasmHash accessor, profile c-<commit prefix>, access
+ok    stores, then reads, hunter A's row (WasmHash accessor, profile c-<commit prefix>, access
       And[Whitelist[A], Predecessor{Whitelist[probe]}]) is read inside the TEE: broken:true, h_exploit = commit.
 neg   the same secrets_ref is refused (a) when hunter B signs through the probe, (b) when A calls OutLayer
       directly with no contract in between.
@@ -68,7 +68,9 @@ def store_garbage(profile):
 def store_cli(profile, secrets):
     env = {**os.environ, "OUTLAYER_HOME": os.path.expanduser("~/.config/outlayer/home-hunter-a"),
            "OUTLAYER_NETWORK": "testnet"}
-    p = subprocess.run(["outlayer", "secrets", "set", json.dumps(secrets), "--wasm-hash", PIN_HASH, "--profile",
+    # OUTLAYER_BIN: outlayer CLI 0.2.1 attaches a fixed 0.1 NEAR to `secrets set` (too little for a ~60 KB row);
+    # day-0 used a local build that reads SEALED_SECRETS_DEPOSIT_YOCTO for the oversized case only.
+    p = subprocess.run([os.environ.get("OUTLAYER_BIN", "outlayer"), "secrets", "set", json.dumps(secrets), "--wasm-hash", PIN_HASH, "--profile",
                         profile, "--access", f"whitelist:{A}", "--via", PROBE], env=env, capture_output=True, text=True)
     return (p.stdout + p.stderr).strip().splitlines()[-1]
 
@@ -77,15 +79,19 @@ if __name__ == "__main__":
     os.makedirs(os.path.join(HERE, "results"), exist_ok=True)
     mode = sys.argv[1]
     if mode == "ok":
+        # rows are keyed by the pinned wasm hash: a new pin needs its row stored again
+        print("row", store_cli(PROFILE, json.load(open(INPUT))["secrets"]))
         via_probe("g7-ok", A, PROFILE)
     elif mode == "neg":
         via_probe("g7-neg-signer-b", B, PROFILE)
         direct("neg-direct", A, PROFILE)
-    elif mode == "fail":
-        via_probe("g7d-missing", A, "c-00000000")
-        print("garbage row tx", store_garbage("c-badbad00"))
-        via_probe("g7d-undecryptable", A, "c-badbad00")
+    elif mode in ("fail", "oversized"):
+        if mode == "fail":
+            via_probe("g7d-missing", A, "c-00000000")
+            print("garbage row tx", store_garbage("c-badbad00"))
+            via_probe("g7d-undecryptable", A, "c-badbad00")
         big = json.load(open(INPUT))["secrets"] | {"EXPLOIT": json.dumps(
             [{"to": None, "data": "0x" + "ab" * 15000, "value": "0"}] * 2, separators=(",", ":"))}
+        os.environ.setdefault("SEALED_SECRETS_DEPOSIT_YOCTO", str(10**24))
         print("oversized row", store_cli("c-b1600000", big))
         via_probe("g7d-oversized", A, "c-b1600000")
