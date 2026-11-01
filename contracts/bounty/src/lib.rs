@@ -8,7 +8,7 @@
 //!
 //! State machine per invariant: `Open → Pending(c) → Awarded(c) → Delivered(c) → Paid(c)`, with refusals
 //! returning it to `Open`. The whole claim-to-pay flow and every refusal are documented in
-//! `../../specs/architecture.md` (§Endpoints, §Refusal semantics, §Protocol Invariants). Every refusal is a
+//! `ARCHITECTURE.md` at the repo root (§Commit to payout, §Refusals, §Invariants I1–I8). Every refusal is a
 //! successful tx with a log, never a panic (panics are reserved for malformed arguments).
 
 use near_sdk::borsh::{BorshDeserialize, BorshSerialize};

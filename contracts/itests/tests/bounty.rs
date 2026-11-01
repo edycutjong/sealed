@@ -546,7 +546,7 @@ async fn verifier_unavailable_refunds_once_then_slashes() -> anyhow::Result<()> 
 // has not answered) cannot be released before the 30-min floor. The *firing* of release_stale needs NEAR's
 // own yield auto-resume to have failed — which the sandbox cannot induce (the yield times out into a `null`
 // verdict at ~200 blocks, long before 30 min), so the refund branch is covered by code review; see
-// specs/progress.md Decisions.
+// ARCHITECTURE.md §Limits.
 #[tokio::test]
 async fn release_stale_refuses_before_window() -> anyhow::Result<()> {
     let e = setup(0, 3_600_000_000_000, 0).await?; // stale_after floored to 30 min
@@ -596,7 +596,7 @@ async fn commit_on_awarded_invariant_is_refused() -> anyhow::Result<()> {
 // full refund, in on_payout_checked's Err branch — the slot is never taken. (A commit stuck *before* that
 // callback runs is unreachable in the sandbox: the .then callback's gas is reserved up front, so it always
 // runs; release_stale's AwaitingRegistration branch defends only a top-level gas starvation and is covered
-// by code review, not a sandbox test — see specs/progress.md Decisions.)
+// by code review, not a sandbox test — see ARCHITECTURE.md §Limits.)
 #[tokio::test]
 async fn registration_unavailable_is_refused() -> anyhow::Result<()> {
     let e = setup(0, 3_600_000_000_000, 1_800_000_000_000_000).await?;

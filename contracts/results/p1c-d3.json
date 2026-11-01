@@ -51,7 +51,7 @@
  },
  "timing_method": "commit_to_verdict_s / deliver_to_paid_s are client wall-clock from a 3s poll (approx, not block-derived); not used as README claims",
  "max_size_deliver": {
-  "note": "first measured on day-0 G6 (build-plan.md:54): a 65820 B enc deliver accepted on the keyless probe",
+  "note": "first measured on day-0 G6 (day0/results/day0.json): a 65820 B enc deliver accepted on the keyless probe",
   "deliver_tx": "BE7VgQ111GFgBK1FbYwUpJA8nuXkgRnqfUpwEc3pBfNq",
   "enc_bytes": 65820,
   "evidence": "day0/results/g6-deliver24k.json"

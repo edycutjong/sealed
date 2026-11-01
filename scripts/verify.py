@@ -8,8 +8,8 @@ bundle, label `RECORDED`). Each commit yields one line with these checks:
            those exact bytes, sha256-checked)
   worker   the verdict came back in the operator's resolve tx for this request_id, signed by a key registered
            on OutLayer via TDX quote — a FunctionCall access key scoped to resolve_execution (worker
-           attestation, llms-full.md:8268-8384). On chain this shows the request pinned the hash and an
-           attested key answered, NOT that the worker ran exactly those bytes (limits table).
+           attestation, https://app.outlayer.ai/docs/tee-attestation). On chain this shows the request pinned the hash and an
+           attested key answered, NOT that the worker ran exactly those bytes (ARCHITECTURE.md §Limits).
   verdict  the AWARDED/REFUSED the bounty logged agrees with the worker's submitted verdict (broken flag)
   h_enc    (paid) sha256(enc) from the deliver tx args = the award callback's h_enc = the verdict's h_enc
   paid     (paid) on_paid logged PAID for the invariant amount

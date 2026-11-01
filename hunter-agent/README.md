@@ -21,7 +21,7 @@ extraction. `telephone-muse-wonder-1.0-low.md` shows the agent changing course f
 local run shows the transaction succeeded but validateInstance returned 0 …", then a different submission that breaks it.
 
 **Not NEAR AI Cloud.** These runs used Meta's Muse API because no NEAR AI Cloud key exists on this machine
-(`submission/HUMAN-TODO.md` row 9; run `--provider nearai --model <id>` with a key to add that row). They are not
+(run `--provider nearai --model <id>` with a key to add that row). They are not
 private-inference runs and must not be described as such.
 
 **Honest history.**
