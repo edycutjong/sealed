@@ -147,7 +147,7 @@ Detail for each, plus memory and seal-key reuse: [ARCHITECTURE.md § Limits](ARC
 
 ### Prerequisites
 
-`python3` ≥ 3.8 and `wasmtime` (`brew install wasmtime` or `curl https://wasmtime.dev/install.sh -sSf | bash`). Rust is
+`python3` ≥ 3.8 and `wasmtime` (`brew install wasmtime`, `cargo install wasmtime-cli`, or `curl https://wasmtime.dev/install.sh -sSf | bash`). Rust is
 only needed to rebuild the verifier from source (`make verifier-check`).
 
 ### Reproduce from a fresh clone (no NEAR account, no keys)
