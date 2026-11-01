@@ -5,6 +5,8 @@ use std::collections::BTreeMap;
 
 use revm::{
     context::{result::ExecutionResult, Context, TxEnv},
+    handler::EthPrecompiles,
+    precompile::Precompiles,
     database::{CacheDB, EmptyDB},
     primitives::{hardfork::SpecId, Address, Bytes, TxKind, U256},
     state::{AccountInfo, Bytecode},
@@ -15,8 +17,13 @@ use sha2::{Digest, Sha256};
 
 pub mod seal;
 
-/// Per-tx gas limit, fixed by the verifier.
-pub const TX_GAS_LIMIT: u64 = 30_000_000;
+/// Gas for ALL exploit txs together (each tx gets what is left). Frozen at day-0 G5b: the worst measured shape
+/// (a KECCAK256 loop, ~865 wasm instructions per gas) keeps exploit + validate under 50% of the worker's 2e9.
+pub const EXPLOIT_GAS_BUDGET: u64 = 600_000;
+/// Gas for the level's `validateInstance` call (it can reach hunter code, so it is bounded too).
+pub const VALIDATE_GAS_LIMIT: u64 = 500_000;
+/// Gas for building a snapshot (factory deploy + createInstance); never used on hunter input.
+pub const SETUP_GAS_LIMIT: u64 = 30_000_000;
 /// Max txs in one exploit.
 pub const MAX_TXS: usize = 4;
 /// Max total calldata across all txs.
@@ -197,6 +204,15 @@ pub fn build_evm(snap: &Snapshot, db: CacheDB<EmptyDB>) -> Evm {
         })
         .with_db(db)
         .build_mainnet()
+        .with_precompiles(EthPrecompiles { precompiles: no_precompiles(), spec: SpecId::CANCUN })
+}
+
+/// The verifier EVM has NO precompiles: no kept level needs one, and some (BLAKE2F at 1 gas per round, MODEXP,
+/// the bn254 pairing) cost far more wasm work per gas than any opcode, which would break the G5b bound.
+/// Their addresses behave as empty accounts.
+fn no_precompiles() -> &'static Precompiles {
+    static NONE: std::sync::OnceLock<Precompiles> = std::sync::OnceLock::new();
+    NONE.get_or_init(Precompiles::default)
 }
 
 /// `validateInstance(address,address)` selector.
@@ -212,13 +228,13 @@ pub fn validate_calldata(instance: Address, player: Address) -> Bytes {
     Bytes::from(d)
 }
 
-pub fn tx(caller: Address, kind: TxKind, data: Bytes, value: U256) -> TxEnv {
+pub fn tx(caller: Address, kind: TxKind, data: Bytes, value: U256, gas_limit: u64) -> TxEnv {
     TxEnv::builder()
         .caller(caller)
         .kind(kind)
         .data(data)
         .value(value)
-        .gas_limit(TX_GAS_LIMIT)
+        .gas_limit(gas_limit)
         .gas_price(0)
         .build_fill()
 }
@@ -277,22 +293,24 @@ pub fn execute(snap: &Snapshot, exploit_bytes: &[u8]) -> Result<(bool, u64, Opti
     };
     let mut gas = 0u64;
     for (to, data, value) in txs {
+        let left = EXPLOIT_GAS_BUDGET - gas;
         let kind = match to {
             Some(a) => TxKind::Call(a),
             None => TxKind::Create,
         };
-        match evm.transact_commit(tx(player, kind, data, value)) {
+        // A tx whose intrinsic gas exceeds what is left is invalid and simply does not happen.
+        match evm.transact_commit(tx(player, kind, data, value, left)) {
             // Revert / halt / out-of-gas are normal EVM outcomes.
             Ok(r) => {
                 trace(|| format!("tx {kind:?} -> {}", outcome(&r)));
-                gas = gas.saturating_add(r.tx_gas_used())
+                gas = gas.saturating_add(r.tx_gas_used()).min(EXPLOIT_GAS_BUDGET)
             }
             // Invalid tx (e.g. value above the player's balance): the tx simply does not happen.
             Err(e) => trace(|| format!("tx {kind:?} -> invalid {e:?}")),
         }
     }
     let r = evm
-        .transact(tx(validator, TxKind::Call(factory), validate_calldata(instance, player), U256::ZERO))
+        .transact(tx(validator, TxKind::Call(factory), validate_calldata(instance, player), U256::ZERO, VALIDATE_GAS_LIMIT))
         .map_err(|e| format!("validate failed: {e:?}"))?;
     trace(|| {
         format!("call validateInstance({instance:#x},{player:#x}) from {validator:#x} on factory {factory:#x} -> {}", outcome(&r.result))
