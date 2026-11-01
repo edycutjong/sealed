@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: Sending ether directly makes the player EOA the king; an EOA always accepts the 2300-gas transfer, so the owner can reclaim kingship without reverting.

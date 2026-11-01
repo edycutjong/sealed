@@ -1,0 +1,2 @@
+VERDICT: PAY
+REASON: contribute() registers 0.0001 ether, empty-calldata payment triggers receive() making player owner, then withdraw() drains the entire balance.

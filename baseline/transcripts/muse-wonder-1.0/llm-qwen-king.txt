@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: Bytecode uses 0x30 ADDRESS instead of 0x39 CODECOPY, so RETURN deploys five zero STOP bytes rather than reverting code; that king accepts Ether, so the level can reclaim the throne.

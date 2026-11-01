@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: All four transactions are zero-value contract creations that never call Fallback; their init code loops via EXP/JUMP and runs out of gas, so neither owner nor Fallback balance changes.

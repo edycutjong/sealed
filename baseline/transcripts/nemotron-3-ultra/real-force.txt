@@ -1,0 +1,2 @@
+VERDICT: PAY
+REASON: Created contract self-destructs (0xff) sending its 1 wei balance to Force address 0xd3264fed42a0dc00663d0aa2b0abb90a19b347f2, making Force balance > 0.

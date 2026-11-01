@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: Transaction data "0x0x..." is invalid hex, so the creation transaction cannot decode or execute, no attacker contract is deployed, and kingship remains reclaimable.

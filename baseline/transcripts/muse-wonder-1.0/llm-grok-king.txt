@@ -1,0 +1,2 @@
+VERDICT: PAY
+REASON: Constructor CALLs King with 0.001 ether, meeting prize, becoming king; deployed 5-byte code always reverts, so King's transfer to it on reclaim reverts and throne stays locked.

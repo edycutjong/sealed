@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: All four transactions are contract creations whose init code loops emitting LOG0 until out of gas; none interact with Fallback, so player never becomes owner nor drains its balance.

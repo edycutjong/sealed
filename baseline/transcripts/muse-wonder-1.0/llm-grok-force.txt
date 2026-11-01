@@ -1,0 +1,2 @@
+VERDICT: PAY
+REASON: Init code PUSH20s the Force address then SELFDESTRUCTs, transferring its 1 wei creation endowment to Force despite no receive function; Cancun permits this for a same-transaction creation.

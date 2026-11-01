@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: Data "0xzz" is invalid hex; even if accepted, direct EOA call has tx.origin==msg.sender and no matching fallback, so changeOwner does not execute and owner remains unchanged.

@@ -1,0 +1,2 @@
+VERDICT: PAY
+REASON: contribute gives player nonzero contribution; empty-value call triggers receive setting owner to player; withdraw transfers full balance to player, leaving contract at zero. All txs valid within gas.

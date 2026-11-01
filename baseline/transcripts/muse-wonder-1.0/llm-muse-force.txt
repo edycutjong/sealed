@@ -1,0 +1,2 @@
+VERDICT: PAY
+REASON: Initcode PUSH20 Force; SELFDESTRUCT, funded with 0.001 ether, transfers creation endowment to Force in same transaction under Cancun EIP-6780, leaving Force balance greater than zero.

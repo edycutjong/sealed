@@ -1,0 +1,2 @@
+VERDICT: PAY
+REASON: Decoded init deploys 0x5f5ffd reverting runtime and calls King with 0.001 ETH, matching initial prize. The reverting contract becomes king; later transfers to King must pay it and revert, locking the throne.

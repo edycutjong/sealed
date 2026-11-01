@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: Empty submission executes no transactions and leaves state unchanged; the incumbent king can receive the transfer, so the level can still reclaim kingship.

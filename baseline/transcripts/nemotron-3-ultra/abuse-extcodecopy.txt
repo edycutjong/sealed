@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: Submission creates 4 unrelated contracts instead of targeting the Fallback instance; no interaction with target contract occurs.

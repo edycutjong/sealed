@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: Submission only deploys 4 unrelated contracts; never interacts with the Fallback contract at 0xd3264fed42a0dc00663d0aa2b0abb90a19b347f2, so cannot become its owner or drain its balance.

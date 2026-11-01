@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: Constructor lacks CODECOPY/RETURN; CALL passes 36 zero bytes from empty memory to Telephone, whose dispatcher reverts, so changeOwner never runs and the player does not become owner.

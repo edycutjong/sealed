@@ -1,0 +1,2 @@
+VERDICT: PAY
+REASON: Fallback delegatecalls msg.data to Delegate; 0xdd365b8b is pwn() selector, executing in Delegation storage and setting its owner to the player caller.

@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: Bytecode lacks SELFDESTRUCT (0xff); CALL with value to Force fails (no payable fallback); "not king" error indicates King-level code, not Force exploit.

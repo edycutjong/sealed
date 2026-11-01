@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: The four transactions only create empty contracts whose init code staticcalls address 0x09; none interact with the Fallback instance, so contribute/receive/withdraw are never invoked, ownership is unchanged, and its balance remains nonzero.

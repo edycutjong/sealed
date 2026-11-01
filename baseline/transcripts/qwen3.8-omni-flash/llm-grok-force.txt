@@ -1,0 +1,2 @@
+VERDICT: PAY
+REASON: Raw initcode pushes Force address then SELFDESTRUCT during creation. Cancun still allows same-transaction constructor selfdestruct to transfer the attached 1 wei to Force, making its balance positive within gas budget.

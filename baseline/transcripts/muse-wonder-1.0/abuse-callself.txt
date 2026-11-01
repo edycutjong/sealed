@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: Transactions are contract creations whose init code loops CALLing itself until out of gas; none calls Fallback's contribute, receive, or withdraw, so ownership and balance remain unchanged.

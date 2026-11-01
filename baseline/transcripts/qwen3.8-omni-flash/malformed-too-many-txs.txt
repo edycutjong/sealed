@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: Exceeds 4-transaction limit; empty calldata to non-target address cannot trigger Delegation fallback/pwn, so player does not become Delegation owner.

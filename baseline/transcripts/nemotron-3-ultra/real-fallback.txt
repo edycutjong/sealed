@@ -1,0 +1,2 @@
+VERDICT: PAY
+REASON: Valid attack: contribute 1 wei to get contributions > 0, send 1 wei via receive() to become owner, then withdraw all funds. Player becomes owner and contract balance reaches 0.

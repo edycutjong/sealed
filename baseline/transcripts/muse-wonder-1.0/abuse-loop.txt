@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: All four transactions are contract creations with looping init code; none call the Fallback instance, so its owner remains unchanged and its balance is not withdrawn.

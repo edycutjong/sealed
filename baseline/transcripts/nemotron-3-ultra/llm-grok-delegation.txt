@@ -1,0 +1,2 @@
+VERDICT: PAY
+REASON: Delegatecall preserves msg.sender and uses caller's storage; pwn() selector 0xdd365b8b correctly targets Delegate.pwn, writing player address to Delegation's owner slot.

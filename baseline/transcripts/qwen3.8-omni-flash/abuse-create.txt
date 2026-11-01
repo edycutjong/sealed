@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: All four transactions are zero-value contract creations that only recursively deploy copies; they never call Fallback, transfer ether, or change ownership, so the level conditions remain unmet.

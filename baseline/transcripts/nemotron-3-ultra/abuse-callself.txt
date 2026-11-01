@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: All 4 creation transactions revert (stack underflow on CALL in init code); no state changes, player not owner, balance not zero.

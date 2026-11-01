@@ -1,0 +1,2 @@
+VERDICT: PAY
+REASON: Init code calls King with 0.001 ether, meeting the prize and becoming king; deployed runtime always reverts, so King's later transfer to it reverts and blocks reclaiming kingship.

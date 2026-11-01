@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: Empty transaction list performs no selfdestruct, transfer, or deployment; Force receives no ether, so its balance remains zero.

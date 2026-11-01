@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: Force has no payable receive or fallback, so a plain 1-wei transfer with empty calldata reverts and its balance remains zero.

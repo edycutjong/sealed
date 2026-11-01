@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: Invalid double-0x data; even normalized, constructor only CALLs Force with value, which fails/reverts (no receive), and lacks SELFDESTRUCT, so Force balance stays zero.

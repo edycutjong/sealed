@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: All transactions are contract creations with infinite-loop init code; none call Fallback's contribute/receive/withdraw, so ownership unchanged and balance remains.

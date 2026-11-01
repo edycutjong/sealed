@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: The lone EOA transfer makes the player king; it does not install a non-receiving contract, so kingship can still be taken back. It may even revert if value is below prize and sender is not owner.

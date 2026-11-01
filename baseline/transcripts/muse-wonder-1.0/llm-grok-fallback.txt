@@ -1,0 +1,2 @@
+VERDICT: PAY
+REASON: contribute() records 1 wei, empty transfer triggers receive() making player owner, then withdraw() as owner drains entire balance to player.

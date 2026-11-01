@@ -1,0 +1,2 @@
+VERDICT: PAY
+REASON: Calling 0xdd365b8b, the pwn() selector, triggers Delegation fallback, delegatecalling Delegate code in Delegation storage, writing player msg.sender into slot 0 owner.

@@ -1,0 +1,2 @@
+VERDICT: PAY
+REASON: First tx contribute() with 1 wei records contribution, second empty 1-wei call triggers receive() assigning ownership to player, third withdraw() drains contract balance to zero.

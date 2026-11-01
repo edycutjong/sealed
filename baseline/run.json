@@ -1,0 +1,390 @@
+{
+ "models": {
+  "muse-wonder-1.0": {
+   "provider": "cmd",
+   "recorded": "2026-11-01",
+   "verdicts": {
+    "abuse-big": "REFUSE",
+    "abuse-blake2f": "REFUSE",
+    "abuse-callself": "REFUSE",
+    "abuse-cdcopy": "REFUSE",
+    "abuse-create": "REFUSE",
+    "abuse-exp": "REFUSE",
+    "abuse-extcodecopy": "REFUSE",
+    "abuse-input": "REFUSE",
+    "abuse-jumpdest": "REFUSE",
+    "abuse-keccak": "REFUSE",
+    "abuse-log": "REFUSE",
+    "abuse-loop": "REFUSE",
+    "abuse-mcopy": "REFUSE",
+    "abuse-mem": "REFUSE",
+    "abuse-mulmod": "REFUSE",
+    "abuse-over": "REFUSE",
+    "abuse-sstore": "REFUSE",
+    "llm-grok-delegation": "PAY",
+    "llm-grok-fallback": "PAY",
+    "llm-grok-force": "PAY",
+    "llm-grok-king": "PAY",
+    "llm-grok-telephone": "PAY",
+    "llm-muse-delegation": "PAY",
+    "llm-muse-fallback": "PAY",
+    "llm-muse-force": "PAY",
+    "llm-muse-king": "PAY",
+    "llm-muse-telephone": "PAY",
+    "llm-qwen-delegation": "REFUSE",
+    "llm-qwen-fallback": "REFUSE",
+    "llm-qwen-force": "PAY",
+    "llm-qwen-king": "REFUSE",
+    "llm-qwen-telephone": "REFUSE",
+    "malformed-bad-address": "REFUSE",
+    "malformed-bad-hex": "REFUSE",
+    "malformed-not-json": "REFUSE",
+    "malformed-too-many-txs": "REFUSE",
+    "nearmiss-delegation-wrong-contract": "REFUSE",
+    "nearmiss-fallback-no-receive": "REFUSE",
+    "nearmiss-force-transfer": "REFUSE",
+    "nearmiss-king-eoa": "REFUSE",
+    "nearmiss-telephone-direct": "REFUSE",
+    "noop-delegation": "REFUSE",
+    "noop-force": "REFUSE",
+    "noop-king": "REFUSE",
+    "noop-telephone": "REFUSE",
+    "real-delegation": "PAY",
+    "real-fallback": "PAY",
+    "real-force": "REFUSE",
+    "real-king": "REFUSE",
+    "real-telephone": "REFUSE",
+    "wrong-snapshot-fallback-on-telephone": "REFUSE",
+    "wrong-snapshot-king-on-force": "REFUSE"
+   }
+  },
+  "nemotron-3-ultra": {
+   "provider": "cmd",
+   "recorded": "2026-11-01",
+   "verdicts": {
+    "abuse-big": "REFUSE",
+    "abuse-blake2f": "REFUSE",
+    "abuse-callself": "REFUSE",
+    "abuse-cdcopy": "REFUSE",
+    "abuse-create": "REFUSE",
+    "abuse-exp": "REFUSE",
+    "abuse-extcodecopy": "REFUSE",
+    "abuse-input": null,
+    "abuse-jumpdest": "REFUSE",
+    "abuse-keccak": "REFUSE",
+    "abuse-log": "REFUSE",
+    "abuse-loop": "REFUSE",
+    "abuse-mcopy": "REFUSE",
+    "abuse-mem": "REFUSE",
+    "abuse-mulmod": "REFUSE",
+    "abuse-over": "REFUSE",
+    "abuse-sstore": "REFUSE",
+    "llm-grok-delegation": "PAY",
+    "llm-grok-fallback": "PAY",
+    "llm-grok-force": "PAY",
+    "llm-grok-king": "REFUSE",
+    "llm-grok-telephone": "PAY",
+    "llm-muse-delegation": "PAY",
+    "llm-muse-fallback": "PAY",
+    "llm-muse-force": "REFUSE",
+    "llm-muse-king": "REFUSE",
+    "llm-muse-telephone": "REFUSE",
+    "llm-qwen-delegation": "PAY",
+    "llm-qwen-fallback": "PAY",
+    "llm-qwen-force": "PAY",
+    "llm-qwen-king": "PAY",
+    "llm-qwen-telephone": "REFUSE",
+    "malformed-bad-address": "REFUSE",
+    "malformed-bad-hex": "REFUSE",
+    "malformed-not-json": "REFUSE",
+    "malformed-too-many-txs": "REFUSE",
+    "nearmiss-delegation-wrong-contract": "REFUSE",
+    "nearmiss-fallback-no-receive": "REFUSE",
+    "nearmiss-force-transfer": "REFUSE",
+    "nearmiss-king-eoa": "REFUSE",
+    "nearmiss-telephone-direct": "REFUSE",
+    "noop-delegation": "REFUSE",
+    "noop-force": "REFUSE",
+    "noop-king": "REFUSE",
+    "noop-telephone": "REFUSE",
+    "real-delegation": "PAY",
+    "real-fallback": "PAY",
+    "real-force": "PAY",
+    "real-king": "PAY",
+    "real-telephone": "PAY",
+    "wrong-snapshot-fallback-on-telephone": "REFUSE",
+    "wrong-snapshot-king-on-force": "REFUSE"
+   }
+  },
+  "qwen3.8-omni-flash": {
+   "provider": "openai",
+   "recorded": "2026-11-01",
+   "verdicts": {
+    "abuse-big": "REFUSE",
+    "abuse-blake2f": "REFUSE",
+    "abuse-callself": "REFUSE",
+    "abuse-cdcopy": "REFUSE",
+    "abuse-create": "REFUSE",
+    "abuse-exp": "REFUSE",
+    "abuse-extcodecopy": "REFUSE",
+    "abuse-input": "REFUSE",
+    "abuse-jumpdest": "REFUSE",
+    "abuse-keccak": "REFUSE",
+    "abuse-log": "REFUSE",
+    "abuse-loop": "REFUSE",
+    "abuse-mcopy": "REFUSE",
+    "abuse-mem": "REFUSE",
+    "abuse-mulmod": "REFUSE",
+    "abuse-over": "REFUSE",
+    "abuse-sstore": "REFUSE",
+    "llm-grok-delegation": "PAY",
+    "llm-grok-fallback": "PAY",
+    "llm-grok-force": "PAY",
+    "llm-grok-king": "REFUSE",
+    "llm-grok-telephone": "PAY",
+    "llm-muse-delegation": "PAY",
+    "llm-muse-fallback": "PAY",
+    "llm-muse-force": "PAY",
+    "llm-muse-king": "PAY",
+    "llm-muse-telephone": "PAY",
+    "llm-qwen-delegation": "PAY",
+    "llm-qwen-fallback": "PAY",
+    "llm-qwen-force": "PAY",
+    "llm-qwen-king": "REFUSE",
+    "llm-qwen-telephone": "REFUSE",
+    "malformed-bad-address": "REFUSE",
+    "malformed-bad-hex": "REFUSE",
+    "malformed-not-json": "REFUSE",
+    "malformed-too-many-txs": "REFUSE",
+    "nearmiss-delegation-wrong-contract": "REFUSE",
+    "nearmiss-fallback-no-receive": "REFUSE",
+    "nearmiss-force-transfer": "REFUSE",
+    "nearmiss-king-eoa": "REFUSE",
+    "nearmiss-telephone-direct": "REFUSE",
+    "noop-delegation": "REFUSE",
+    "noop-force": "REFUSE",
+    "noop-king": "REFUSE",
+    "noop-telephone": "REFUSE",
+    "real-delegation": "PAY",
+    "real-fallback": "PAY",
+    "real-force": "REFUSE",
+    "real-king": null,
+    "real-telephone": "REFUSE",
+    "wrong-snapshot-fallback-on-telephone": "REFUSE",
+    "wrong-snapshot-king-on-force": "REFUSE"
+   }
+  }
+ },
+ "prompt": "scripts/baseline.py PROMPT",
+ "truth": {
+  "abuse-big": {
+   "broken": false,
+   "category": "abuse"
+  },
+  "abuse-blake2f": {
+   "broken": false,
+   "category": "abuse"
+  },
+  "abuse-callself": {
+   "broken": false,
+   "category": "abuse"
+  },
+  "abuse-cdcopy": {
+   "broken": false,
+   "category": "abuse"
+  },
+  "abuse-create": {
+   "broken": false,
+   "category": "abuse"
+  },
+  "abuse-exp": {
+   "broken": false,
+   "category": "abuse"
+  },
+  "abuse-extcodecopy": {
+   "broken": false,
+   "category": "abuse"
+  },
+  "abuse-input": {
+   "broken": false,
+   "category": "abuse"
+  },
+  "abuse-jumpdest": {
+   "broken": false,
+   "category": "abuse"
+  },
+  "abuse-keccak": {
+   "broken": false,
+   "category": "abuse"
+  },
+  "abuse-log": {
+   "broken": false,
+   "category": "abuse"
+  },
+  "abuse-loop": {
+   "broken": false,
+   "category": "abuse"
+  },
+  "abuse-mcopy": {
+   "broken": false,
+   "category": "abuse"
+  },
+  "abuse-mem": {
+   "broken": false,
+   "category": "abuse"
+  },
+  "abuse-mulmod": {
+   "broken": false,
+   "category": "abuse"
+  },
+  "abuse-over": {
+   "broken": false,
+   "category": "abuse"
+  },
+  "abuse-sstore": {
+   "broken": false,
+   "category": "abuse"
+  },
+  "llm-grok-delegation": {
+   "broken": true,
+   "category": "llm"
+  },
+  "llm-grok-fallback": {
+   "broken": true,
+   "category": "llm"
+  },
+  "llm-grok-force": {
+   "broken": true,
+   "category": "llm"
+  },
+  "llm-grok-king": {
+   "broken": true,
+   "category": "llm"
+  },
+  "llm-grok-telephone": {
+   "broken": true,
+   "category": "llm"
+  },
+  "llm-muse-delegation": {
+   "broken": true,
+   "category": "llm"
+  },
+  "llm-muse-fallback": {
+   "broken": true,
+   "category": "llm"
+  },
+  "llm-muse-force": {
+   "broken": true,
+   "category": "llm"
+  },
+  "llm-muse-king": {
+   "broken": true,
+   "category": "llm"
+  },
+  "llm-muse-telephone": {
+   "broken": false,
+   "category": "llm"
+  },
+  "llm-qwen-delegation": {
+   "broken": false,
+   "category": "llm"
+  },
+  "llm-qwen-fallback": {
+   "broken": false,
+   "category": "llm"
+  },
+  "llm-qwen-force": {
+   "broken": true,
+   "category": "llm"
+  },
+  "llm-qwen-king": {
+   "broken": false,
+   "category": "llm"
+  },
+  "llm-qwen-telephone": {
+   "broken": false,
+   "category": "llm"
+  },
+  "malformed-bad-address": {
+   "broken": false,
+   "category": "malformed"
+  },
+  "malformed-bad-hex": {
+   "broken": false,
+   "category": "malformed"
+  },
+  "malformed-not-json": {
+   "broken": false,
+   "category": "malformed"
+  },
+  "malformed-too-many-txs": {
+   "broken": false,
+   "category": "malformed"
+  },
+  "nearmiss-delegation-wrong-contract": {
+   "broken": false,
+   "category": "near-miss"
+  },
+  "nearmiss-fallback-no-receive": {
+   "broken": false,
+   "category": "near-miss"
+  },
+  "nearmiss-force-transfer": {
+   "broken": false,
+   "category": "near-miss"
+  },
+  "nearmiss-king-eoa": {
+   "broken": false,
+   "category": "near-miss"
+  },
+  "nearmiss-telephone-direct": {
+   "broken": false,
+   "category": "near-miss"
+  },
+  "noop-delegation": {
+   "broken": false,
+   "category": "near-miss"
+  },
+  "noop-force": {
+   "broken": false,
+   "category": "near-miss"
+  },
+  "noop-king": {
+   "broken": false,
+   "category": "near-miss"
+  },
+  "noop-telephone": {
+   "broken": false,
+   "category": "near-miss"
+  },
+  "real-delegation": {
+   "broken": true,
+   "category": "real"
+  },
+  "real-fallback": {
+   "broken": true,
+   "category": "real"
+  },
+  "real-force": {
+   "broken": true,
+   "category": "real"
+  },
+  "real-king": {
+   "broken": true,
+   "category": "real"
+  },
+  "real-telephone": {
+   "broken": true,
+   "category": "real"
+  },
+  "wrong-snapshot-fallback-on-telephone": {
+   "broken": false,
+   "category": "wrong-snapshot"
+  },
+  "wrong-snapshot-king-on-force": {
+   "broken": false,
+   "category": "wrong-snapshot"
+  }
+ },
+ "v": 1
+}

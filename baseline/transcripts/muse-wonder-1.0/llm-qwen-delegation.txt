@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: Calldata 0xdd01383d is not pwn() selector 0xdd365b8b; Delegate has no matching function or fallback, delegatecall fails and Delegation.owner unchanged.

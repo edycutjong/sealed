@@ -1,0 +1,2 @@
+VERDICT: PAY
+REASON: The calldata 0xdd01383d is the correct pwn() selector; delegatecall preserves msg.sender, so the player becomes Delegation.owner within the 600k gas limit.

@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: The submission only sends four zero-value creation transactions; their initcode never calls Fallback, so it cannot set the player as owner or reduce Fallback’s ether balance to zero.

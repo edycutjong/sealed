@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: Submission is not a valid JSON transaction array or executable EVM calldata; it merely describes an attack, so it cannot be executed to make the player owner.

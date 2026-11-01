@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: Non-empty calldata with no matching function/fallback reverts; receive requires empty calldata and positive value. Huge data may also exceed 600k gas. Owner/balance unchanged.

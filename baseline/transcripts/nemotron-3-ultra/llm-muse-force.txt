@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: Malformed CREATE2 initcode (only 1 salt byte vs 32 required), no selfdestruct logic in initcode, and value is 0.001 ETH not 1 ETH.

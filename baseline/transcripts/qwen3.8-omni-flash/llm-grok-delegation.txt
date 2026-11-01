@@ -1,0 +1,2 @@
+VERDICT: PAY
+REASON: Fallback delegatecalls pwn() selector to Delegate in Delegation context; msg.sender is player, writing slot 0 owner. Selector matches pwn(), value/gas valid, so player becomes Delegation owner.

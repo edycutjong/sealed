@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: The four creations execute an infinite MSTORE loop and run out of gas, never calling contribute, receive, or withdraw on Fallback, so player does not become owner and its balance remains nonzero.

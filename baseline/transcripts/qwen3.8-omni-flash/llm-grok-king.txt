@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: Misencoded PUSH6 swallows the next PUSH1 byte, so a successful inner call hits invalid 0xd8; a failed call jumps to revert. The creation transaction never deploys the rejecting contract, leaving King unlocked.

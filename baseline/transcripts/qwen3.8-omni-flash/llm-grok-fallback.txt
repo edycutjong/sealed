@@ -1,0 +1,2 @@
+VERDICT: PAY
+REASON: contribute(1 wei) gives player nonzero contribution; empty-calldata payment invokes receive and sets owner; withdraw then sends entire balance to player, leaving contract empty.

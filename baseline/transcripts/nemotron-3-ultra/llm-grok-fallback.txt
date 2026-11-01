@@ -1,0 +1,2 @@
+VERDICT: PAY
+REASON: contribute(1 wei) gives player nonzero contribution; empty-calldata send triggers receive() making player owner; withdraw() drains full balance to player. All conditions met.

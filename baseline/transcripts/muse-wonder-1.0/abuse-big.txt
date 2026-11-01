@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: Single call has selector 0xabababab, matching no function; with non-empty calldata and no fallback function it reverts, value 0 also fails receive, so ownership and balance unchanged.

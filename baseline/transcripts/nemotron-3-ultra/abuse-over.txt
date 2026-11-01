@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: All 5 transactions revert (msg.value=0 fails receive() require msg.value>0); player never becomes owner, contract balance unchanged; also exceeds 4-transaction limit.

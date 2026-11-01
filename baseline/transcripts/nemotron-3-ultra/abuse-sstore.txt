@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: Submission creates four unrelated contracts with infinite-loop bytecode; never calls Fallback, so cannot transfer ownership or drain its ether balance.

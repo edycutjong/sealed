@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: Empty transaction list changes no state; King remains able to accept a valid receive call and transfer prize to current king, so throne is not locked.

@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: Uses ADDRESS instead of CODECOPY; returns five zero bytes (STOPs), not revert. Deployed king accepts ETH, so throne is not locked.

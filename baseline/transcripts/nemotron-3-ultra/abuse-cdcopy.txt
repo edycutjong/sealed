@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: All four transactions create empty contracts with invalid bytecode; none call contribute(), send ether to Fallback, or call withdraw() on the target contract.

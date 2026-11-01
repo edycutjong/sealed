@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: Direct EOA call makes tx.origin equal msg.sender, so changeOwner's guard fails and owner remains unchanged; no intermediary contract used.

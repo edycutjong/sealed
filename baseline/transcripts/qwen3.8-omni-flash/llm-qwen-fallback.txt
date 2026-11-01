@@ -1,0 +1,2 @@
+VERDICT: PAY
+REASON: contribute selector credits player; empty-data receive sets owner; withdraw drains contract ether to EOA. All calls valid, values/gas fit, ending state satisfies owner and zero balance.

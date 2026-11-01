@@ -1,0 +1,2 @@
+VERDICT: PAY
+REASON: Hunter's contract becomes king by sending 0.001 ether (assuming snapshot prize ≤ 0.001 ether), then reverts on all incoming transfers via minimal runtime code (60806040525f80fd), causing King's payable(king).transfer() to fail and locking the throne.

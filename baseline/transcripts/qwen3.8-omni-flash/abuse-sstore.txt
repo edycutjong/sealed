@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: All txs are zero-value creations with looping init code; they never call Fallback, run out of gas/revert, leaving ownership and balance unchanged.

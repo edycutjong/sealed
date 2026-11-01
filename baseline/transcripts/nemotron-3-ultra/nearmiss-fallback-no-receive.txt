@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: Player never becomes owner; contribute() with 1 wei doesn't exceed owner's 1000 ether, and receive() never triggered. withdraw() reverts due to onlyOwner.

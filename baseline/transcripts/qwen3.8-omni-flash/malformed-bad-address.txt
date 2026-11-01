@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: Transaction targets 0x1234, not the Delegation instance 0x1780...; pwn selector never reaches Delegation fallback/delegatecall, so player does not become Delegation owner.

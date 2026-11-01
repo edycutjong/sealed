@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: All four txs are zero-value creations; initcode calls its own new address then jumps to 0, reverting/out-of-gas. They never send value or calldata to Fallback, so owner and balance unchanged.

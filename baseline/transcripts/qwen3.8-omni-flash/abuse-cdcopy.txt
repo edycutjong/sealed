@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: Four creation txs contain only an infinite-loop init code; they never call Fallback, transfer ether, or return runtime code. They revert/exhaust gas, leaving owner and balance unchanged.

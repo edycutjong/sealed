@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: All four transactions are contract creations with non-terminating init code that runs out of gas; none calls the Fallback instance, so its owner and balance remain unchanged.

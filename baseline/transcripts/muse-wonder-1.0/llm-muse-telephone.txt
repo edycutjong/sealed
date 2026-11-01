@@ -1,0 +1,2 @@
+VERDICT: PAY
+REASON: Initcode stores changeOwner(player) calldata, CALLs Telephone from newly created contract so tx.origin (player EOA) != msg.sender, setting owner to player.

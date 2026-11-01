@@ -1,0 +1,2 @@
+VERDICT: PAY
+REASON: Initcode PUSH20 Force address then SELFDESTRUCTs; 1 wei creation value transfers to Force via selfdestruct (bypassing receive), leaving Force balance 1 wei > 0.

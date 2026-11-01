@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: Direct 1-wei transfer to Force reverts because the compiled empty contract lacks receive/fallback and contains rejecting code. Balance remains 0; selfdestruct or forced-ether path is required.

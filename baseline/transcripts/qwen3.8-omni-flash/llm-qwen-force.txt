@@ -1,0 +1,2 @@
+VERDICT: PAY
+REASON: The initcode pushes Force’s address and executes SELFDESTRUCT; in Cancun, same-transaction creation selfdestruct still transfers the 1 wei to Force without calling receive, making its balance positive.

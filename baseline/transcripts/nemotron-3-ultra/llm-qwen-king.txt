@@ -1,0 +1,2 @@
+VERDICT: PAY
+REASON: Exploit deploys contract with 0.001 ETH, calls King to become king (prize=0.001 ETH), deployed contract has empty runtime code (no receive/fallback), causing future prize transfers to revert and locking throne.

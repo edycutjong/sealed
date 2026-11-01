@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: Invalid hex data "0xzz"; direct EOA call fails tx.origin != msg.sender check.
