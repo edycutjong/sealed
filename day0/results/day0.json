@@ -32,11 +32,11 @@
   },
   "G5": {
    "result": "PASS",
-   "evidence": "results/g5.json: Fallback {'i': 0.37, 's': 1.91, 'mem': 0.28}% of the enforced limits"
+   "evidence": "results/g5.json: Fallback 0.37% instructions, 1.91% time, 0.28% peak memory of the enforced limits"
   },
   "G5b": {
    "result": "PASS",
-   "evidence": "results/g5.json: 15 runs, worst {'i': 23.98, 's': 1.95, 'mem': 0.46}% (abuse-keccak); first run on the 30 M-gas cap FAILED (abuse-loop hit 2e9 instructions, results/probe2-f8b9/g6-abuse-loop.json) -> cap lowered to 600 k exploit + 500 k validate gas, precompiles removed, opt-level 3; Fallback still broken:true on all 3"
+   "evidence": "results/g5.json: 15 runs on chain, worst abuse-keccak 23.98% (787 instr/gas); results/g5b-fuel.json: 20 shapes in local fuel. First run on the 30 M-gas cap FAILED (abuse-loop hit 2e9, results/probe2-f8b9/g6-abuse-loop.json) -> 600 k exploit + 500 k validate gas, no precompiles, opt-level 3; Fallback still broken:true on all 3. The exploit+validate SUM (~44% on-chain rate, ~48% local) is derived, not run"
   },
   "G6": {
    "result": "PASS",
@@ -47,8 +47,8 @@
    "evidence": "results/g6-g7-ok.json broken:true from the keystore row (WasmHash accessor, access whitelist:A via probe); refused for signer B through the probe (g6-g7-neg-signer-b.json) and for A calling OutLayer directly (g7-neg-direct.json)"
   },
   "G7d": {
-   "result": "PASS (table changed)",
-   "evidence": "missing + oversized secret -> normal verdicts (g6-g7d-missing/oversized.json); undecryptable row -> worker-answered failure arriving as bytes null (g6-g7d-undecryptable.json), same arrival as url-down (g6-url-down.json) and, per OutLayer contract/src/execution.rs on_execution_response, yield timeout and stale runs; Err only if request_execution itself fails. Refusal table: every non-verdict -> capped refund (1 per hunter per invariant per 24 h), then slash"
+   "result": "PASS (table changed; partly source-cited)",
+   "evidence": "LIVE: missing + oversized secret -> normal verdicts (g6-g7d-missing/oversized.json); undecryptable row -> worker-answered failure arriving as bytes null (g6-g7d-undecryptable.json), same as url-down (g6-url-down.json). SOURCE-CITED, not run: yield timeout and stale runs also arrive as null (OutLayer contract/src/execution.rs on_execution_response); cancel_stale_execution is sender-only; Err only if request_execution itself fails. Pending durations for timeout/cancel not measured (D2/D3). Refusal table: every non-verdict -> capped refund (1 per hunter per invariant per 24 h), then slash"
   }
  }
 }

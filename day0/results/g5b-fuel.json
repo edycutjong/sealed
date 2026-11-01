@@ -1,0 +1,25 @@
+{
+ "wasm": "verifier-day0.wasm",
+ "fuel_limit_worker": 2000000000,
+ "fuel": {
+  "fallback.json": 7589888,
+  "noop.json": 7249920,
+  "abuse-big.json": 28246016,
+  "abuse-blake2f.json": 7610368,
+  "abuse-callself.json": 22413312,
+  "abuse-cdcopy.json": 17514496,
+  "abuse-create.json": 8024064,
+  "abuse-exp.json": 86900736,
+  "abuse-extcodecopy.json": 14049280,
+  "abuse-input.json": 28770304,
+  "abuse-jumpdest.json": 33161216,
+  "abuse-keccak.json": 481034240,
+  "abuse-log.json": 7544832,
+  "abuse-loop.json": 19726336,
+  "abuse-mcopy.json": 16097280,
+  "abuse-mem.json": 8978432,
+  "abuse-mulmod.json": 126156800,
+  "abuse-over.json": 7340032,
+  "abuse-sstore.json": 7536640
+ }
+}
