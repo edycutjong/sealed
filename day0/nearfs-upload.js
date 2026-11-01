@@ -1,6 +1,6 @@
 // usage: node nearfs-upload.js <dir> <signer-account>  (key read from ~/.config/near/sealed-testnet/<signer>.json)
-// Needs web4-deploy@0.8.0 installed: npm i --prefix $WEB4 web4-deploy@0.8.0
-const W = (process.env.WEB4 || '/tmp/sealed-tools/web4') + '/node_modules/';
+// Needs web4-deploy@0.8.0 installed: npm i --prefix $WEB4 web4-deploy@0.8.0  (WEB4 defaults to <tmpdir>/web4)
+const W = (process.env.WEB4 || require('path').join(require('os').tmpdir(), 'web4')) + '/node_modules/';
 const fs = require('fs');
 const req = require('module').createRequire(W + 'web4-deploy/bin/deploy');
 const { connect, keyStores, Account, KeyPair } = req('near-api-js');
