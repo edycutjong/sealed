@@ -3,7 +3,9 @@
 no NEAR credentials, no Rust toolchain.
 
 For each corpus/published/<label>.json:
-  1. sha256(verifier.wasm) must equal the hash the bounty pinned (from the evidence bundle's request args).
+  1. The wasm run is the one whose sha256 equals the hash the bounty pinned (from the evidence bundle's request
+     args): verifier.wasm (HEAD), or verifiers/<sha256>.wasm for a bounty pinned to an earlier build (the D3
+     throwaway pins 92a4681d…, the pre-D4 Fallback-only verifier; rebuildable from the commit that introduced it).
   2. wasmtime runs the verifier on the exact input_data the bounty sent, with the published secrets.
   3. The replayed verdict (minus `lim`, the worker's environment report) must equal the verdict the TDX worker
      submitted on chain (corpus/evidence/<label>.json → resolve tx args), byte for byte after JSON parsing.
@@ -25,10 +27,18 @@ def sha(b):
     return hashlib.sha256(b).hexdigest()
 
 
-def run(inp, secrets):
+def wasm_for(pinned):
+    """The committed wasm whose bytes hash to `pinned`, or None. Never trusts a file name alone."""
+    for path in (VERIFIER, os.path.join(ROOT, "verifiers", f"{pinned}.wasm")):
+        if os.path.exists(path) and sha(open(path, "rb").read()) == pinned:
+            return path
+    return None
+
+
+def run(inp, secrets, wasm=VERIFIER):
     env = {**os.environ, **secrets, "SEALED_DEBUG_ENC": "1"}
     p = subprocess.run(["wasmtime", "run", "--env", "EXPLOIT", "--env", "SALT", "--env", "EPH_SK",
-                        "--env", "SEALED_DEBUG_ENC", VERIFIER], input=json.dumps(inp).encode(),
+                        "--env", "SEALED_DEBUG_ENC", wasm], input=json.dumps(inp).encode(),
                        capture_output=True, env=env)
     if p.returncode != 0:
         raise RuntimeError(p.stderr.decode()[-400:])
@@ -75,12 +85,15 @@ def main():
         ev = json.load(open(os.path.join(ROOT, "corpus", "evidence", f"{label}.json")))
         fails = []
         pinned = ev["request_execution_args"]["source"]["WasmUrl"]["hash"]
-        if pinned != wasm_hash:
-            fails.append(f"pinned {pinned[:12]} != verifier.wasm {wasm_hash[:12]}")
+        wasm = wasm_for(pinned)
+        if wasm is None:
+            print(f"REPLAY-FAIL {label}: no committed wasm hashes to the pinned {pinned[:12]}…")
+            bad += 1
+            continue
         sent = json.loads(ev["request_execution_args"]["input_data"])
         if sent != pub["input"]:
             fails.append("published input != input_data the bounty sent")
-        v, enc = run(sent, pub["secrets"])
+        v, enc = run(sent, pub["secrets"], wasm)
         chain = ev.get("verdict_output")
         chain = json.loads(chain) if isinstance(chain, str) else chain
         if not isinstance(chain, dict) or strip(chain) != strip(v):
@@ -93,7 +106,7 @@ def main():
         tag = "REPLAY-OK" if not fails else "REPLAY-FAIL"
         what = "broken" if v["broken"] else f"not broken ({v['err'] or 'no invariant broken'})"
         extra = f" · enc {len(d)} B = h_enc" if d is not None else ""
-        print(f"{tag} {label}: {what} · h_exploit {v['h_exploit'][:12]}… = commit · verdict = chain{extra}"
+        print(f"{tag} {label}: {what} · wasm {pinned[:8]} · h_exploit {v['h_exploit'][:12]}… = commit · verdict = chain{extra}"
               + ("" if not fails else " · " + "; ".join(fails)))
         ok, bad = ok + (not fails), bad + bool(fails)
     print(f"replay: {ok} OK · {bad} FAIL · verifier.wasm {wasm_hash[:16]}…")

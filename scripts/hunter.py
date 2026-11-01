@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 """Sealed Exploit hunter client (testnet): seal an exploit, commit it, let OutLayer judge it, deliver, get paid.
 
-usage: python3 scripts/hunter.py --bounty <acct> --hunter <acct> --exploit <name|file.json> --label <label>
-       [--payout-to <acct>] [--no-deliver]
+usage: python3 scripts/hunter.py --bounty <acct> --hunter <acct> --exploit <name|corpus:<item>|file.json> --label <label>
+       [--invariant <id>] [--payout-to <acct>] [--no-deliver] [--deliver-wrong-first] [--skip-store]
+  --exploit corpus:<item> commits the D4 corpus item's EXPLOIT bytes verbatim (corpus/manifest.json → vector), on
+  the item's own invariant — LLM-written items are never re-serialized.
        python3 scripts/hunter.py --finish <label>   (re-build the evidence + published files of a saved run)
 
   1. EXPLOIT = the tx list (compact JSON); SALT, EPH_SK = 32 fresh random bytes each.
@@ -92,13 +94,22 @@ def main():
     ap.add_argument("--payout-to")
     ap.add_argument("--no-deliver", action="store_true")
     ap.add_argument("--skip-store", action="store_true", help="commit without a secret row (refusal tests)")
+    ap.add_argument("--deliver-wrong-first", action="store_true",
+                    help="deliver a wrong enc first (on-chain refusal: delivery mismatch), then the right one")
     a = ap.parse_args()
     payout_to = a.payout_to or a.hunter
 
     st = near.view(a.bounty, "view_state")
+    if a.exploit.startswith("corpus:"):
+        item = next(i for i in json.load(open(os.path.join(ROOT, "corpus", "manifest.json")))["items"]
+                    if i["name"] == a.exploit[7:])
+        exploit = json.load(open(os.path.join(ROOT, item["vector"])))["secrets"]["EXPLOIT"]
+        if a.invariant == ap.get_default("invariant"):
+            a.invariant = item["invariant_id"]
+    else:
+        txs = EXPLOITS[a.exploit] if a.exploit in EXPLOITS else json.load(open(a.exploit))["txs"]
+        exploit = json.dumps(txs, separators=(",", ":"))
     inv = next(i for i in st["invariants"] if i["id"] == a.invariant)
-    txs = EXPLOITS[a.exploit] if a.exploit in EXPLOITS else json.load(open(a.exploit))["txs"]
-    exploit = json.dumps(txs, separators=(",", ":"))
     secrets = {"EXPLOIT": exploit, "SALT": os.urandom(32).hex(), "EPH_SK": os.urandom(32).hex()}
     commit_hash = hashlib.sha256(exploit.encode() + a.hunter.encode() + bytes.fromhex(secrets["SALT"])).hexdigest()
     # Exactly the input_data the bounty builds in request_args (lib.rs): the verifier reads these five fields.
@@ -137,6 +148,11 @@ def main():
                commit_to_verdict_s=round(time.time() - t0, 1), timing_method="client wall-clock, 3s poll (approx)")
     print(f"[{a.label}] verdict {c['status']} after {run['commit_to_verdict_s']} s")
 
+    if status_name(c["status"]) == "Awarded" and not a.no_deliver and a.deliver_wrong_first:
+        wrong = bytes(len(bytes.fromhex(enc)))  # right length, wrong bytes → sha256 ≠ attested h_enc
+        run["mismatch_tx"] = near.call(a.hunter, a.bounty, "deliver",
+                                       {"commit_id": cid, "enc": base64.b64encode(wrong).decode()}, gas="100 Tgas")
+        print(f"[{a.label}] wrong deliver tx {run['mismatch_tx']} (expect REFUSED delivery mismatch)")
     if status_name(c["status"]) == "Awarded" and not a.no_deliver:
         t1 = time.time()
         run["deliver_tx"] = near.call(a.hunter, a.bounty, "deliver",
