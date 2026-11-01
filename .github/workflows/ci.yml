@@ -23,6 +23,12 @@ jobs:
       - run: make test-verifier
       - name: Rebuilt verifier.wasm equals the committed bytes (the pinned hash)
         run: make verifier-check
+      - name: Keep the rebuilt wasm for diffing when the hash drifts
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: verifier-rebuilt
+          path: target/wasm32-wasip1/release/verifier.wasm
 
   replay:
     name: replay (creds-free, wasmtime + python only)
