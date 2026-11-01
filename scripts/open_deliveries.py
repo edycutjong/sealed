@@ -54,7 +54,9 @@ def check(pub):
         return ["deliver tx"], None
     cid, h_enc = str(pub["commit_id"]), verdict.get("h_enc")
     logs = ev.get("bounty_logs", []) + ev.get("deliver_logs", [])
+    commit_log = next((l.split()[1] for l in logs if l.startswith("COMMIT ")), None)
     fails = [name for name, ok in (
+        ("published commit id = the COMMIT log", commit_log == cid),
         ("published input = the request input", inp == json.loads(ev["request_execution_args"]["input_data"])),
         ("verdict broken", verdict.get("broken") is True),
         ("verdict invariant", verdict.get("invariant_id") == inp["invariant_id"]),

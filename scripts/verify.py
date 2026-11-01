@@ -12,8 +12,9 @@ bundle, label `RECORDED`). Each commit yields one line with these checks:
            a TDX quote check (https://app.outlayer.ai/docs/tee-attestation); this script checks the key's scope, not
            the quote. On chain this shows the request pinned the hash and the operator's scoped worker key answered,
            NOT that the worker ran exactly those bytes (ARCHITECTURE.md §Limits).
-  bundle   (online) the bundled verdict, request input and delivered enc equal the re-fetched chain values —
-           so `make replay`, which reads only the bundle, is comparing against the chain
+  bundle   (online) the bundled verdict, request input, deliver args (enc + commit_id) and bounty / deliver logs
+           equal the re-fetched chain values — so `make replay` and `make open`, which read only the bundle, are
+           comparing against the chain
   verdict  the AWARDED/REFUSED the bounty logged agrees with the worker's submitted verdict (broken flag)
   h_enc    (paid) sha256(enc) from the deliver tx args = the award callback's h_enc = the verdict's h_enc
   paid     (paid) on_paid logged PAID for THIS commit id and the awarded amount
@@ -219,9 +220,12 @@ def one(ev, online, url):
         b_out = ev.get("verdict_output")
         b_out = json.loads(b_out) if isinstance(b_out, str) else b_out
         b_enc = tx_args(ev["deliver_tx_status"], "deliver") if ev.get("deliver_tx_status") else None
+        # …and so are the bundled bounty / deliver logs and the whole deliver args (enc AND commit_id), which
+        # `make open` reads: a bundle cannot re-label which commit was delivered and paid.
         checks.append(("bundle", b_out == out
                        and ev["request_execution_args"].get("input_data") == (req or {}).get("input_data")
-                       and (b_enc or {}).get("enc") == (denc or {}).get("enc")))
+                       and b_enc == denc
+                       and ev.get("bounty_logs") == blog and (ev.get("deliver_logs") or []) == dlog))
     awarded = any(l.startswith("AWARDED ") for l in blog)
     refused = any(l.startswith("REFUSED ") for l in blog)
     checks.append(("verdict", isinstance(out, dict) and bool(out.get("broken")) == awarded and (awarded or refused)))
@@ -311,9 +315,10 @@ def born_keyless(bounty, want, url):
     hashes = [a["UseGlobalContract"].get("code_hash") for a in t.get("actions", [])
               if isinstance(a, dict) and "UseGlobalContract" in a]
     calls = [a["FunctionCall"]["method_name"] for a in t.get("actions", []) if isinstance(a, dict) and "FunctionCall" in a]
-    born = (t.get("receiver_id") == bounty and "SuccessValue" in (r["result"].get("status") or {})
-            and set(kinds) <= {"CreateAccount", "Transfer", "UseGlobalContract", "FunctionCall"}
-            and "CreateAccount" in kinds and hashes == [want] and calls == ["new"])
+    born = (t.get("signer_id") == bounty.split(".", 1)[1] and t.get("receiver_id") == bounty
+            and "SuccessValue" in (r["result"].get("status") or {})
+            and set(kinds) == {"CreateAccount", "Transfer", "UseGlobalContract", "FunctionCall"}
+            and hashes == [want] and calls == ["new"])
     return born, (f"born keyless: create tx {create[:8]}… = {' · '.join(kinds)}, no AddKey" if born
                   else f"create tx {create[:8]}… is not a keyless global-code birth ({' · '.join(kinds)})")
 
