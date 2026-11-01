@@ -195,7 +195,9 @@ hunter-agent/   LLM-hunter transcripts and proposed exploits       day0/        
 
 ## 📽️ Demo Materials
 
-Walk-through with explorer links: [DEMO.md](DEMO.md). A video and a live page are not published yet.
+Walk-through with explorer links: [DEMO.md](DEMO.md). Landing page: [sealed-exploit.vercel.app](https://sealed-exploit.vercel.app)
+(source `docs/index.html`; it replays two recorded testnet runs). Pitch deck: [/pitch/](https://sealed-exploit.vercel.app/pitch/)
+(`docs/pitch/index.html`). A video is not published yet.
 
 ## 📄 License
 
