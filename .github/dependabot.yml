@@ -1,14 +1,19 @@
+# cargo: security updates only (limit 0 blocks version bumps). A dependency bump changes the pinned
+# verifier.wasm / bounty.wasm bytes, so those move only by hand with the hash updated.
 version: 2
 updates:
   - package-ecosystem: cargo
     directory: /
     schedule: { interval: weekly }
+    open-pull-requests-limit: 0
   - package-ecosystem: cargo
     directory: /contracts
     schedule: { interval: weekly }
+    open-pull-requests-limit: 0
   - package-ecosystem: cargo
     directory: /contracts/itests
     schedule: { interval: weekly }
+    open-pull-requests-limit: 0
   - package-ecosystem: github-actions
     directory: /
     schedule: { interval: weekly }
