@@ -1,0 +1,11 @@
+target/
+.env
+.env.*
+*.key
+*.pem
+node_modules/
+__pycache__/
+*.pyc
+.venv/
+day0/out/
+graphify-out/
