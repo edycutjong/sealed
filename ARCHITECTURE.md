@@ -83,7 +83,7 @@ hunter                bounty (keyless)            token            OutLayer (TEE
 | I3 | At most one pending verdict per invariant | `bounty.rs:363` |
 | I4 | `withdraw_pool` never moves reserved or escrowed USDC, and only after the timelock | `bounty.rs:383`; `lib.rs:552` |
 | I5 | Every request pins `verifier_wasm_hash`; only `new` sets it | `lib.rs:657`, `:192` |
-| I6 | The bounty account has zero access keys for life | `scripts/deploy_bounty_testnet.py:115`; `make verify-d5` checks it on chain |
+| I6 | The bounty account has zero access keys for life | `scripts/deploy_bounty_testnet.py:115`; `make verify-demo` / `verify-d5` check it on chain, with the code = the committed `contracts/bounty.wasm` |
 | I7 | Awarded ⇒ `h_exploit`, `invariant_id`, `h_snapshot` all match the commit | `bounty.rs:279`, `:298`, `:318` |
 | I8 | The exploit becomes public, and the escrow owed, only in a `deliver` with `sha256(enc) == h_enc` | `bounty.rs:209`, `:436` |
 
@@ -92,7 +92,8 @@ hunter                bounty (keyless)            token            OutLayer (TEE
 | Target | Script | Re-checks |
 |---|---|---|
 | `make replay` | `scripts/verify_offline.py` | each published commit under wasmtime from the committed wasm whose sha256 is the hash its bounty pinned (`verifier.wasm`, or `verifiers/<sha>.wasm` for the earlier D3 build) = the on-chain verdict |
-| `make verify` / `verify-demo` / `verify-d5` | `scripts/verify.py` | per commit, from the archival RPC: pinned hash (bounty's live state), the resolve tx went to the bounty's OutLayer contract from the operator OutLayer's config named at that block, with a key scoped to it; the bundle equals the chain; verdict, `h_enc`, `PAID` for this commit id; the bounty's `paid_total` / `escrow` equal the bundled PAID / AWARDED amounts; the bundle set equals `corpus/results.json` runs, each commit once, and covers every commit id the bounty holds on chain (`view_state.commits`); `verify-d5` adds I6 |
+| `make verify` / `verify-demo` / `verify-d5` | `scripts/verify.py` | per commit, from the archival RPC: pinned hash (bounty's live state), the resolve tx went to the bounty's OutLayer contract from the operator OutLayer's config named at that block, with a key scoped to it; the bundle equals the chain; verdict, `h_enc`, `PAID` for this commit id; the bounty's `paid_total` / `escrow` equal the bundled PAID / AWARDED amounts; the bundle set equals `corpus/results.json` runs, each commit once, and covers every commit id the bounty holds on chain (`view_state.commits`); `verify-demo` and `verify-d5` add I6: FAIL unless each bounty has 0 access keys and its global code hash is base58(sha256(`contracts/bounty.wasm`)) |
+| `make open` | `scripts/open_deliveries.py` | offline, each paid delivery: `sha256(enc)` = the verdict's `h_enc`; the box (`verifier/src/seal.rs`) opens with the hunter's ephemeral key, published after payment (the same shared key the protocol's own key gives), to the exploit `make replay` re-runs; it hashes to the commit |
 | `make corpus` | `scripts/corpus_check.py` | all 52 corpus items against their golden verdicts |
 | `make refusals` | `scripts/refusals.py` | the 6 refusal kinds seen on chain, with tx hashes |
 | `make bench` / `bench-chain` | `scripts/bench.py` | latency p50/p95 and resources vs limits, recomputed from the bundles (`bench-chain` re-reads the chain) |
@@ -100,13 +101,15 @@ hunter                bounty (keyless)            token            OutLayer (TEE
 
 ## Limits
 
-- **Worker attestation.** On chain, `make verify` shows the request pinned the verifier hash and a key registered for
-  the OutLayer worker answered (`scripts/verify.py` docstring, `worker`); it does not show the worker ran exactly those
-  bytes. `make replay` re-runs the same bytes locally and must reproduce the verdict. Replay reads only the bundle;
+- **Worker attestation.** On chain, `make verify` shows the request pinned the verifier hash and the operator's worker
+  key, scoped to `resolve_execution` on OutLayer, answered (`scripts/verify.py` docstring, `worker`). It checks that key,
+  not its TDX quote (OutLayer documents the quote check at key registration), and it does not show the worker ran
+  exactly those bytes. `make replay` re-runs the same bytes locally and must reproduce the verdict. Replay reads only the bundle;
   `make verify`'s `bundle` check is what ties that bundle to the chain.
 - **RPC trust.** `make verify` believes the archival RPC it queries (no light-client proof). Run it against a second
   provider to cross-check: `make verify RPC=https://archival-rpc.testnet.near.org`. An RPC that errors or rate-limits
-  turns lines into RECORDED (exit 2), never into a pass. To stay under the public node's rate limit, the OutLayer
+  turns lines into RECORDED (`verify.py` exit 2; through `make`, a FAIL and a RECORDED both stop the target, printed
+  as `Error 1` / `Error 2`), never into a pass. To stay under the public node's rate limit, the OutLayer
   operator and the worker key's scope are read at the first and last resolve block of the run and pinned in between
   when both reads agree (a rotation away and back would need OutLayer's owner key); otherwise each row reads its own.
 - **Memory** is the verifier's own peak linear memory; OutLayer reports no worker memory figure.
@@ -129,6 +132,13 @@ hunter                bounty (keyless)            token            OutLayer (TEE
   unregistered payout account is refunded in full and pays only gas, so a bounty can be run out of storage balance;
   anyone can top a keyless bounty up with a plain NEAR transfer. Charging storage to the hunter needs a contract change
   (not made: it would replace the global code hash the testnet evidence pins).
+- **Commit hash case.** `commit` accepts any 64 hex digits (`lib.rs:248`), but the award compares that string with the
+  verifier's lowercase `h_exploit` (`lib.rs:379`), so an uppercase commit can never be awarded and is refused as
+  `commit mismatch` (bond slashed). `scripts/hunter.py` commits Python's lowercase `hexdigest()` (`hunter.py:118`).
+  Normalizing in the contract is a code change (not made: it would replace the global code hash).
+- **Verdict parsing.** `find_verdict` (`lib.rs:720`) takes the first JSON object carrying `h_enc`, parsing any string
+  OutLayer wraps it in. Every verifier verdict serializes `h_enc` at its top level, error verdicts included
+  (`verifier/src/lib.rs:118`), so the search stops at the verdict and never parses its `err` text (≤ 64 B, `MAX_ERR`).
 - **Seal key reuse.** The seal's nonce is derived from `EPH_SK` (`seal.rs:5`), so a hunter client must draw a fresh
   `EPH_SK` per commit; `scripts/hunter.py` draws 32 random bytes each time.
 - **No outside users yet.** The measured demo is our own hunter agent plus the fakes corpus.

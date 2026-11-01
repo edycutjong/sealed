@@ -1,8 +1,9 @@
 # Demo
 
-Everything here runs from a fresh clone with `python3` and `wasmtime`; no NEAR account or key. Testnet only.
+Everything here runs from a fresh clone with `python3` and `wasmtime` (`make open` also needs PyNaCl); no NEAR account
+or key. Testnet only.
 
-## 1. One real exploit pays (offline, seconds)
+## 1. Re-run a real exploit offline, then check its recorded payout
 
 ```bash
 make replay
@@ -31,11 +32,15 @@ make refusals
 
 ```bash
 make verify-demo   # 5 paid demo-bounty runs, about 25 archival RPC calls, about 1.5 min
-make verify        # all 29 runs, about 80 calls; exit 2 = RPC unreachable, not a failed check
+make verify        # all 29 runs, about 80 calls; make prints Error 2 = RPC unreachable, Error 1 = a failed check
+make open          # offline: all 6 paid deliveries open to the exploit `make replay` re-runs (needs PyNaCl)
 ```
 
-Per run it checks: the pinned verifier hash, the OutLayer worker key, the verdict, `h_enc`, and PAID for that commit id;
-that every commit on chain is bundled; and that the bounty's paid and escrow totals match.
+Per run it checks: the pinned verifier hash, the operator's scoped OutLayer worker key, the verdict, `h_enc`, and PAID
+for that commit id; that every commit on chain is bundled; and that the bounty's paid and escrow totals match.
+`verify-demo` also fails unless the demo bounty has 0 access keys and runs the committed `contracts/bounty.wasm`.
+`make open` is the protocol's side: the delivered box opens (with the hunter's ephemeral key, published after payment;
+it is the same shared key the protocol's own key gives) to the replayed exploit, which hashes to the commit.
 
 ## 4. The numbers
 

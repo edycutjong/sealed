@@ -45,7 +45,8 @@ hash of the verifier WASM. Then:
 3. The callback **awards** the first commit that verifies, once per invariant. Everything else is **refused on chain with
    a reason**, and a hunter-caused failure slashes the bond.
 4. The hunter **delivers** the exploit sealed to the protocol's key. The contract checks it hashes to what the worker
-   attested, and only then is the escrow owed and **paid**. The protocol gets exactly the exploit that was verified.
+   attested, and only then is the escrow owed and **paid**. The protocol gets exactly the exploit that was verified
+   (`make open` opens all 6 paid deliveries offline to the exploit `make replay` re-runs).
 
 The protocol still decides what counts as a break, but before any bug exists and in public.
 
@@ -131,9 +132,10 @@ The sandbox tests run the contract against a mock OutLayer and a mock token; the
 ### Honest limits (7)
 
 1. **Testnet only.** The mainnet leg is prepared (`scripts/mainnet_leg.py`) and has not run.
-2. **Worker attestation.** `make verify` shows the request pinned the verifier hash and a registered OutLayer worker key
-   answered; it does not show the worker ran exactly those bytes. `make replay` re-runs the same bytes locally.
-3. **RPC trust.** `make verify` believes the archival RPC it queries; an RPC error becomes RECORDED (exit 2), never a pass.
+2. **Worker attestation.** `make verify` shows the request pinned the verifier hash and the operator's OutLayer worker
+   key (scoped to `resolve_execution`) answered. It checks the key, not its TDX quote, and does not show the worker ran
+   exactly those bytes. `make replay` re-runs the same bytes locally.
+3. **RPC trust.** `make verify` believes the archival RPC it queries; an RPC error becomes RECORDED (`verify.py` exit 2, `make` prints `Error 2`), never a pass.
 4. **Baseline models** are third-party, not NEAR AI Cloud, one run each, with a hunter claim on only 5 of the 21 fakes.
 5. **Stuck commits.** The dangling-`Pending` refund branch is covered by code review only, and the yield-timeout path was
    not observed on a live testnet run.
@@ -157,8 +159,9 @@ only needed to rebuild the verifier from source (`make verifier-check`).
 | `make doctor` | prerequisites present, `verifier.wasm` hash matches its pin | archival RPC ping |
 | `make replay` | every published commit re-run under wasmtime from the committed wasm its bounty pinned (sha256-checked) = its on-chain verdict | none |
 | `make replay INPUT=corpus/vectors/real-fallback.json` | the verdict for one tx list (yours: `{"target":0,"invariant_id":"…","txs":[…]}`) | none |
-| `make verify` | each of the 29 runs proven from chain data: pinned hash, attested worker key, verdict, `h_enc`, PAID; every commit on chain bundled; paid totals match | archival RPC, about 80 calls (a few minutes on a rate-limited node; exit 2 = unreachable, not a failed check) |
-| `make verify-demo` | the same checks on the 5 paid demo-bounty runs | about 25 calls (about 1.5 min) |
+| `make open` | all 6 paid deliveries opened offline: `sha256(enc)` = the verdict's `h_enc`, the box opens to the exploit `make replay` re-runs, and it hashes to the commit (needs PyNaCl) | none |
+| `make verify` | each of the 29 runs proven from chain data: pinned hash, the operator's scoped worker key, verdict, `h_enc`, PAID; every commit on chain bundled; paid totals match | archival RPC, about 80 calls (a few minutes on a rate-limited node; `Error 2` = unreachable, `Error 1` = a failed check) |
+| `make verify-demo` | the same checks on the 5 paid demo-bounty runs, and FAIL unless that bounty has 0 access keys and runs the committed `contracts/bounty.wasm` (global hash `7Htmes…`) | about 25 calls (about 1.5 min) |
 | `make corpus` | all 52 corpus items vs their golden verdicts | none |
 | `make refusals` | the 6 on-chain refusal kinds with tx hashes | none |
 | `make bench` | request→verdict p50/p95, instructions / time / memory vs the enforced limits | none (`make bench-chain` re-reads the chain) |
