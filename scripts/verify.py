@@ -128,6 +128,12 @@ def one(ev, online, url):
     checks.append(("verdict", isinstance(out, dict) and bool(out.get("broken")) == awarded and (awarded or refused)))
     paid_logs = [l for l in dlog if l.startswith("PAID ")]
     kind = "PAID" if paid_logs else ("REFUSED" if refused else "AWARDED")
+    if ev.get("expire_tx") and not paid_logs:
+        # Awarded, never delivered, voided by `expire` after deliver_by: escrow back to the pool, bond slashed.
+        elog = logs(near.tx(ev["expire_tx"], ev["expire_signer"], url)["result"], ev["bounty"]) if online else ev["expire_logs"]
+        cid = next((l.split()[1] for l in blog if l.startswith("COMMIT ")), None)
+        checks.append(("expired", any(l.startswith(f"EXPIRED {cid};") for l in elog)))
+        kind = "VOIDED"
     if paid_logs:
         h_enc = sha(base64.b64decode(denc["enc"]))
         aw = next((l for l in blog if l.startswith("AWARDED ")), "")

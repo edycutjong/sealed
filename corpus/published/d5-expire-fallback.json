@@ -1,0 +1,22 @@
+{
+ "label": "d5-expire-fallback",
+ "bounty": "corpus.sealed-dev-11010702.testnet",
+ "commit_id": 0,
+ "input": {
+  "target": 0,
+  "invariant_id": "fallback-owner-drained",
+  "hunter": "sealed-hunter-a-11010702.testnet",
+  "commit_hash": "b5122305d70fc46fcfa0171c275d6a4de1b2070d10e8297a38625a7da354d130",
+  "protocol_enc_pk": "9110d7d50b64d770c267f401786ebfc1ce5861b55c25a8eb50916aa253b3b316"
+ },
+ "secrets": {
+  "EXPLOIT": "[{\"to\":\"0xd3264fed42a0dc00663d0aa2b0abb90a19b347f2\",\"data\":\"0xd7bb99ba\",\"value\":\"1\"},{\"to\":\"0xd3264fed42a0dc00663d0aa2b0abb90a19b347f2\",\"data\":\"0x\",\"value\":\"1\"},{\"to\":\"0xd3264fed42a0dc00663d0aa2b0abb90a19b347f2\",\"data\":\"0x3ccfd60b\",\"value\":\"0\"}]",
+  "SALT": "8070527ecb474ea792e06445dfd9346a0a08349431255238a3715f9f3ba223af",
+  "EPH_SK": "42e97b7ed32366190854c3bfd7d0f90f2b3e2eab109d94367429fbd567e764c8"
+ },
+ "exploit_name": "corpus:real-fallback",
+ "final_status": "Voided",
+ "timing_s": {
+  "commit_to_verdict_s": 14.4
+ }
+}

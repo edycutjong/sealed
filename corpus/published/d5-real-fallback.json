@@ -1,0 +1,23 @@
+{
+ "label": "d5-real-fallback",
+ "bounty": "demo.sealed-dev-11010702.testnet",
+ "commit_id": 2,
+ "input": {
+  "target": 0,
+  "invariant_id": "fallback-owner-drained",
+  "hunter": "sealed-hunter-a-11010702.testnet",
+  "commit_hash": "336ea1fb468c28216eb5718f8b2c27281ff0b230abc9eae61494fe58a4cad2e6",
+  "protocol_enc_pk": "1615c35a39d90e99c243daf9a8757ae7edaf8feb0fe9a4bdaa7df83798cc760a"
+ },
+ "secrets": {
+  "EXPLOIT": "[{\"to\":\"0xd3264fed42a0dc00663d0aa2b0abb90a19b347f2\",\"data\":\"0xd7bb99ba\",\"value\":\"1\"},{\"to\":\"0xd3264fed42a0dc00663d0aa2b0abb90a19b347f2\",\"data\":\"0x\",\"value\":\"1\"},{\"to\":\"0xd3264fed42a0dc00663d0aa2b0abb90a19b347f2\",\"data\":\"0x3ccfd60b\",\"value\":\"0\"}]",
+  "SALT": "20fe8ac12cab2f688b188fe4f3937827b4c6b1d4db0bcc2733c32bb85b8d938f",
+  "EPH_SK": "ea0e6b1a089830318252534d72464458a66eff05a3e0d69bbde460cd5ea21c02"
+ },
+ "exploit_name": "corpus:real-fallback",
+ "final_status": "Paid",
+ "timing_s": {
+  "commit_to_verdict_s": 14.6,
+  "deliver_to_paid_s": 6.3
+ }
+}

@@ -1,0 +1,65 @@
+{
+ "network": "testnet",
+ "refusals": [
+  {
+   "kind": "delivery mismatch",
+   "tx": "FTdPqnJmLcqjs9eAixAVxML2W1DStFQ48XpaSvgvUTiV",
+   "signer": "sealed-hunter-a-11010702.testnet",
+   "logs": [
+    "REFUSED 0 delivery mismatch"
+   ],
+   "matched": "REFUSED 0 delivery mismatch"
+  },
+  {
+   "kind": "invariant busy",
+   "tx": "7yHvtQpEYmPKEczD8zYfyyNUw9mKu7k1DjD5YKWCzonx",
+   "signer": "sealed-hunter-b-11010702.testnet",
+   "logs": [
+    "REFUSED: claim pending"
+   ],
+   "matched": "REFUSED: claim pending"
+  },
+  {
+   "kind": "pool pull",
+   "tx": "EWPNBudg3Ti764jYhDiJc2mm4SPnSsoVBkadJYYmJwoK",
+   "signer": "sealed-dev-11010702.testnet",
+   "logs": [
+    "REFUSED: claim pending"
+   ],
+   "matched": "REFUSED: claim pending"
+  },
+  {
+   "kind": "duplicate",
+   "tx": "39JpmTh6mYMt1pz2vgdk4NXnPVuMCp2EyCDdsyNJVHoq",
+   "signer": "sealed-hunter-b-11010702.testnet",
+   "logs": [
+    "REFUSED: invariant already paid"
+   ],
+   "matched": "REFUSED: invariant already paid"
+  },
+  {
+   "kind": "expired award",
+   "tx": "3oaUKM3xRpxL9QkhKSmmv1c3kM79s6Me3DsgoDMHfUVy",
+   "signer": "sealed-hunter-b-11010702.testnet",
+   "logs": [
+    "EXPIRED 0; escrow 1000000000 back to pool, bond slashed"
+   ],
+   "matched": "EXPIRED 0; escrow 1000000000 back to pool, bond slashed"
+  },
+  {
+   "kind": "fake",
+   "tx": "DUtubHScU3udGH58UxdTHWjwvDBjsHCsrupmBMxVYZiy",
+   "signer": "sealed-hunter-a-11010702.testnet",
+   "logs": [
+    "COMMIT 2 fallback-owner-drained by sealed-hunter-a-11010702.testnet; reserved 2000000000",
+    "PENDING 2 fallback-owner-drained",
+    "EVENT_JSON:{\"standard\":\"near-outlayer\",\"version\":\"1.0.0\",\"event\":\"execution_requested\",\"data\":[{\"request_data\":\"{\\\"request_id\\\":6070,\\\"sender_id\\\":\\\"sealed-hunter-a-11010702.testnet\\\",\\\"predecessor_id\\\":\\\"corpus.sealed-dev-11010702.testnet\\\",\\\"code_source\\\":{\\\"WasmUrl\\\":{\\\"url\\\":\\\"https://6pa7yka0ghwew5xh.public.blob.vercel-storage.com/wasm/d2972cd2659c2ad4fe799511a40dfef620c0ed8154001a9b53afcfcb3aa7b1d0.wasm\\\",\\\"hash\\\":\\\"d2972cd2659c2ad4fe799511a40dfef620c0ed8154001a9b53afcfcb3aa7b1d0\\\",\\\"build_target\\\":\\\"wasm32-wasip1\\\"}},\\\"resource_limits\\\":{\\\"max_instructions\\\":2000000000,\\\"max_memory_mb\\\":512,\\\"max_execution_seconds\\\":120},\\\"input_data\\\":\\\"{\\\\\\\"commit_hash\\\\\\\":\\\\\\\"68dd5b7ac73bb4935cc603e924903610feb00ed7994652d5fc094979bb9812b8\\\\\\\",\\\\\\\"hunter\\\\\\\":\\\\\\\"sealed-hunter-a-11010702.testnet\\\\\\\",\\\\\\\"invariant_id\\\\\\\":\\\\\\\"fallback-owner-drained\\\\\\\",\\\\\\\"protocol_enc_pk\\\\\\\":\\\\\\\"9110d7d50b64d770c267f401786ebfc1ce5861b55c25a8eb50916aa253b3b316\\\\\\\",\\\\\\\"target\\\\\\\":0}\\\",\\\"input_data_in_state\\\":false,\\\"secrets_ref\\\":{\\\"profile\\\":\\\"c-68dd5b7a\\\",\\\"account_id\\\":\\\"sealed-hunter-a-11010702.testnet\\\"},\\\"response_format\\\":\\\"Text\\\",\\\"payment\\\":\\\"100000000000000000000000\\\",\\\"attached_usd\\\":\\\"0\\\",\\\"timestamp\\\":1793508162022147571,\\\"compile_only\\\":false,\\\"force_rebuild\\\":false,\\\"store_on_fastfs\\\":false,\\\"use_bound_identity\\\":false,\\\"project_uuid\\\":null,\\\"project_id\\\":null}\",\"data_id\":[2,110,199,220,254,107,30,5,48,238,240,251,26,181,127,92,146,94,131,210,96,148,124,89,7,107,200,34,77,83,1,243],\"timestamp\":1793508162022147571}]}",
+    "[[yNEAR charged: \"1230600700000000000000\"]]",
+    "EVENT_JSON:{\"standard\":\"near-outlayer\",\"version\":\"1.0.0\",\"event\":\"execution_completed\",\"data\":[{\"sender_id\":\"sealed-hunter-a-11010702.testnet\",\"code_source\":{\"WasmUrl\":{\"url\":\"https://6pa7yka0ghwew5xh.public.blob.vercel-storage.com/wasm/d2972cd2659c2ad4fe799511a40dfef620c0ed8154001a9b53afcfcb3aa7b1d0.wasm\",\"hash\":\"d2972cd2659c2ad4fe799511a40dfef620c0ed8154001a9b53afcfcb3aa7b1d0\",\"build_target\":\"wasm32-wasip1\"}},\"resources_used\":{\"instructions\":7279880,\"time_ms\":2306,\"compile_time_ms\":null},\"success\":true,\"error_message\":null,\"payment_charged\":\"1230600700000000000000\",\"payment_refunded\":\"98769399300000000000000\",\"compilation_note\":\"Cached WASM from 2026-11-01T04:27:35.907526+00:00\",\"timestamp\":1793508168747247072}]}",
+    "Execution completed successfully. Output: Text(378 bytes), Resources: { instructions: 7279880, time_ms: 2306 }, Cost: 1230600700000000000000 yoctoNEAR, Refund: 98769399300000000000000 yoctoNEAR, Cached WASM from 2026-11-01T04:27:35.907526+00:00",
+    "REFUSED 2 no invariant broken"
+   ],
+   "matched": "REFUSED 2 no invariant broken"
+  }
+ ]
+}

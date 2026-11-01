@@ -1,0 +1,23 @@
+{
+ "label": "d5-real-force",
+ "bounty": "demo.sealed-dev-11010702.testnet",
+ "commit_id": 3,
+ "input": {
+  "target": 3,
+  "invariant_id": "force-balance-nonzero",
+  "hunter": "sealed-hunter-a-11010702.testnet",
+  "commit_hash": "3649a6dc71a88c45de8428faa457eda6468181f6979583c7ddf655cc5bc6baa9",
+  "protocol_enc_pk": "1615c35a39d90e99c243daf9a8757ae7edaf8feb0fe9a4bdaa7df83798cc760a"
+ },
+ "secrets": {
+  "EXPLOIT": "[{\"to\":null,\"data\":\"0x0x608060405260405160b838038060b88339818101604052810190602191906091565b8073ffffffffffffffffffffffffffffffffffffffff16ff5b5f80fd5b5f73ffffffffffffffffffffffffffffffffffffffff82169050919050565b5f606582603e565b9050919050565b607381605d565b8114607c575f80fd5b50565b5f81519050608b81606c565b92915050565b5f6020828403121560a35760a2603a565b5b5f60ae84828501607f565b9150509291505056fe000000000000000000000000d3264fed42a0dc00663d0aa2b0abb90a19b347f2\",\"value\":\"1\"}]",
+  "SALT": "d59ef68789a84a591b0bf8110b75b9eee615304cc7c9f1f9791a994ecf3f39a7",
+  "EPH_SK": "583d3cd36fac72d405817b12b2d613a659847487b5d5cd7127df2e30927d1f94"
+ },
+ "exploit_name": "corpus:real-force",
+ "final_status": "Paid",
+ "timing_s": {
+  "commit_to_verdict_s": 14.3,
+  "deliver_to_paid_s": 6.4
+ }
+}

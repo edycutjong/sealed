@@ -1,0 +1,23 @@
+{
+ "label": "d5-real-delegation",
+ "bounty": "demo.sealed-dev-11010702.testnet",
+ "commit_id": 1,
+ "input": {
+  "target": 2,
+  "invariant_id": "delegation-owner-taken",
+  "hunter": "sealed-hunter-a-11010702.testnet",
+  "commit_hash": "b107c84a7df669954c18303390880da87e3e1369c6f92e0f39594712f5fb262a",
+  "protocol_enc_pk": "1615c35a39d90e99c243daf9a8757ae7edaf8feb0fe9a4bdaa7df83798cc760a"
+ },
+ "secrets": {
+  "EXPLOIT": "[{\"to\":\"0x1780ddd8723ddc88d5def27cc1dfb16a73077434\",\"data\":\"0xdd365b8b\",\"value\":\"0\"}]",
+  "SALT": "d8b6c8cf8bc77999878412ca71c4b0ec6a0c4b2b64c68f4aaf67f37a69fbd7e3",
+  "EPH_SK": "30262789cfe8c7b9a841432cac1482a98e1b4810a9218b2ff253ca840025ed29"
+ },
+ "exploit_name": "corpus:real-delegation",
+ "final_status": "Paid",
+ "timing_s": {
+  "commit_to_verdict_s": 13.9,
+  "deliver_to_paid_s": 7.1
+ }
+}
