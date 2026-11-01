@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: First selector 0xf057478d is getContribution(), not contribute(); its non-payable call with 1 wei reverts, so contribution stays zero, receive() reverts, and withdraw() cannot make player owner or drain funds.

@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: Empty calldata fails to invoke Delegate.pwn(); delegatecall with no selector does nothing. Also 5 transactions exceed 4-tx limit.

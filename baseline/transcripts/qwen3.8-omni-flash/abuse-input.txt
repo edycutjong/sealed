@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: The lone transaction sends non-empty calldata to a contract with no fallback, so it reverts; value is 0, leaving owner and balance unchanged.

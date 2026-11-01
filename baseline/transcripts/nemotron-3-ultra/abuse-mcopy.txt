@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: Submission deploys 4 new contracts instead of interacting with target Fallback instance; no ownership transfer or balance drain occurs.

@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: Init code contains truncated PUSH32 (only 19/32 bytes), causing deployment to revert; King's kingship never transfers to hunter's contract.

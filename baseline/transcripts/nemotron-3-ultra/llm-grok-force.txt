@@ -1,0 +1,2 @@
+VERDICT: PAY
+REASON: Contract creation code pushes Force address and selfdestructs in constructor, forwarding 1 wei value to Force, making its balance > 0.

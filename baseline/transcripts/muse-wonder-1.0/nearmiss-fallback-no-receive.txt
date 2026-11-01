@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: First transaction only calls contribute() for 1 wei; no receive() transfer follows, so player never becomes owner, and the subsequent withdraw() reverts under onlyOwner, leaving balance undrained.

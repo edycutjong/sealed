@@ -1,0 +1,2 @@
+VERDICT: PAY
+REASON: Fallback delegatecalls pwn() to Delegate; delegatecall preserves player as msg.sender and writes Delegation.storage.owner, so player becomes owner. Selector and zero value valid; gas sufficient.

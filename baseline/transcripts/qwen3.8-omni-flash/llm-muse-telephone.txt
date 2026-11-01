@@ -1,0 +1,2 @@
+VERDICT: PAY
+REASON: Valid initcode stores changeOwner calldata and CALLs Telephone from the creating account, so tx.origin is player and msg.sender differs. Owner becomes player; empty runtime and gas are acceptable.

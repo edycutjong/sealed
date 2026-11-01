@@ -1,0 +1,2 @@
+VERDICT: PAY
+REASON: Data 0xdd365b8b is pwn() selector; Delegation fallback delegatecalls it, writing msg.sender (player) to Delegation's slot 0 owner.

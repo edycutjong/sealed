@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: All four transactions are contract creations whose init code infinitely jumps to offset 0 and exhausts gas; they never invoke Fallback, alter its owner, or drain its ether.

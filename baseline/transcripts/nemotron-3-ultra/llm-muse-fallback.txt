@@ -1,0 +1,2 @@
+VERDICT: PAY
+REASON: Contribute 0.0001 ETH (<0.001), send 0.0001 ETH to trigger receive() (contributions>0), become owner, withdraw() drains full balance to 0.

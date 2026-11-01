@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: Invalid hex encoding ('0x0x...' prefix) prevents decoding and deployment; no contract calls changeOwner, so Telephone owner remains unchanged.

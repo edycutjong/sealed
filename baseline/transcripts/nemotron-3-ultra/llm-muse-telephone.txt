@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: Initcode pushes calldata with selector 0xa6f9dae1 instead of correct 0x7fa6f9da for changeOwner(address), so CALL reverts and ownership unchanged.

@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: Single tx with 0 value and garbage calldata (0xabab...) matches no function selector; cannot call contribute(), trigger receive(), or invoke withdraw() to seize ownership and drain funds.

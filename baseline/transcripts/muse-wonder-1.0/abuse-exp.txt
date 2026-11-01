@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: Transactions are four contract creations whose init code loops EXP operations and jumps back to start, never calling Fallback; they run out of gas and deploy nothing, leaving owner and balance unchanged.

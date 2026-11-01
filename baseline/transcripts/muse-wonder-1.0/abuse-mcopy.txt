@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: No transaction calls the Fallback instance; all four deployments execute an infinite MCOPY loop, run out of gas, and create nothing, leaving owner and balance unchanged.

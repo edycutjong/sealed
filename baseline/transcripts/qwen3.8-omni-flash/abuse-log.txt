@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: No transaction calls Fallback. The creation bytecode only logs and jumps in a loop, exhausting gas without deploying or changing Fallback's owner or balance.

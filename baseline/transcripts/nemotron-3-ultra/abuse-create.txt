@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: Submission deploys 4 unrelated contracts via CREATE opcodes; never interacts with Fallback instance at 0xd326..., never calls contribute/receive/withdraw, cannot become owner or drain balance.

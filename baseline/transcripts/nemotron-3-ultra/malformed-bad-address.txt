@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: Transaction sent to wrong address (0x1234 vs 0x1780ddd8723ddc88d5def27cc1dfb16a73077434); delegatecall never reaches Delegation contract.

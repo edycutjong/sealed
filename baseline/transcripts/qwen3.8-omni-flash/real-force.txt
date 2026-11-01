@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: Data hex has duplicate 0x prefix (“0x0x…”), making the transaction malformed; it cannot execute, so Force’s balance remains zero.

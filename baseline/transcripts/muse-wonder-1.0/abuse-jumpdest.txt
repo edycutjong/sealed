@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: All four transactions are contract creations whose init code only executes JUMPDESTs then PUSH0/JUMP to 0, looping until out of gas. None calls the Fallback contract, so its owner and balance remain unchanged.

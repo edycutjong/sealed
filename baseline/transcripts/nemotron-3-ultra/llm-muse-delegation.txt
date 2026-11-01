@@ -1,0 +1,2 @@
+VERDICT: PAY
+REASON: The pwn() selector triggers fallback delegatecall to Delegate, executing pwn() in Delegation's storage context, setting owner to player.

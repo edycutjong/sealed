@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: Byte at offset 6 is 0x30 ADDRESS, not 0x39 CODECOPY, so calldata in memory remains zeroed; call with selector 0x00000000 reverts, owner unchanged.

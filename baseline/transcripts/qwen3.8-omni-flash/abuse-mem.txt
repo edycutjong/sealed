@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: All four txs are zero-value creations whose bytecode jumps to an invalid destination and reverts; they never call Fallback, so player ownership and balance conditions are unchanged.

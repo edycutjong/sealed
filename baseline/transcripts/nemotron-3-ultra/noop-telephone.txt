@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: Empty transaction array executes no calls; player never invokes changeOwner, so owner unchanged.

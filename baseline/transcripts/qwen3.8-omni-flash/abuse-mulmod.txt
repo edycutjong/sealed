@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: All four transactions create contracts; none calls Fallback. The init code only pushes, jumps, duplicates, multiplies, pops until stack overflow/revert, causing no external state change, so owner/balance remain unchanged.

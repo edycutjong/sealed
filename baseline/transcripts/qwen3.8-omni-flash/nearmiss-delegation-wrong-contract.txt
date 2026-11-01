@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: Submission sends pwn() to 0xd326..., not the Delegation instance 0x1780...; without delegatecall through Delegation fallback, it cannot set Delegation.owner. Therefore level not broken.

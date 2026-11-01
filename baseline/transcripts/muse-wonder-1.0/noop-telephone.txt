@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: Empty transaction list executes no calls, Telephone.owner remains original deployer, never becomes player EOA.

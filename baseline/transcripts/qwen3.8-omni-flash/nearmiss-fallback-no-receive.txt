@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: First tx calls contribute, not receive; 1 wei cannot exceed owner’s 1000 ETH contribution, so owner unchanged. Withdraw reverts, leaving contract balance nonzero.

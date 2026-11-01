@@ -1,0 +1,2 @@
+VERDICT: PAY
+REASON: Zero-value call hits Delegation fallback; delegatecall executes Delegate.pwn in Delegation storage with msg.sender still the player, setting Delegation.owner to player. Selector and gas are valid.

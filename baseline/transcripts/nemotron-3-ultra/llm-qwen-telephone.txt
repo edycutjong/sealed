@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: The init code calls Telephone with argsOffset=0 and argsSize=0 (empty calldata), not the encoded changeOwner(player) call at offset 0x2A, so the owner remains unchanged.

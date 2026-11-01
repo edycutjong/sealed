@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: Empty transaction list makes no call to Delegation fallback, so delegatecall to pwn() never executes and ownership remains with original creator, not player.

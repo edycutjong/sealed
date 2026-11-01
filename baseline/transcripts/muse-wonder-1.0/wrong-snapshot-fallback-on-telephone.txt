@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: Direct EOA calls have tx.origin == msg.sender, so changeOwner cannot set owner; also calldata lacks address argument and nonpayable calls with value revert, and other selectors don't exist.

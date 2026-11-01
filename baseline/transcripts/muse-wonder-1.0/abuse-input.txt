@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: Calldata selector 0xabababab matches no function; contract has no fallback, only receive() for empty calldata, so the call reverts with no contribution, ownership change, or withdrawal.

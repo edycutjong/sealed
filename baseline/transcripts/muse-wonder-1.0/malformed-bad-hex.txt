@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: Data "0xzz" is not valid hex/calldata for changeOwner(address); no valid call executes, and a direct EOA call would anyway have tx.origin == msg.sender.

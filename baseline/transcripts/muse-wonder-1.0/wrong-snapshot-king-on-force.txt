@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: Malformed data "0x0x..." is not valid hex, so no creation transaction can execute or fund Force; its balance remains zero.

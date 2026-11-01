@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: The transaction is sent to 0x1234, not the Delegation instance at 0x1780ddd8723ddc88d5def27cc1dfb16a73077434, so no delegatecall executes and Delegation owner remains unchanged.

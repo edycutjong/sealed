@@ -1,0 +1,2 @@
+VERDICT: PAY
+REASON: contribute registers nonzero contribution; empty-value call triggers receive setting player owner; withdraw then transfers entire balance to player, leaving contract at zero within gas.

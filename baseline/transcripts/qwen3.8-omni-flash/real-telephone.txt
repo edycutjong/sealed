@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: Invalid hex data: the string begins with double 0x, so it cannot decode to EVM transaction bytes; without execution it cannot make the player Telephone owner.

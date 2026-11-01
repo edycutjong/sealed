@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: Contract sends only 0.001 ETH to King, less than the 1 ETH prize; King's receive() reverts, exploit never becomes king, owner can still reclaim throne.

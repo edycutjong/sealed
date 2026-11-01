@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: All four transactions deploy looping init code that never returns and never interact with the Fallback instance, so ownership and its balance remain unchanged.

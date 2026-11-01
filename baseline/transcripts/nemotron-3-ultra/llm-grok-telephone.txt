@@ -1,0 +1,2 @@
+VERDICT: PAY
+REASON: Deployment bytecode calls changeOwner(player) on Telephone; tx.origin=player EOA, msg.sender=deployed contract, so guard passes and owner becomes player.

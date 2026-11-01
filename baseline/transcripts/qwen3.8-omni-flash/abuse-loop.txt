@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: The transactions only deploy looping creation code; they never call Fallback, send ether, or alter its owner/balance. Failed creations cannot meet the win condition.

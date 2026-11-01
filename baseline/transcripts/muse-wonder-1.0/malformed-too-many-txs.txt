@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: Transactions target wrong address 0xd326... not Delegation instance, send empty calldata not pwn() selector, and exceed 4-transaction limit; owner unchanged.

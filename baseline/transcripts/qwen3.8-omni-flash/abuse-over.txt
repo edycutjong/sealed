@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: Five transactions exceed the four-transaction limit; each zero-value empty call fails receive()'s msg.value>0 require, so player never becomes owner and balance unchanged.

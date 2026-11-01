@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: Calls are direct from EOA, so tx.origin==msg.sender; changeOwner is nonpayable and receives value, reverting. Empty/unknown calls have no fallback/receive. Owner is never set to player.

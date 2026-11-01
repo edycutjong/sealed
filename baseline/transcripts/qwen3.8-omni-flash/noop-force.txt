@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: Empty transaction list sends no ether to Force; its balance remains 0, so the level is not broken.

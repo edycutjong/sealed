@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: No contract deployed; all txs target Telephone directly so tx.origin==msg.sender, causing changeOwner to fail; final calldata missing address argument.

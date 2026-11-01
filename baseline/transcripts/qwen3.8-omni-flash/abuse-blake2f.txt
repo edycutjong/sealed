@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: All four are creations; initcode only STATICCALLs address 9 and STOPs, deploying empty code. It never interacts with Fallback, so player ownership and zero balance are not achieved.

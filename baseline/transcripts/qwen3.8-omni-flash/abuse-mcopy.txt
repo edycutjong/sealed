@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: All txs are zero-value creations whose init code loops out of gas; they never call the Fallback instance, leaving owner and balance unchanged.

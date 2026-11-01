@@ -1,0 +1,2 @@
+VERDICT: PAY
+REASON: Valid exploit — deployment bytecode creates contract that calls Telephone.changeOwner(player) via internal tx, satisfying tx.origin != msg.sender; double "0x" in JSON is a serialization artifact, not a byte error.

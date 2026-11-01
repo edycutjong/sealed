@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: Submission is prose, not a JSON array of transactions with addresses, calldata, and value; nothing executable is provided to call changeOwner via a contract and change ownership.

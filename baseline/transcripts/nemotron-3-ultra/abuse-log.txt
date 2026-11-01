@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: Submission deploys 4 contracts with init code that infinite-loops (LOG0 + JUMP to 0), never returns runtime bytecode, and never calls Fallback.contribute(), receive(), or withdraw(); cannot make player owner or drain balance.

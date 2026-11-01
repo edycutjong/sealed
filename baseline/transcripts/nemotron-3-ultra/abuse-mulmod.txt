@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: All 4 transactions create new contracts (to:null) with 0 value; none target the Fallback instance, call contribute(), or send ether to trigger receive(). Player never becomes owner; balance unchanged.

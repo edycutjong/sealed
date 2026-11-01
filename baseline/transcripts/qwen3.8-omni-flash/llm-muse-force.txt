@@ -1,0 +1,2 @@
+VERDICT: PAY
+REASON: PUSH20 Force address then SELFDESTRUCT initcode creates a funded contract; under Cancun it may self-destruct in same transaction, force-sending 0.001 ETH to Force, making its balance positive.

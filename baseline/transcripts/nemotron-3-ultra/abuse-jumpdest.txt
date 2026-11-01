@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: All four transactions are contract creations (to:null) not calls to the Fallback instance; they never invoke contribute, receive, or withdraw on 0xd3264fed42a0dc00663d0aa2b0abb90a19b347f2.

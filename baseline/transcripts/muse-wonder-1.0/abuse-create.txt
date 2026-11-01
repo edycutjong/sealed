@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: All four transactions only create contracts and never call the Fallback instance; no contribute, receive, or withdraw occurs, so player cannot become owner or drain its balance.

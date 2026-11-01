@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: The sole transaction is a direct EOA call to Telephone.changeOwner, so tx.origin equals msg.sender; the condition fails and owner remains unchanged. No contract intermediary is used.

@@ -1,0 +1,2 @@
+VERDICT: PAY
+REASON: Constructor CALL invokes changeOwner(player) from the new contract; tx.origin is player, msg.sender is contract, so guard passes. Selector, memory, and jump logic are valid; empty runtime still commits the ownership change.

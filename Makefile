@@ -80,3 +80,17 @@ results:
 	@python3 scripts/results.py
 
 .PHONY: replay verify verify-d5 corpus refusals results
+
+# ----- baseline / hunter agent (D6) -----
+## The mirror image of `make replay`: the same corpus judged by an LLM that cannot execute anything. Prints, per recorded
+## model, how many fakes it would pay (baseline/run.json, raw replies in baseline/transcripts/). `make baseline MODEL=<id>`
+## re-runs it live on NEAR AI Cloud (needs ~/.config/near-ai-cloud/api.key) and adds that model to the record.
+MODEL ?=
+baseline:
+ifeq ($(MODEL),)
+	@python3 scripts/baseline.py show
+else
+	python3 scripts/baseline.py record --provider nearai --model $(MODEL)
+endif
+
+.PHONY: baseline

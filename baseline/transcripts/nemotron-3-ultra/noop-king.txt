@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: Empty transaction array leaves contract state unchanged; throne remains claimable by owner or anyone sending >= prize.

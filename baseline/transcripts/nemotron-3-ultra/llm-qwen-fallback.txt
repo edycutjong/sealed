@@ -1,0 +1,2 @@
+VERDICT: PAY
+REASON: contribute(1 wei) gives player nonzero contribution; receive(1 wei) makes player owner; withdraw() drains entire contract balance to zero.

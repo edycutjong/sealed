@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: Four creations execute only an infinite CALLDATACOPY/JUMP loop and never interact with Fallback; contribute, receive, and withdraw are uncalled, so player never becomes owner and balance remains.

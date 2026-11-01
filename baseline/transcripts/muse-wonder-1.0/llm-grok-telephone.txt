@@ -1,0 +1,2 @@
+VERDICT: PAY
+REASON: Init code calls Telephone.changeOwner(player); tx.origin is player EOA while msg.sender is newly created contract, so guard passes and owner becomes player.

@@ -1,0 +1,2 @@
+VERDICT: PAY
+REASON: 0xdd365b8b is pwn(); Delegation fallback delegatecalls it, executing Delegate.pwn in Delegation storage with msg.sender as player, setting Delegation.owner to player. Level broken.
