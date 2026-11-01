@@ -4,7 +4,8 @@ the key file under ~/.config/near/sealed-testnet/ (the key is never printed)."""
 import base64, json, os, re, subprocess, time, urllib.request
 
 RPC = os.environ.get("NEAR_RPC", "https://rpc.testnet.near.org")
-ARCHIVAL = os.environ.get("NEAR_ARCHIVAL_RPC", "https://archival-rpc.testnet.near.org")
+# FastNEAR by default: the Foundation archival node rate-limits shared IPs (HTTP 429) on a full `make verify`.
+ARCHIVAL = os.environ.get("NEAR_ARCHIVAL_RPC", "https://archival-rpc.testnet.fastnear.com")
 KEYS = os.path.expanduser("~/.config/near/sealed-testnet")
 OUTLAYER = "outlayer.testnet"
 

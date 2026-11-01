@@ -2,8 +2,8 @@
 """`make verify`: prove each payout from chain data alone.
 
 For every corpus/evidence/<label>.json, re-fetch the bundled txs from an archival RPC (default
-`https://archival-rpc.testnet.near.org`, `--rpc <url>` overrides; unreachable → read the bundle, label
-`RECORDED`). Each commit yields one line with these checks:
+`https://archival-rpc.testnet.fastnear.com`, `--rpc <url>` or NEAR_ARCHIVAL_RPC overrides; unreachable → read the
+bundle, label `RECORDED`). Each commit yields one line with these checks:
   pinned   request_execution args pin WasmUrl.hash = the bounty's verifier_wasm_hash (`make replay` reruns
            those exact bytes, sha256-checked)
   worker   the verdict came back in the operator's resolve tx for this request_id, signed by a key registered
@@ -13,7 +13,7 @@ For every corpus/evidence/<label>.json, re-fetch the bundled txs from an archiva
   verdict  the AWARDED/REFUSED the bounty logged agrees with the worker's submitted verdict (broken flag)
   h_enc    (paid) sha256(enc) from the deliver tx args = the award callback's h_enc = the verdict's h_enc
   paid     (paid) on_paid logged PAID for the invariant amount
-Exit 0 only if ≥ 1 Paid line exists and every payout line is CHAIN-CHECKED (empty bundle → 1; offline → 2)."""
+Exit 0 only if ≥ 1 Paid line exists and every payout line is CHAIN-CHECKED (empty bundle → 1; offline or rate-limited → 2)."""
 import argparse, base64, glob, hashlib, json, os, sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -99,8 +99,12 @@ def one(ev, online, url):
                    "block_hash": rtx["transaction_outcome"]["block_hash"]}
             # Scope the access-key lookup to the resolve tx's inclusion block: a later admin rotation/
             # revocation of the worker key must not fail a payout that was valid when the worker answered.
-            key = near.rpc("query", {"request_type": "view_access_key", "block_id": res["block_hash"],
-                                     "account_id": ev["operator"], "public_key": res["public_key"]}, url).get("result")
+            kr = near.rpc("query", {"request_type": "view_access_key", "block_id": res["block_hash"],
+                                    "account_id": ev["operator"], "public_key": res["public_key"]}, url)
+            key = kr.get("result")
+            if key is None and "UNKNOWN_ACCESS_KEY" not in json.dumps(kr.get("error", {})):
+                # not "no such key" but an unusable answer (non-archival node, rate-limit body): unchecked, not FAIL
+                raise ConnectionError(f"view_access_key: {json.dumps(kr.get('error', kr))[:160]}")
         else:
             key = None
         out = verdict_output(res)
@@ -153,10 +157,16 @@ def bounty_integrity(bounty, online, url, require_keyless):
     (not a payout check); `--require-keyless` turns a keyed bounty into a FAIL for the final judged run."""
     if not online:
         return f"bounty {bounty}: keys/code not re-checked (offline)", True
-    keys = near.rpc("query", {"request_type": "view_access_key_list", "finality": "final",
-                              "account_id": bounty}, url).get("result", {}).get("keys", [])
-    acct = near.rpc("query", {"request_type": "view_account", "finality": "final",
-                              "account_id": bounty}, url).get("result", {})
+    try:
+        kr = near.rpc("query", {"request_type": "view_access_key_list", "finality": "final", "account_id": bounty}, url)
+        ar = near.rpc("query", {"request_type": "view_account", "finality": "final", "account_id": bounty}, url)
+    except OSError as e:
+        return f"bounty {bounty}: keys/code not re-checked (RPC error: {e})", None
+    if "result" not in kr or "result" not in ar:  # an RPC error body must not read as "0 keys, own code"
+        err = (kr if "result" not in kr else ar).get("error", {})
+        return f"bounty {bounty}: keys/code not re-checked (RPC error: {json.dumps(err)[:160]})", None
+    keys = kr["result"].get("keys", [])
+    acct = ar["result"]
     glob = acct.get("global_contract_hash") or acct.get("global_contract_account_id")
     keyless = len(keys) == 0 and bool(glob)
     tag = "keyless+global-hash" if keyless else f"{len(keys)} key(s){'' if glob else ', own code'}"
@@ -179,29 +189,42 @@ def main():
         print("verify: empty bundle (no corpus/evidence/*.json)")
         return 1
     online = reachable(a.rpc)
-    n_pass = n_chain = n_rec = n_paid = 0
+    n_pass = n_chain = n_rec = n_paid = n_unb = 0
     any_fail = False
     for bounty in sorted({json.load(open(b))["bounty"] for b in bundles}):
         line_s, ok = bounty_integrity(bounty, online, a.rpc, a.require_keyless)
+        if ok is None:  # RPC error: unchecked, never a pass — under --require-keyless it forces exit 2
+            print("RPC-ERROR " + line_s)
+            n_unb += a.require_keyless
+            continue
         print(("INFO " if ok else "FAIL ") + line_s)
         any_fail |= not ok
     for b in bundles:
         ev = json.load(open(b))
-        kind, checks, fails = one(ev, online, a.rpc)
-        mark = ("CHAIN-CHECKED" if online else "RECORDED") if not fails else "FAIL"
+        row_online = online
+        try:
+            kind, checks, fails = one(ev, online, a.rpc)
+        except OSError as e:  # HTTP 429/5xx or a timeout after near.rpc's retries: not a failed check
+            print(f"RPC-ERROR {ev['label']}: {e} — checked from the bundle only")
+            row_online = False
+            kind, checks, fails = one(ev, False, a.rpc)
+        except KeyError as e:  # the archival node answered without a result (e.g. unknown tx): a real failure
+            kind, checks, fails = "?", [], [f"rpc returned no result ({e})"]
+        mark = ("CHAIN-CHECKED" if row_online else "RECORDED") if not fails else "FAIL"
         print(f"{mark} {ev['label']} [{kind}]: " + " · ".join(n for n, _ in checks)
               + ("" if not fails else " · FAILED: " + ",".join(fails)))
         ok = not fails
         n_pass += ok
-        n_chain += ok and online
-        n_rec += ok and not online
+        n_chain += ok and row_online
+        n_rec += ok and not row_online
         n_paid += ok and kind == "PAID"
         any_fail |= not ok
     print(f"checks: {n_pass} PASS · {n_chain} CHAIN-CHECKED · {n_rec} RECORDED")
     if any_fail:
         return 1
-    if not online:
-        print("exit 2: RECORDED only — the archival RPC was unreachable, not a failed check")
+    if n_rec or n_unb:
+        print(f"exit 2: {n_rec} RECORDED line(s), {n_unb} bounty keyless check(s) unchecked — the archival RPC was unreachable or rate-limited, not a failed check; "
+              "re-run later or pass RPC=<url>")
         return 2
     if n_paid < 1:
         print("exit 1: no Paid payout line")
