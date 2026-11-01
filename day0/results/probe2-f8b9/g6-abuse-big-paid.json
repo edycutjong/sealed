@@ -1,0 +1,116 @@
+{
+ "label": "abuse-big-paid",
+ "input": "day0/abuse-big.json",
+ "probe": "probe2.sealed-dev-11010702.testnet",
+ "signer": "sealed-hunter-a-11010702.testnet",
+ "request_tx": "ADfcp7f6gCNSsLz9M8MFuseD3L1VkMHRaHmHZ2ZpYFEu",
+ "requested_limits": {
+  "max_instructions": 2000000000,
+  "max_memory_mb": 512,
+  "max_execution_seconds": 120
+ },
+ "request_source": {
+  "WasmUrl": {
+   "build_target": "wasm32-wasip1",
+   "hash": "f8b9062ac22d9bf06768f240785a6e929ed9a3b2168d9a1b6a754f336f98f11f",
+   "url": "https://6pa7yka0ghwew5xh.public.blob.vercel-storage.com/wasm/f8b9062ac22d9bf06768f240785a6e929ed9a3b2168d9a1b6a754f336f98f11f-YGPHCnmcCJXbvg4fDq7ofPodEMnox4.wasm"
+  }
+ },
+ "secrets_ref": null,
+ "record": {
+  "id": 10,
+  "caller": "sealed-hunter-a-11010702.testnet",
+  "label": "abuse-big-paid",
+  "kind": "ok",
+  "raw": "\"{\\\"v\\\":1,\\\"broken\\\":false,\\\"invariant_id\\\":\\\"fallback-owner-drained\\\",\\\"h_exploit\\\":\\\"1b372cbc16d07952ab5e1dc2749efb9158d857b8446fa7c2cb703f36156934b5\\\",\\\"h_snapshot\\\":\\\"57263dfb780961cfb0391a49684340ba627e7e39159b1d513fd2e2861c60a073\\\",\\\"h_enc\\\":\\\"437cb77a2e77323d620408d8cb705e6fe9721ca2ff7e7458e978f14303c4dacc\\\",\\\"gas_used\\\":0,\\\"err\\\":\\\"exploit invalid: calldata too large\\\",\\\"lim\\\":{\\\"i\\\":2000000000,\\\"m\\\":512,\\\"s\\\":120,\\\"mem\\\":1769472}}\\n\"",
+  "h_enc": "437cb77a2e77323d620408d8cb705e6fe9721ca2ff7e7458e978f14303c4dacc",
+  "broken": false,
+  "requested_height": 275684558,
+  "requested_ns": 1793498977332729669,
+  "resolved_height": 275684572,
+  "resolved_ns": 1793498984464784423,
+  "delivered": false
+ },
+ "wall_s_client": 19.0,
+ "wall_s_chain": 7.1,
+ "blocks": 14,
+ "execution_completed": [
+  {
+   "standard": "near-outlayer",
+   "version": "1.0.0",
+   "event": "execution_completed",
+   "data": [
+    {
+     "sender_id": "sealed-hunter-a-11010702.testnet",
+     "code_source": {
+      "WasmUrl": {
+       "url": "https://6pa7yka0ghwew5xh.public.blob.vercel-storage.com/wasm/f8b9062ac22d9bf06768f240785a6e929ed9a3b2168d9a1b6a754f336f98f11f-YGPHCnmcCJXbvg4fDq7ofPodEMnox4.wasm",
+       "hash": "f8b9062ac22d9bf06768f240785a6e929ed9a3b2168d9a1b6a754f336f98f11f",
+       "build_target": "wasm32-wasip1"
+      }
+     },
+     "resources_used": {
+      "instructions": 35768837,
+      "time_ms": 1613,
+      "compile_time_ms": null
+     },
+     "success": true,
+     "error_message": null,
+     "payment_charged": "1161303500000000000000",
+     "payment_refunded": "248838696500000000000000",
+     "compilation_note": "Cached WASM from 2026-11-01T02:05:17.872516+00:00",
+     "timestamp": 1793498984039683045
+    }
+   ]
+  }
+ ],
+ "native_verdict": {
+  "v": 1,
+  "broken": false,
+  "invariant_id": "fallback-owner-drained",
+  "h_exploit": "1b372cbc16d07952ab5e1dc2749efb9158d857b8446fa7c2cb703f36156934b5",
+  "h_snapshot": "57263dfb780961cfb0391a49684340ba627e7e39159b1d513fd2e2861c60a073",
+  "h_enc": "437cb77a2e77323d620408d8cb705e6fe9721ca2ff7e7458e978f14303c4dacc",
+  "gas_used": 0,
+  "err": "exploit invalid: calldata too large"
+ },
+ "chain_verdict": {
+  "v": 1,
+  "broken": false,
+  "invariant_id": "fallback-owner-drained",
+  "h_exploit": "1b372cbc16d07952ab5e1dc2749efb9158d857b8446fa7c2cb703f36156934b5",
+  "h_snapshot": "57263dfb780961cfb0391a49684340ba627e7e39159b1d513fd2e2861c60a073",
+  "h_enc": "437cb77a2e77323d620408d8cb705e6fe9721ca2ff7e7458e978f14303c4dacc",
+  "gas_used": 0,
+  "err": "exploit invalid: calldata too large",
+  "lim": {
+   "i": 2000000000,
+   "m": 512,
+   "s": 120,
+   "mem": 1769472
+  }
+ },
+ "match_native": true,
+ "wasmtime_verdict": {
+  "v": 1,
+  "broken": false,
+  "invariant_id": "fallback-owner-drained",
+  "h_exploit": "1b372cbc16d07952ab5e1dc2749efb9158d857b8446fa7c2cb703f36156934b5",
+  "h_snapshot": "57263dfb780961cfb0391a49684340ba627e7e39159b1d513fd2e2861c60a073",
+  "h_enc": "437cb77a2e77323d620408d8cb705e6fe9721ca2ff7e7458e978f14303c4dacc",
+  "gas_used": 0,
+  "err": "exploit invalid: calldata too large",
+  "lim": {
+   "i": null,
+   "m": null,
+   "s": null,
+   "mem": 1769472
+  }
+ },
+ "verdict_sha256": {
+  "native": "d2ad84244278e49ce868d3459ab73689482ca98cecf80427e52da16200885d7a",
+  "wasmtime": "d2ad84244278e49ce868d3459ab73689482ca98cecf80427e52da16200885d7a",
+  "outlayer": "d2ad84244278e49ce868d3459ab73689482ca98cecf80427e52da16200885d7a"
+ },
+ "three_of_three": true
+}

@@ -1,0 +1,120 @@
+{
+ "label": "g7d-missing",
+ "input": "day0/fallback.json",
+ "probe": "probe3.sealed-dev-11010702.testnet",
+ "signer": "sealed-hunter-a-11010702.testnet",
+ "request_tx": "9CqhHU3NgEckbQi1V9QkbvSLEVteWJmmFM2aFE13CmRT",
+ "requested_limits": {
+  "max_instructions": 2000000000,
+  "max_memory_mb": 512,
+  "max_execution_seconds": 120
+ },
+ "deposit": "19500300000000000000000 yoctonear",
+ "request_source": {
+  "WasmUrl": {
+   "build_target": "wasm32-wasip1",
+   "hash": "fb179c0067c9100256cc8033c23e21678985fcb4e8f3e94622c7969e85f22fd8",
+   "url": "https://6pa7yka0ghwew5xh.public.blob.vercel-storage.com/wasm/fb179c0067c9100256cc8033c23e21678985fcb4e8f3e94622c7969e85f22fd8.wasm"
+  }
+ },
+ "secrets_ref": {
+  "account_id": "sealed-hunter-a-11010702.testnet",
+  "profile": "c-00000000"
+ },
+ "record": {
+  "id": 17,
+  "caller": "sealed-hunter-a-11010702.testnet",
+  "label": "g7d-missing",
+  "kind": "ok",
+  "raw": "\"{\\\"v\\\":1,\\\"broken\\\":false,\\\"invariant_id\\\":\\\"fallback-owner-drained\\\",\\\"h_exploit\\\":\\\"\\\",\\\"h_snapshot\\\":\\\"\\\",\\\"h_enc\\\":\\\"\\\",\\\"gas_used\\\":0,\\\"err\\\":\\\"secret missing\\\",\\\"lim\\\":{\\\"i\\\":2000000000,\\\"m\\\":512,\\\"s\\\":120,\\\"mem\\\":1179648}}\\n\"",
+  "h_enc": "",
+  "broken": false,
+  "requested_height": 275686360,
+  "requested_ns": 1793499991829720051,
+  "resolved_height": 275686373,
+  "resolved_ns": 1793499999662864425,
+  "delivered": false
+ },
+ "wall_s_client": 19.0,
+ "wall_s_chain": 7.8,
+ "blocks": 13,
+ "execution_completed": [
+  {
+   "standard": "near-outlayer",
+   "version": "1.0.0",
+   "event": "execution_completed",
+   "data": [
+    {
+     "sender_id": "sealed-hunter-a-11010702.testnet",
+     "code_source": {
+      "WasmUrl": {
+       "url": "https://6pa7yka0ghwew5xh.public.blob.vercel-storage.com/wasm/fb179c0067c9100256cc8033c23e21678985fcb4e8f3e94622c7969e85f22fd8.wasm",
+       "hash": "fb179c0067c9100256cc8033c23e21678985fcb4e8f3e94622c7969e85f22fd8",
+       "build_target": "wasm32-wasip1"
+      }
+     },
+     "resources_used": {
+      "instructions": 33177,
+      "time_ms": 2260,
+      "compile_time_ms": null
+     },
+     "success": true,
+     "error_message": null,
+     "payment_charged": "1226000000000000000000",
+     "payment_refunded": "18274300000000000000000",
+     "compilation_note": "Cached WASM from 2026-11-01T02:17:49.234435+00:00",
+     "timestamp": 1793499999124231588
+    }
+   ]
+  }
+ ],
+ "native_verdict": {
+  "v": 1,
+  "broken": true,
+  "invariant_id": "fallback-owner-drained",
+  "h_exploit": "c7b729125dc25e430172f01cfed0104bce3269d8494963318f8e54d9a8533ef8",
+  "h_snapshot": "57263dfb780961cfb0391a49684340ba627e7e39159b1d513fd2e2861c60a073",
+  "h_enc": "3d7951d7210a38e331aeaf19773e2458235631955717f129662792dac5eefdd7",
+  "gas_used": 106932,
+  "err": null
+ },
+ "chain_verdict": {
+  "v": 1,
+  "broken": false,
+  "invariant_id": "fallback-owner-drained",
+  "h_exploit": "",
+  "h_snapshot": "",
+  "h_enc": "",
+  "gas_used": 0,
+  "err": "secret missing",
+  "lim": {
+   "i": 2000000000,
+   "m": 512,
+   "s": 120,
+   "mem": 1179648
+  }
+ },
+ "match_native": false,
+ "wasmtime_verdict": {
+  "v": 1,
+  "broken": true,
+  "invariant_id": "fallback-owner-drained",
+  "h_exploit": "c7b729125dc25e430172f01cfed0104bce3269d8494963318f8e54d9a8533ef8",
+  "h_snapshot": "57263dfb780961cfb0391a49684340ba627e7e39159b1d513fd2e2861c60a073",
+  "h_enc": "3d7951d7210a38e331aeaf19773e2458235631955717f129662792dac5eefdd7",
+  "gas_used": 106932,
+  "err": null,
+  "lim": {
+   "i": null,
+   "m": null,
+   "s": null,
+   "mem": 1507328
+  }
+ },
+ "verdict_sha256": {
+  "native": "b6586c81dfe45f30a5086dbe1267603ee7811adfa2f3047a5138a6cfe2a34050",
+  "wasmtime": "b6586c81dfe45f30a5086dbe1267603ee7811adfa2f3047a5138a6cfe2a34050",
+  "outlayer": "492b5a7cd55941b5a236562d77f36f6e1518714a09bc21a7f8dfb035a6e63af3"
+ },
+ "three_of_three": false
+}

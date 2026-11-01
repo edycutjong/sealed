@@ -1,0 +1,50 @@
+{
+ "label": "neg-direct",
+ "signer": "sealed-hunter-a-11010702.testnet",
+ "request_tx": "2hKC5DuEd9e7zck9gPEtBfvfxiE1NXVJ2nTXwMKVMfJX",
+ "secrets_ref": {
+  "profile": "c-c7b72912",
+  "account_id": "sealed-hunter-a-11010702.testnet"
+ },
+ "final_status": {
+  "SuccessValue": "bnVsbA=="
+ },
+ "wall_s_client": 13.0,
+ "execution_completed": [
+  {
+   "standard": "near-outlayer",
+   "version": "1.0.0",
+   "event": "execution_completed",
+   "data": [
+    {
+     "sender_id": "sealed-hunter-a-11010702.testnet",
+     "code_source": {
+      "WasmUrl": {
+       "url": "https://6pa7yka0ghwew5xh.public.blob.vercel-storage.com/wasm/fb179c0067c9100256cc8033c23e21678985fcb4e8f3e94622c7969e85f22fd8.wasm",
+       "hash": "fb179c0067c9100256cc8033c23e21678985fcb4e8f3e94622c7969e85f22fd8",
+       "build_target": "wasm32-wasip1"
+      }
+     },
+     "resources_used": {
+      "instructions": 0,
+      "time_ms": 0,
+      "compile_time_ms": null
+     },
+     "success": false,
+     "error_message": "Access denied by access condition \u2014 signer sealed-hunter-a-11010702.testnet, called from sealed-hunter-a-11010702.testnet. Check the access conditions configured by the secret owner.",
+     "payment_charged": "1000000000000000000000",
+     "payment_refunded": "49000000000000000000000",
+     "compilation_note": null,
+     "timestamp": 1793499963992699723
+    }
+   ]
+  }
+ ],
+ "logs": [
+  "EVENT_JSON:{\"standard\":\"near-outlayer\",\"version\":\"1.0.0\",\"event\":\"execution_requested\",\"data\":[{\"request_data\":\"{\\\"request_id\\\":6036,\\\"sender_id\\\":\\\"sealed-hunter-a-11010702.testnet\\\",\\\"predecessor_id\\\":\\\"sealed-hunter-a-11010702.testnet\\\",\\\"code_source\\\":{\\\"WasmUrl\\\":{\\\"url\\\":\\\"https://6pa7yka0ghwe",
+  "[[yNEAR charged: \"1000000000000000000000\"]]",
+  "EVENT_JSON:{\"standard\":\"near-outlayer\",\"version\":\"1.0.0\",\"event\":\"execution_completed\",\"data\":[{\"sender_id\":\"sealed-hunter-a-11010702.testnet\",\"code_source\":{\"WasmUrl\":{\"url\":\"https://6pa7yka0ghwew5xh.public.blob.vercel-storage.com/wasm/fb179c0067c9100256cc8033c23e21678985fcb4e8f3e94622c7969e85f22fd",
+  "Execution failed: \"Access denied by access condition \u2014 signer sealed-hunter-a-11010702.testnet, called from sealed-hunter-a-11010702.testnet. Check the access conditions configured by the secret owner.\". Resources: { instructions: 0, time_ms: 0 }. Refunded 49000000000000000000000 yoctoNEAR"
+ ],
+ "return": "null"
+}

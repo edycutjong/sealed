@@ -1,0 +1,268 @@
+{
+ "check": "G5+G5b",
+ "pin_sha256": "fb179c0067c9100256cc8033c23e21678985fcb4e8f3e94622c7969e85f22fd8",
+ "runs": 15,
+ "worst_pct_of_enforced": {
+  "i": 23.98,
+  "s": 1.95,
+  "mem": 0.46
+ },
+ "result": "PASS",
+ "rows": [
+  {
+   "label": "abuse-big",
+   "request_tx": "oMj8WeAZy5jAVjiHTxCeCQktRN431f8CSacShhkwtjK",
+   "success": true,
+   "broken": false,
+   "err": "exploit invalid: calldata too large",
+   "three_of_three": true,
+   "instructions": 27447491,
+   "time_ms": 2316,
+   "peak_mem_b": 1769472,
+   "verdict_bytes": 446,
+   "pct": {
+    "i": 1.37,
+    "s": 1.93,
+    "mem": 0.33
+   }
+  },
+  {
+   "label": "abuse-blake2f",
+   "request_tx": "96Gh7njXQP4TABGRiSBxf1GPdcGeyPWozakk8mvnek32",
+   "success": true,
+   "broken": false,
+   "err": null,
+   "three_of_three": true,
+   "instructions": 7397418,
+   "time_ms": 2309,
+   "peak_mem_b": 1572864,
+   "verdict_bytes": 416,
+   "pct": {
+    "i": 0.37,
+    "s": 1.92,
+    "mem": 0.29
+   }
+  },
+  {
+   "label": "abuse-callself",
+   "request_tx": "6UANL4v4TZek7Mia62cQYDiz7KEX6FTp1NS4wa1a9hv9",
+   "success": true,
+   "broken": false,
+   "err": null,
+   "three_of_three": true,
+   "instructions": 22202899,
+   "time_ms": 2266,
+   "peak_mem_b": 1507328,
+   "verdict_bytes": 416,
+   "pct": {
+    "i": 1.11,
+    "s": 1.89,
+    "mem": 0.28
+   }
+  },
+  {
+   "label": "abuse-create",
+   "request_tx": "FrbKxBb6cvcQeKsDrU5dPNPyRsZNxATMxAXcq2uvrM5E",
+   "success": true,
+   "broken": false,
+   "err": null,
+   "three_of_three": true,
+   "instructions": 7786476,
+   "time_ms": 2316,
+   "peak_mem_b": 1835008,
+   "verdict_bytes": 416,
+   "pct": {
+    "i": 0.39,
+    "s": 1.93,
+    "mem": 0.34
+   }
+  },
+  {
+   "label": "abuse-input",
+   "request_tx": "3iJGqiEfNxSBz8TzeCDwvu6ZzA8wCVSvWSp3oAQQYRH2",
+   "success": true,
+   "broken": false,
+   "err": null,
+   "three_of_three": true,
+   "instructions": 27961615,
+   "time_ms": 2108,
+   "peak_mem_b": 1769472,
+   "verdict_bytes": 416,
+   "pct": {
+    "i": 1.4,
+    "s": 1.76,
+    "mem": 0.33
+   }
+  },
+  {
+   "label": "abuse-jumpdest",
+   "request_tx": "8GAxxR6cRF29J3C368626QSoWEUcKiFe2xWCgKmEm2Sj",
+   "success": true,
+   "broken": false,
+   "err": null,
+   "three_of_three": true,
+   "instructions": 32837302,
+   "time_ms": 2302,
+   "peak_mem_b": 1572864,
+   "verdict_bytes": 416,
+   "pct": {
+    "i": 1.64,
+    "s": 1.92,
+    "mem": 0.29
+   }
+  },
+  {
+   "label": "abuse-keccak",
+   "request_tx": "BWzg5uXHnstptfpfP3WoqDtoCkkg7mZBirBLryeiNbQW",
+   "success": true,
+   "broken": false,
+   "err": null,
+   "three_of_three": true,
+   "instructions": 479569753,
+   "time_ms": 2297,
+   "peak_mem_b": 1507328,
+   "verdict_bytes": 416,
+   "pct": {
+    "i": 23.98,
+    "s": 1.91,
+    "mem": 0.28
+   }
+  },
+  {
+   "label": "abuse-loop",
+   "request_tx": "5rwYBKM8V7cRRznzS4DJQDF9ZbQ24S2oZXjpNiE1AibR",
+   "success": true,
+   "broken": false,
+   "err": null,
+   "three_of_three": true,
+   "instructions": 19518585,
+   "time_ms": 2275,
+   "peak_mem_b": 1507328,
+   "verdict_bytes": 416,
+   "pct": {
+    "i": 0.98,
+    "s": 1.9,
+    "mem": 0.28
+   }
+  },
+  {
+   "label": "abuse-mem",
+   "request_tx": "GrvACVABXBs57buHqBa4WPAdj7ivw9wDnAenBy5TZvFZ",
+   "success": true,
+   "broken": false,
+   "err": null,
+   "three_of_three": true,
+   "instructions": 7806603,
+   "time_ms": 2295,
+   "peak_mem_b": 2490368,
+   "verdict_bytes": 416,
+   "pct": {
+    "i": 0.39,
+    "s": 1.91,
+    "mem": 0.46
+   }
+  },
+  {
+   "label": "abuse-mulmod",
+   "request_tx": "GYaWeDZUDj4CtM5sAssdC8kSsSZWmV6kWbZsytZToDxD",
+   "success": true,
+   "broken": false,
+   "err": null,
+   "three_of_three": true,
+   "instructions": 125907179,
+   "time_ms": 2296,
+   "peak_mem_b": 1572864,
+   "verdict_bytes": 416,
+   "pct": {
+    "i": 6.3,
+    "s": 1.91,
+    "mem": 0.29
+   }
+  },
+  {
+   "label": "abuse-over",
+   "request_tx": "4E1WqqCS9o2cKdx4E7TUNUihXnem7hrx93xwsxcaNe8p",
+   "success": true,
+   "broken": false,
+   "err": "exploit invalid: too many txs",
+   "three_of_three": true,
+   "instructions": 7134574,
+   "time_ms": 2254,
+   "peak_mem_b": 1507328,
+   "verdict_bytes": 440,
+   "pct": {
+    "i": 0.36,
+    "s": 1.88,
+    "mem": 0.28
+   }
+  },
+  {
+   "label": "abuse-sstore",
+   "request_tx": "ETL1AUEEQrdu36trqCMkoMiqnSsFB8o6gPbMLfYaA2Fm",
+   "success": true,
+   "broken": false,
+   "err": null,
+   "three_of_three": true,
+   "instructions": 7316495,
+   "time_ms": 2251,
+   "peak_mem_b": 1572864,
+   "verdict_bytes": 416,
+   "pct": {
+    "i": 0.37,
+    "s": 1.88,
+    "mem": 0.29
+   }
+  },
+  {
+   "label": "deliver24k",
+   "request_tx": "5AQXDg7Xf9SLuT5hbhpBBDq92UXmrsmnvMWYJqD14Rtk",
+   "success": true,
+   "broken": false,
+   "err": null,
+   "three_of_three": true,
+   "instructions": 27965533,
+   "time_ms": 2292,
+   "peak_mem_b": 1769472,
+   "verdict_bytes": 416,
+   "pct": {
+    "i": 1.4,
+    "s": 1.91,
+    "mem": 0.33
+   }
+  },
+  {
+   "label": "fallback",
+   "request_tx": "D2VKufuRbYsYfo2T9tZbpRj3sksquxEtBboAj5UGDZWB",
+   "success": true,
+   "broken": true,
+   "err": null,
+   "three_of_three": true,
+   "instructions": 7386957,
+   "time_ms": 2296,
+   "peak_mem_b": 1507328,
+   "verdict_bytes": 415,
+   "pct": {
+    "i": 0.37,
+    "s": 1.91,
+    "mem": 0.28
+   }
+  },
+  {
+   "label": "noop",
+   "request_tx": "8DcQYjzctnDPPBAimot2Y4BH8GeLRKnMWuuZ3HQjhWEN",
+   "success": true,
+   "broken": false,
+   "err": null,
+   "three_of_three": true,
+   "instructions": 7049368,
+   "time_ms": 2340,
+   "peak_mem_b": 1507328,
+   "verdict_bytes": 411,
+   "pct": {
+    "i": 0.35,
+    "s": 1.95,
+    "mem": 0.28
+   }
+  }
+ ]
+}
