@@ -13,10 +13,10 @@ and prints `factory.validateInstance(instance, player)`: `1` for a real exploit,
 chain.
 
 The paid fallback exploit on the demo bounty, in order:
-[commit](https://testnet.nearblocks.io/txns/FNbCUc53YNayqd6NBqaaxnZTeGAVGABHfPsoHz7Gkc2s) (14.6 s to verdict) →
+[commit](https://testnet.nearblocks.io/txns/FNbCUc53YNayqd6NBqaaxnZTeGAVGABHfPsoHz7Gkc2s) (14.6 s client wall-clock to verdict, 8.5 s on chain block time) →
 [worker verdict](https://testnet.nearblocks.io/txns/2vdtrvQmZmpt4NGfAD2FyBQy9d5PjLR4dEJuQCF8MXTX) →
-[deliver](https://testnet.nearblocks.io/txns/AodmFQ6tq4pBcxLreRDSCanKkZQY7m6nhM459NfPAg3s) (6.3 s to PAID). Timings are from
-`corpus/results.json` (`timing_s`).
+[deliver](https://testnet.nearblocks.io/txns/AodmFQ6tq4pBcxLreRDSCanKkZQY7m6nhM459NfPAg3s) (6.3 s client wall-clock to PAID, 1.8 s on chain). Wall-clock is `corpus/results.json` `timing_s` (3 s polling, approximate);
+block time is `corpus/bench.json` `chain.rows`.
 
 ## 2. A fake is refused with a reason
 
@@ -30,8 +30,8 @@ make refusals
 ## 3. Prove the payouts from chain data
 
 ```bash
-make verify-demo   # 5 paid demo-bounty runs, ~25 archival RPC calls, ~1.5 min
-make verify        # all 29 runs, ~80 calls; exit 2 = RPC unreachable, not a failed check
+make verify-demo   # 5 paid demo-bounty runs, about 25 archival RPC calls, about 1.5 min
+make verify        # all 29 runs, about 80 calls; exit 2 = RPC unreachable, not a failed check
 ```
 
 Per run it checks: the pinned verifier hash, the OutLayer worker key, the verdict, `h_enc`, and PAID for that commit id;
@@ -45,7 +45,8 @@ make bench      # request→verdict p50 7.27 s, p95 10.85 s (29 runs); heaviest 
 make baseline   # what LLM-only triage would pay (not NEAR AI Cloud models; see baseline/README.md)
 ```
 
-LLM-only triage paid 1, 3 and 3 of the 21 fakes (muse-wonder-1.0, nemotron-3-ultra, qwen3.8-omni-flash). The verifier paid 0.
+LLM-only triage paid 1, 3 and 3 of the 21 fakes (muse-wonder-1.0, nemotron-3-ultra, qwen3.8-omni-flash) and 12, 12 and 11 of the
+15 real exploits. The executing verifier paid 0 of the 21 fakes and 5 of 5 real exploits on the demo bounty.
 
 ## Limits
 
