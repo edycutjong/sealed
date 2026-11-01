@@ -92,8 +92,12 @@ def build_prompt(it):
 
 
 def parse_verdict(reply):
-    m = re.findall(r"VERDICT:\s*\**\s*(PAY|REFUSE)", reply, re.I)
-    return m[-1].upper() if m else None
+    """The last `VERDICT:` line decides; a line naming both PAY and REFUSE (an echoed template) is no answer."""
+    lines = [l for l in reply.splitlines() if re.search(r"VERDICT:", l, re.I)]
+    if not lines:
+        return None
+    m = re.findall(r"\b(PAY|REFUSE)\b", lines[-1], re.I)
+    return m[0].upper() if len({x.upper() for x in m}) == 1 else None
 
 
 # ----- providers: each takes the prompt text and returns the model's reply text -----
@@ -199,8 +203,14 @@ def show(only=None):
             by.setdefault(run["truth"][n]["category"], []).append(n)
         if by:
             print("    fakes paid by category: " + ", ".join(f"{c} {len(v)}" for c, v in sorted(by.items())))
-        if no_reply:
-            print(f"    unanswered (not counted as pay): {len(no_reply)}")
+        claimed = [n for n in on_chain if n.startswith("llm-")]
+        print(f"    {len(claimed)} of the {len(on_chain)} fakes carry a hunter claim (the rest arrive with no explanation); "
+              f"fakes paid: {len(pay(on_chain))}, of which with a claim: {len([n for n in pay(on_chain) if n in claimed])}")
+        for n in no_reply:
+            first = open(os.path.join(OUT, "transcripts", model, n + ".txt")).read().strip().splitlines()[:1]
+            why = first[0][:90] if first and first[0].startswith("[no reply") else "reply had no VERDICT line"
+            kind = "fake" if n in fakes else "real exploit"
+            print(f"    unanswered, counted as NOT paying ({kind}): {n} — {why}")
     print("\n  transcripts: baseline/transcripts/<model>/<item>.txt · prompt: python3 scripts/baseline.py prompt <item>")
     print("  The verifier executes the submission and calls validateInstance: `make replay` re-runs it, no model involved.")
 

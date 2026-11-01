@@ -10,7 +10,8 @@ The agent never sees the factory's validateInstance code, only what a local run 
 (success / revert + data) and what validateInstance returned. The model is only the proposer; whether anything is paid is
 decided by the verifier on chain (`scripts/hunter.py` commits a winning submission), so a wrong or lucky model changes
 what the agent finds, not what the bounty pays. Each run is written verbatim to hunter-agent/<level>-<model>.md.
-`--provider nearai` calls NEAR AI Cloud (private inference: the finding is not shown to a model vendor)."""
+`--provider nearai` calls NEAR AI Cloud, whose inference is private (the finding is not shown to a model vendor);
+no run recorded in hunter-agent/ used it."""
 import argparse, hashlib, json, os, re, subprocess, sys, time
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -42,6 +43,11 @@ validateInstance returned {ret}. Start your answer with one sentence beginning "
 output shows, then give the corrected submission in a single ```json block (same format)."""
 
 
+def with_history(first, history):
+    """The model call is stateless, so the whole conversation goes in every prompt: task, then (your answer, feedback)*."""
+    return first + "".join(f"\n\n--- your previous answer ---\n{ans}\n\n--- feedback ---\n{fb}" for ans, fb in history)
+
+
 def local_run(level, txs):
     """The committed verifier.wasm under wasmtime on the player's submission → (broken, feedback text)."""
     lv = LEVELS[level]
@@ -52,6 +58,8 @@ def local_run(level, txs):
     p = subprocess.run(["wasmtime", "run", "--env", "EXPLOIT", "--env", "SALT", "--env", "EPH_SK", "--env", "SEALED_TRACE",
                         vo.VERIFIER], input=json.dumps(inp).encode(), capture_output=True,
                        env={**os.environ, **secrets, "SEALED_TRACE": "1"})
+    if p.returncode != 0:
+        sys.exit(f"verifier crashed (exit {p.returncode}), not a model result:\n{p.stderr.decode()[-300:]}")
     verdict = json.loads(p.stdout)
     lines, ret, i = [], "nothing (the submission was rejected before the invariant check)", 0
     for l in p.stderr.decode().splitlines():
@@ -94,7 +102,7 @@ def main():
     msgs = FIRST.format(goal=baseline.GOAL[lv["invariant_id"]], level=a.level, instance=lv["instance"],
                         source=open(os.path.join(ROOT, "levels", "src", "ethernaut", baseline.SOURCE[a.level])).read().rstrip())
     log = [f"# Hunter agent run — {a.level} — {a.model} ({a.provider}) — {time.strftime('%Y-%m-%d', time.gmtime())}\n"]
-    prompt, won, found = msgs, False, None
+    history, prompt, won, found = [], msgs, False, None  # each prompt = the task + every earlier answer and its local run
     for turn in range(1, a.turns + 1):
         for attempt in range(3):  # a flaky provider call is retried; three failures end the run with the error shown
             try:
@@ -110,7 +118,8 @@ def main():
         txs = extract(reply)
         if txs is None:
             log.append("**No parseable ```json transaction array in the reply.**\n")
-            prompt = REVISE.format(trace="(your reply held no valid JSON transaction array)", ret="nothing")
+            history.append((reply.strip(), REVISE.format(trace="(your reply held no valid JSON transaction array)", ret="nothing")))
+            prompt = with_history(msgs, history)
             continue
         broken, trace, ret = local_run(a.level, txs)
         log += [f"### Turn {turn} — local verifier (committed verifier.wasm, wasmtime)\n", "```", trace, f"validateInstance → {ret}",
@@ -119,7 +128,8 @@ def main():
         if broken:
             won, found = True, txs
             break
-        prompt = REVISE.format(trace=trace, ret=ret)
+        history.append((reply.strip(), REVISE.format(trace=trace, ret=ret)))
+        prompt = with_history(msgs, history)
     safe = re.sub(r"[^\w.-]+", "_", a.model)
     log.append(f"**Result: {'invariant broken on turn ' + str(turn) if won else 'not broken in ' + str(a.turns) + ' turns'}.**\n")
     if won:

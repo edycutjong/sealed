@@ -2,27 +2,35 @@
 
 `scripts/hunter_agent.py` asks a model for an exploit, runs it through the committed `verifier.wasm` locally (the wasm the
 TEE worker runs), and feeds back what a local EVM run prints (each transaction's outcome, what `validateInstance`
-returned). It revises up to 4 turns. The model only proposes; the bounty still pays only what the verifier executes. A
-winning submission can be committed with `scripts/hunter.py --exploit hunter-agent/<file>.json` (needs an open bounty).
+returned). The whole conversation (task, each earlier answer, each local-run output) goes into every later prompt, up to 4
+turns. The model only proposes; the bounty still pays only what the verifier executes. A winning submission can be
+committed with `scripts/hunter.py --exploit hunter-agent/<file>.json` (needs an open bounty and a funded hunter account).
 
-| Level | muse-wonder-1.0 (reasoning medium) | muse-wonder-1.0-low (reasoning low) | qwen3.8-omni-flash (thinking off) |
-|---|---|---|---|
-| fallback | broken, turn 1 | broken, turn 1 | not broken, 4 turns |
-| telephone | broken, turn 1 | not broken, 4 turns | not broken, 4 turns |
-| delegation | broken, turn 1 | broken, turn 1 | not broken, 4 turns |
-| force | broken, turn 1 | broken, turn 1 | not broken, 4 turns |
-| king | broken, turn 1 | not broken, 4 turns | not broken, 4 turns |
-| **found** | **5 of 5** | **3 of 5** | **0 of 5** |
+| Level | muse-wonder-1.0, reasoning medium | muse-wonder-1.0, reasoning low |
+|---|---|---|
+| fallback | broken, turn 1 | broken, turn 1 |
+| telephone | broken, turn 1 | broken, **turn 2** (turn 1 transacted but `validateInstance` returned 0) |
+| delegation | broken, turn 1 | broken, turn 1 |
+| force | broken, turn 1 | broken, turn 1 |
+| king | broken, turn 1 | broken, turn 1 |
+| **found** | **5 of 5** | **5 of 5** |
 
-Every transcript is `<level>-<model>.md` (replies verbatim, local verifier output after each). Each winning submission is
-`<level>-<model>-exploit.json`; all 8 re-ran as `broken:true` through the committed verifier after extraction (2026-11-01).
+Every transcript is `<level>-<model>.md` (replies verbatim, local verifier output after each turn); each winning
+submission is `<level>-<model>-exploit.json`, and all 10 re-ran as `broken:true` through the committed verifier after
+extraction. `telephone-muse-wonder-1.0-low.md` shows the agent changing course for a stated reason: "I was wrong because the
+local run shows the transaction succeeded but validateInstance returned 0 …", then a different submission that breaks it.
 
-**Not NEAR AI Cloud.** These runs used other providers because no NEAR AI Cloud key exists on this machine
-(`submission/HUMAN-TODO.md` is the owner's list; run `--provider nearai --model <id>` with a key to add that row). They are
-not private-inference runs and must not be described as such.
+**Not NEAR AI Cloud.** These runs used Meta's Muse API because no NEAR AI Cloud key exists on this machine
+(`submission/HUMAN-TODO.md` row 9; run `--provider nearai --model <id>` with a key to add that row). They are not
+private-inference runs and must not be described as such.
 
-**Honest history.** One run per cell, kept as it came out, with two exceptions: the first `fallback` run with muse ran before
-the trace feedback worked and was re-run; the first `king` run with muse failed because the 4000-token output cap truncated its
-replies before the JSON block, so it was re-run with a 12000-token cap (`MUSE_MAX_TOKENS`) and broke the level on turn 1.
-Neither discarded run is kept. In the failed cells the model did revise ("I was wrong because …") and still missed, which is
-what the verifier gate is for: a wrong agent costs the hunter a bond, never the protocol.
+**Honest history.**
+- Both columns are one run per cell. Muse is not deterministic: `king` with reasoning low failed on turn 1 in a first run and
+  broke on turn 1 in the rerun listed here, so single runs are noisy and these 10 cells say "a capable model usually finds
+  these five textbook levels", not a success rate.
+- An earlier version of the loop dropped the conversation after turn 1. Every run it produced was discarded and the failing
+  cells were redone with the fixed loop: telephone and king (reasoning low), plus a qwen3.8-omni-flash set (thinking off) that
+  could not be redone because DashScope's free quota ran out on 2026-11-01, so qwen has no row here.
+- Also discarded: a first `fallback` run made before the trace feedback worked, and a first `king` run (reasoning medium) whose
+  replies the 4000-token output cap truncated; `king` was rerun with a 12000-token cap (`MUSE_MAX_TOKENS`).
+- The levels are textbook Ethernaut; none of this says anything about live protocols.

@@ -82,11 +82,13 @@ def check(_):
 
 
 def quote(a):
+    if a.live and not a.refund_to:
+        sys.exit("--live needs --refund-to <your NEAR account>: a failed or expired swap refunds the USDC there")
     import datetime
     dl = (datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=a.deadline_h)).strftime("%Y-%m-%dT%H:%M:%SZ")
     body = {"dry": not a.live, "swapType": "EXACT_INPUT", "slippageTolerance": 100, "originAsset": CHAINS["near"],
             "depositType": "ORIGIN_CHAIN", "destinationAsset": CHAINS[a.to], "amount": str(a.amount),
-            "refundTo": a.refund_to, "refundType": "ORIGIN_CHAIN", "recipient": a.recipient,
+            "refundTo": a.refund_to or "example.near",  # dry quotes never move funds "refundType": "ORIGIN_CHAIN", "recipient": a.recipient,
             "recipientType": "DESTINATION_CHAIN", "deadline": dl}
     code, r = http(ONECLICK + "/v0/quote", body)
     print(json.dumps({"http": code, **r}, indent=1)[:2500])
@@ -129,7 +131,7 @@ def plan(a):
         ("2. create the KEYLESS bounty account in one batch (CreateAccount + Transfer + UseGlobalContract + new, no AddKey)",
          f"near transaction construct-transaction {a.protocol} receiver-id {a.bounty} add-action create-account "
          f"add-action transfer '{a.bounty_funds} NEAR' add-action use-global-contract use-global-hash {gh} "
-         f"with-init-call new json-args '{json.dumps(cfg, separators=(',', ':'))}' prepaid-gas '100 Tgas' "
+         f"with-init-call new json-args '{json.dumps({'cfg': cfg}, separators=(',', ':'))}' prepaid-gas '100 Tgas' "
          f"attached-deposit '0 NEAR' skip {net}"),
     ]
     regs = [a.bounty, a.hunter] + ([a.payout_to] if not a.payout_to.startswith("0x") else [])
@@ -166,20 +168,27 @@ def plan(a):
              f"OUTLAYER_NETWORK=mainnet outlayer secrets set \"$(python3 -c \"import json;print(json.dumps(json.load(open('{path}'))['secrets']))\")\" "
              f"--wasm-hash {vh} --profile {prof} --access whitelist:{a.hunter} --via {a.bounty}\n"
              f"   # the stock CLI attaches 0.1 NEAR; this row is small enough (needs a funded {a.hunter}, run `outlayer login` first)"),
-            (f"7. run `mainnet_leg.py quote --live` first if payout_to is a 1Click deposit address (its deadline must outlive the payout); commit (bond {a.bond} + OutLayer deposit {a.outlayer_deposit} yocto) — payout_to is the 1Click deposit address or NEAR account",
+            (f"7. if payout_to is a 1Click deposit address, run FIRST: python3 scripts/mainnet_leg.py quote --live --to base --recipient 0x… "
+             f"--refund-to {a.hunter} --amount {a.amount} --deadline-h 6  (its deposit address must stay valid past the {3600 // 60}-minute deliver window "
+             f"plus verdict latency; a failed swap refunds the USDC to {a.hunter}). Then commit (bond {a.bond} + OutLayer deposit {a.outlayer_deposit} yocto) — payout_to is the 1Click deposit address or NEAR account",
              f"near contract call-function as-transaction {a.bounty} commit json-args "
              f"'{json.dumps({'commit_hash': commit, 'invariant_id': lv['invariant_id'], 'payout_to': a.payout_to})}' "
              f"prepaid-gas '300 Tgas' attached-deposit '{int(a.bond) + int(a.outlayer_deposit)} yoctoNEAR' sign-as {a.hunter} {net}\n"
              f"   # then poll: near contract call-function as-read-only {a.bounty} view_commit json-args '{{\"commit_id\":<id>}}' network-config mainnet now"),
             ("8. deliver once the commit reads Awarded (sha256(enc) must equal the attested h_enc → PAID)",
              f"near contract call-function as-transaction {a.bounty} deliver json-args "
-             f"'{json.dumps({'commit_id': '<id from step 7 log: COMMIT <id>>', 'enc': base64.b64encode(bytes.fromhex(enc)).decode()})}' "
+             f"'{json.dumps({'commit_id': '<id>', 'enc': base64.b64encode(bytes.fromhex(enc)).decode()}).replace(chr(34) + '<id>' + chr(34), '<id>')}' "
              f"prepaid-gas '100 Tgas' attached-deposit '0 NEAR' sign-as {a.hunter} {net}"),
             ("9. 1Click: wait for the payout to cross chains", f"python3 scripts/mainnet_leg.py status {a.payout_to}"),
         ]
     else:
         steps.append(("6–9. hunter commands", "re-run `plan` with --gen-key (or --protocol-enc-pk <hex>) after step 1: `enc` is sealed to "
                       "the bounty's protocol key, so the hunter's commit_hash and deliver bytes depend on it"))
+    print("# Notes before you sign anything:\n"
+          f"#  - the {a.bounty_funds} NEAR in step 2 stays in the keyless bounty account for good (no key can move it back).\n"
+          "#  - a payout_to that is a 0x… address is NOT a NEAR account: the bounty refuses the commit (`payout_to not registered`);\n"
+          "#    pay out to a NEAR account or to a 1Click deposit address (the plan registers it in step 3).\n"
+          f"#  - the quote and this plan must use the same --amount ({a.amount} = {a.amount / 1e6:g} USDC, 6 decimals).")
     for title, cmd in steps:
         print(f"\n# {title}\n{cmd}")
     print("\n# After the run: copy every transaction hash into corpus/mainnet.json (hash, signer, step) and re-check with\n"
@@ -193,7 +202,7 @@ def main():
     q = sub.add_parser("quote")
     q.add_argument("--to", choices=sorted(CHAINS), default="base")
     q.add_argument("--recipient", required=True)
-    q.add_argument("--refund-to", default="example.near", help="NEAR account refunded if the swap fails")
+    q.add_argument("--refund-to", help="NEAR account that receives the USDC if the swap fails or expires (required with --live)")
     q.add_argument("--amount", type=int, default=5_000_000, help="USDC base units (6 decimals); default 5 USDC")
     q.add_argument("--deadline-h", type=float, default=6, help="the deposit address stops being honoured after this")
     q.add_argument("--live", action="store_true", help="real quote with a deposit address (default: dry)")
