@@ -96,6 +96,10 @@ fn every_kept_level_breaks_only_for_its_real_exploit() {
         let v = verdict_at(&format!("corpus/vectors/real-{level}.json"));
         assert!(v.broken && v.err.is_none(), "{level}: real exploit must break the level");
         assert_eq!(v.h_snapshot, hex::encode(sha256(&[SNAPSHOTS[i]])), "{level}: target index = snapshot order");
+        let noop = if *level == "fallback" { "day0/noop.json".to_string() } else { format!("corpus/vectors/noop-{level}.json") };
+        let n = verdict_at(&noop);
+        assert!(!n.broken && n.err.is_none(), "{level}: the no-op must leave the level unbroken");
+        assert_eq!(n.h_snapshot, v.h_snapshot, "{level}: no-op ran on the same snapshot");
     }
 }
 

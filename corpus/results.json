@@ -4,15 +4,40 @@
  "explorer": "https://testnet.nearblocks.io/txns/",
  "summary": {
   "real_paid_demo_bounty": "5 of 5",
-  "non_breaking_submissions_paid": "0 of 20",
-  "non_breaking_submissions_refused": "20 of 20",
-  "llm_written_paid": 0,
+  "submitted_non_breaking_paid": "0 of 21",
+  "submitted_non_breaking_refused": "21 of 21",
+  "llm_written": 15,
+  "llm_really_break_wasmtime": 10,
+  "llm_submitted_on_chain": 5,
+  "llm_paid_on_chain": 0,
   "refusal_kinds_on_chain": "6 of 6",
-  "runs": 28,
+  "runs": 29,
   "golden_mismatches": [],
-  "max_instructions": 479555711,
-  "max_instructions_run": "d5-abuse-keccak",
-  "corpus_items_on_chain": "25 of 49"
+  "requested_limits": {
+   "max_instructions": 2000000000,
+   "max_memory_mb": 512,
+   "max_execution_seconds": 120
+  },
+  "g5_heaviest_real": {
+   "run": "d5-expire-fallback",
+   "instructions": 7371260,
+   "time_ms": 2290,
+   "instructions_pct_of_request": 0.37,
+   "time_pct_of_request": 1.91,
+   "verifier_peak_mem_bytes": 1572864,
+   "mem_pct_of_enforced": 0.29
+  },
+  "g5_heaviest_fake": {
+   "run": "d5-abuse-keccak",
+   "instructions": 479555711,
+   "time_ms": 2664,
+   "instructions_pct_of_request": 23.98,
+   "time_pct_of_request": 2.22,
+   "verifier_peak_mem_bytes": 1572864,
+   "mem_pct_of_enforced": 0.29
+  },
+  "memory": "verifier-reported peak linear memory (verdict lim.mem); OutLayer reports no worker memory figure",
+  "corpus_items_on_chain": "26 of 52"
  },
  "bounties": {
   "corpus.sealed-dev-11010702.testnet": {
@@ -137,6 +162,12 @@
    "time_ms": 2304,
    "timing_s": {
     "commit_to_verdict_s": 21.2
+   },
+   "worker_limits_seen": {
+    "i": 2000000000,
+    "m": 512,
+    "s": 120,
+    "mem": 1507328
    }
   },
   {
@@ -162,6 +193,12 @@
    "timing_s": {
     "commit_to_verdict_s": 17.5,
     "deliver_to_paid_s": 9.5
+   },
+   "worker_limits_seen": {
+    "i": 2000000000,
+    "m": 512,
+    "s": 120,
+    "mem": 1507328
    }
   },
   {
@@ -188,6 +225,44 @@
    "time_ms": 2289,
    "timing_s": {
     "commit_to_verdict_s": 15.8
+   },
+   "worker_limits_seen": {
+    "i": 2000000000,
+    "m": 512,
+    "s": 120,
+    "mem": 1835008
+   }
+  },
+  {
+   "label": "d5-abuse-input",
+   "bounty": "corpus.sealed-dev-11010702.testnet",
+   "item": "abuse-input",
+   "category": "abuse",
+   "level": "fallback",
+   "invariant_id": "fallback-owner-drained",
+   "expect": {
+    "broken": false
+   },
+   "final_status": "Refused",
+   "chain_verdict": {
+    "broken": false,
+    "err": null,
+    "gas_used": 414393
+   },
+   "commit_tx": "J7CkDAgjkW2AbZXUGVjpPffohHeEcMDx2Jooy5Qfu2cK",
+   "request_id": 6089,
+   "resolve_tx": "27ttBoMZ55j1s58h46xVvQFbyQdYm1dj8tKuUNn8uBiL",
+   "deliver_tx": null,
+   "instructions": 27947477,
+   "time_ms": 2325,
+   "timing_s": {
+    "commit_to_verdict_s": 15.5
+   },
+   "worker_limits_seen": {
+    "i": 2000000000,
+    "m": 512,
+    "s": 120,
+    "mem": 1769472
    }
   },
   {
@@ -214,6 +289,12 @@
    "time_ms": 2664,
    "timing_s": {
     "commit_to_verdict_s": 16.4
+   },
+   "worker_limits_seen": {
+    "i": 2000000000,
+    "m": 512,
+    "s": 120,
+    "mem": 1572864
    }
   },
   {
@@ -240,6 +321,12 @@
    "time_ms": 2113,
    "timing_s": {
     "commit_to_verdict_s": 14.6
+   },
+   "worker_limits_seen": {
+    "i": 2000000000,
+    "m": 512,
+    "s": 120,
+    "mem": 1572864
    }
   },
   {
@@ -267,6 +354,12 @@
    "time_ms": 2290,
    "timing_s": {
     "commit_to_verdict_s": 14.4
+   },
+   "worker_limits_seen": {
+    "i": 2000000000,
+    "m": 512,
+    "s": 120,
+    "mem": 1572864
    }
   },
   {
@@ -291,6 +384,12 @@
    "time_ms": 2337,
    "timing_s": {
     "commit_to_verdict_s": 14.7
+   },
+   "worker_limits_seen": {
+    "i": 2000000000,
+    "m": 512,
+    "s": 120,
+    "mem": 1572864
    }
   },
   {
@@ -315,6 +414,12 @@
    "time_ms": 2287,
    "timing_s": {
     "commit_to_verdict_s": 14.4
+   },
+   "worker_limits_seen": {
+    "i": 2000000000,
+    "m": 512,
+    "s": 120,
+    "mem": 1572864
    }
   },
   {
@@ -339,6 +444,12 @@
    "time_ms": 2102,
    "timing_s": {
     "commit_to_verdict_s": 14.9
+   },
+   "worker_limits_seen": {
+    "i": 2000000000,
+    "m": 512,
+    "s": 120,
+    "mem": 1572864
    }
   },
   {
@@ -363,6 +474,12 @@
    "time_ms": 2211,
    "timing_s": {
     "commit_to_verdict_s": 20.7
+   },
+   "worker_limits_seen": {
+    "i": 2000000000,
+    "m": 512,
+    "s": 120,
+    "mem": 1572864
    }
   },
   {
@@ -387,6 +504,12 @@
    "time_ms": 2293,
    "timing_s": {
     "commit_to_verdict_s": 14.6
+   },
+   "worker_limits_seen": {
+    "i": 2000000000,
+    "m": 512,
+    "s": 120,
+    "mem": 1572864
    }
   },
   {
@@ -414,6 +537,12 @@
    "time_ms": 1991,
    "timing_s": {
     "commit_to_verdict_s": 14.7
+   },
+   "worker_limits_seen": {
+    "i": 2000000000,
+    "m": 512,
+    "s": 120,
+    "mem": 1572864
    }
   },
   {
@@ -441,6 +570,12 @@
    "time_ms": 2287,
    "timing_s": {
     "commit_to_verdict_s": 15.4
+   },
+   "worker_limits_seen": {
+    "i": 2000000000,
+    "m": 512,
+    "s": 120,
+    "mem": 1572864
    }
   },
   {
@@ -468,6 +603,12 @@
    "time_ms": 2088,
    "timing_s": {
     "commit_to_verdict_s": 13.6
+   },
+   "worker_limits_seen": {
+    "i": 2000000000,
+    "m": 512,
+    "s": 120,
+    "mem": 1572864
    }
   },
   {
@@ -495,6 +636,12 @@
    "time_ms": 2299,
    "timing_s": {
     "commit_to_verdict_s": 13.3
+   },
+   "worker_limits_seen": {
+    "i": 2000000000,
+    "m": 512,
+    "s": 120,
+    "mem": 1572864
    }
   },
   {
@@ -522,6 +669,12 @@
    "time_ms": 2282,
    "timing_s": {
     "commit_to_verdict_s": 14.4
+   },
+   "worker_limits_seen": {
+    "i": 2000000000,
+    "m": 512,
+    "s": 120,
+    "mem": 1572864
    }
   },
   {
@@ -549,6 +702,12 @@
    "time_ms": 2306,
    "timing_s": {
     "commit_to_verdict_s": 13.5
+   },
+   "worker_limits_seen": {
+    "i": 2000000000,
+    "m": 512,
+    "s": 120,
+    "mem": 1572864
    }
   },
   {
@@ -576,6 +735,12 @@
    "time_ms": 2258,
    "timing_s": {
     "commit_to_verdict_s": 14.6
+   },
+   "worker_limits_seen": {
+    "i": 2000000000,
+    "m": 512,
+    "s": 120,
+    "mem": 1572864
    }
   },
   {
@@ -603,6 +768,12 @@
    "time_ms": 2305,
    "timing_s": {
     "commit_to_verdict_s": 13.5
+   },
+   "worker_limits_seen": {
+    "i": 2000000000,
+    "m": 512,
+    "s": 120,
+    "mem": 1572864
    }
   },
   {
@@ -630,6 +801,12 @@
    "time_ms": 2601,
    "timing_s": {
     "commit_to_verdict_s": 22.3
+   },
+   "worker_limits_seen": {
+    "i": 2000000000,
+    "m": 512,
+    "s": 120,
+    "mem": 1572864
    }
   },
   {
@@ -657,6 +834,12 @@
    "time_ms": 2321,
    "timing_s": {
     "commit_to_verdict_s": 14.6
+   },
+   "worker_limits_seen": {
+    "i": 2000000000,
+    "m": 512,
+    "s": 120,
+    "mem": 1572864
    }
   },
   {
@@ -685,6 +868,12 @@
    "timing_s": {
     "commit_to_verdict_s": 13.9,
     "deliver_to_paid_s": 7.1
+   },
+   "worker_limits_seen": {
+    "i": 2000000000,
+    "m": 512,
+    "s": 120,
+    "mem": 1572864
    }
   },
   {
@@ -713,6 +902,12 @@
    "timing_s": {
     "commit_to_verdict_s": 14.6,
     "deliver_to_paid_s": 6.3
+   },
+   "worker_limits_seen": {
+    "i": 2000000000,
+    "m": 512,
+    "s": 120,
+    "mem": 1572864
    }
   },
   {
@@ -741,6 +936,12 @@
    "timing_s": {
     "commit_to_verdict_s": 14.3,
     "deliver_to_paid_s": 6.4
+   },
+   "worker_limits_seen": {
+    "i": 2000000000,
+    "m": 512,
+    "s": 120,
+    "mem": 1572864
    }
   },
   {
@@ -769,6 +970,12 @@
    "timing_s": {
     "commit_to_verdict_s": 14.7,
     "deliver_to_paid_s": 6.8
+   },
+   "worker_limits_seen": {
+    "i": 2000000000,
+    "m": 512,
+    "s": 120,
+    "mem": 1572864
    }
   },
   {
@@ -797,6 +1004,12 @@
    "timing_s": {
     "commit_to_verdict_s": 20.0,
     "deliver_to_paid_s": 6.1
+   },
+   "worker_limits_seen": {
+    "i": 2000000000,
+    "m": 512,
+    "s": 120,
+    "mem": 1572864
    }
   },
   {
@@ -824,6 +1037,12 @@
    "time_ms": 2286,
    "timing_s": {
     "commit_to_verdict_s": 14.8
+   },
+   "worker_limits_seen": {
+    "i": 2000000000,
+    "m": 512,
+    "s": 120,
+    "mem": 1572864
    }
   },
   {
@@ -851,10 +1070,31 @@
    "time_ms": 2766,
    "timing_s": {
     "commit_to_verdict_s": 15.5
+   },
+   "worker_limits_seen": {
+    "i": 2000000000,
+    "m": 512,
+    "s": 120,
+    "mem": 1572864
    }
   }
  ],
  "off_chain": [
+  {
+   "item": "noop-delegation",
+   "category": "near-miss",
+   "reason": "not run on testnet (wasmtime golden only, make corpus)"
+  },
+  {
+   "item": "noop-force",
+   "category": "near-miss",
+   "reason": "not run on testnet (wasmtime golden only, make corpus)"
+  },
+  {
+   "item": "noop-king",
+   "category": "near-miss",
+   "reason": "not run on testnet (wasmtime golden only, make corpus)"
+  },
   {
    "item": "llm-grok-fallback",
    "category": "llm",
@@ -908,72 +1148,67 @@
   {
    "item": "abuse-big",
    "category": "abuse",
-   "reason": "wasmtime only (make corpus); the heaviest abuse shapes ran on testnet"
+   "reason": "wasmtime only (make corpus): testnet ran the heaviest shape (keccak) plus loop, CREATE and oversized input; ran on testnet on day 0 against the earlier verifier pin (day0/results/g6-abuse-big.json)"
   },
   {
    "item": "abuse-blake2f",
    "category": "abuse",
-   "reason": "wasmtime only (make corpus); the heaviest abuse shapes ran on testnet"
+   "reason": "wasmtime only (make corpus): testnet ran the heaviest shape (keccak) plus loop, CREATE and oversized input; ran on testnet on day 0 against the earlier verifier pin (day0/results/g6-abuse-blake2f.json)"
   },
   {
    "item": "abuse-callself",
    "category": "abuse",
-   "reason": "wasmtime only (make corpus); the heaviest abuse shapes ran on testnet"
+   "reason": "wasmtime only (make corpus): testnet ran the heaviest shape (keccak) plus loop, CREATE and oversized input; ran on testnet on day 0 against the earlier verifier pin (day0/results/g6-abuse-callself.json)"
   },
   {
    "item": "abuse-cdcopy",
    "category": "abuse",
-   "reason": "wasmtime only (make corpus); the heaviest abuse shapes ran on testnet"
+   "reason": "wasmtime only (make corpus): testnet ran the heaviest shape (keccak) plus loop, CREATE and oversized input"
   },
   {
    "item": "abuse-exp",
    "category": "abuse",
-   "reason": "wasmtime only (make corpus); the heaviest abuse shapes ran on testnet"
+   "reason": "wasmtime only (make corpus): testnet ran the heaviest shape (keccak) plus loop, CREATE and oversized input"
   },
   {
    "item": "abuse-extcodecopy",
    "category": "abuse",
-   "reason": "wasmtime only (make corpus); the heaviest abuse shapes ran on testnet"
-  },
-  {
-   "item": "abuse-input",
-   "category": "abuse",
-   "reason": "stopped before commit: `outlayer secrets set` attaches a fixed 0.1 NEAR storage deposit and the 49 KB secret row needs 0.66428 NEAR, so OutLayer's secrets contract panics and no commit is made (tx 5rA2ohujEPgbq139JNb9wwbJnC2zUU8mcR3qTHEDM6ws, signer sealed-hunter-a-11010702.testnet)"
+   "reason": "wasmtime only (make corpus): testnet ran the heaviest shape (keccak) plus loop, CREATE and oversized input"
   },
   {
    "item": "abuse-jumpdest",
    "category": "abuse",
-   "reason": "wasmtime only (make corpus); the heaviest abuse shapes ran on testnet"
+   "reason": "wasmtime only (make corpus): testnet ran the heaviest shape (keccak) plus loop, CREATE and oversized input; ran on testnet on day 0 against the earlier verifier pin (day0/results/g6-abuse-jumpdest.json)"
   },
   {
    "item": "abuse-log",
    "category": "abuse",
-   "reason": "wasmtime only (make corpus); the heaviest abuse shapes ran on testnet"
+   "reason": "wasmtime only (make corpus): testnet ran the heaviest shape (keccak) plus loop, CREATE and oversized input"
   },
   {
    "item": "abuse-mcopy",
    "category": "abuse",
-   "reason": "wasmtime only (make corpus); the heaviest abuse shapes ran on testnet"
+   "reason": "wasmtime only (make corpus): testnet ran the heaviest shape (keccak) plus loop, CREATE and oversized input"
   },
   {
    "item": "abuse-mem",
    "category": "abuse",
-   "reason": "wasmtime only (make corpus); the heaviest abuse shapes ran on testnet"
+   "reason": "wasmtime only (make corpus): testnet ran the heaviest shape (keccak) plus loop, CREATE and oversized input; ran on testnet on day 0 against the earlier verifier pin (day0/results/g6-abuse-mem.json)"
   },
   {
    "item": "abuse-mulmod",
    "category": "abuse",
-   "reason": "wasmtime only (make corpus); the heaviest abuse shapes ran on testnet"
+   "reason": "wasmtime only (make corpus): testnet ran the heaviest shape (keccak) plus loop, CREATE and oversized input; ran on testnet on day 0 against the earlier verifier pin (day0/results/g6-abuse-mulmod.json)"
   },
   {
    "item": "abuse-over",
    "category": "abuse",
-   "reason": "wasmtime only (make corpus); the heaviest abuse shapes ran on testnet"
+   "reason": "wasmtime only (make corpus): testnet ran the heaviest shape (keccak) plus loop, CREATE and oversized input; ran on testnet on day 0 against the earlier verifier pin (day0/results/g6-abuse-over.json)"
   },
   {
    "item": "abuse-sstore",
    "category": "abuse",
-   "reason": "wasmtime only (make corpus); the heaviest abuse shapes ran on testnet"
+   "reason": "wasmtime only (make corpus): testnet ran the heaviest shape (keccak) plus loop, CREATE and oversized input; ran on testnet on day 0 against the earlier verifier pin (day0/results/g6-abuse-sstore.json)"
   }
  ]
 }

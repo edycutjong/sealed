@@ -161,6 +161,42 @@
    }
   },
   {
+   "name": "noop-delegation",
+   "category": "near-miss",
+   "level": "delegation",
+   "target": 2,
+   "invariant_id": "delegation-owner-taken",
+   "vector": "corpus/vectors/noop-delegation.json",
+   "expect": {
+    "broken": false,
+    "err": null
+   }
+  },
+  {
+   "name": "noop-force",
+   "category": "near-miss",
+   "level": "force",
+   "target": 3,
+   "invariant_id": "force-balance-nonzero",
+   "vector": "corpus/vectors/noop-force.json",
+   "expect": {
+    "broken": false,
+    "err": null
+   }
+  },
+  {
+   "name": "noop-king",
+   "category": "near-miss",
+   "level": "king",
+   "target": 4,
+   "invariant_id": "king-throne-locked",
+   "vector": "corpus/vectors/noop-king.json",
+   "expect": {
+    "broken": false,
+    "err": null
+   }
+  },
+  {
    "name": "wrong-snapshot-fallback-on-telephone",
    "category": "wrong-snapshot",
    "level": "telephone",

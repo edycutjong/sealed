@@ -116,7 +116,9 @@ def items():
         out.append((f"real-{level}", "real", level, compact(txs), {"broken": True, "err": None}))
     for (level, name), txs in near_misses().items():
         out.append((name, "near-miss", level, compact(txs), {"broken": False, "err": None}))
-    out.append(("noop-telephone", "near-miss", "telephone", compact([]), {"broken": False, "err": None}))
+    # The empty tx list on every kept level (Fallback's no-op is the day-0 `noop` golden).
+    for level in ("telephone", "delegation", "force", "king"):
+        out.append((f"noop-{level}", "near-miss", level, compact([]), {"broken": False, "err": None}))
     # Real exploits committed to the wrong invariant (another level's snapshot).
     out.append(("wrong-snapshot-fallback-on-telephone", "wrong-snapshot", "telephone", compact(real["fallback"]),
                 {"broken": False, "err": None}))

@@ -9,12 +9,20 @@ import glob, json, os
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TESTNET = "https://testnet.nearblocks.io/txns/"
-# Items stopped before any commit, with the failed tx (the deposit is refunded when the call panics).
-PRECOMMIT = {
-    "abuse-input": "stopped before commit: `outlayer secrets set` attaches a fixed 0.1 NEAR storage deposit and the "
-                   "49 KB secret row needs 0.66428 NEAR, so OutLayer's secrets contract panics and no commit is made "
-                   "(tx 5rA2ohujEPgbq139JNb9wwbJnC2zUU8mcR3qTHEDM6ws, signer sealed-hunter-a-11010702.testnet)",
-}
+# Abuse shapes run under wasmtime only: each testnet run slashes a 0.5 NEAR bond, so testnet carries the heaviest
+# shape by fuel (keccak) and three the plan names (gas loop, CREATE bomb, oversized input — its 49 KB secret row needs
+# a 0.7 NEAR storage deposit, see OUTLAYER_BIN in hunter.py); day 0 ran 15 shapes on chain.
+ABUSE_OFF_CHAIN = ("wasmtime only (make corpus): testnet ran the heaviest shape (keccak) plus loop, CREATE and oversized "
+                   "input")
+
+
+def golden_of(name):
+    """The committed golden verdict: tests/golden/corpus/<name>.json (D4 items) or tests/golden/<name>.json (abuse)."""
+    for sub in (("corpus",), ()):
+        p = os.path.join(ROOT, "verifier", "tests", "golden", *sub, f"{name}.json")
+        if os.path.exists(p):
+            return json.load(open(p))
+    return None
 
 
 def load(p):
@@ -36,10 +44,7 @@ def main():
         chain = json.loads(ev["verdict_output"]) if isinstance(ev.get("verdict_output"), str) else ev.get("verdict_output")
         done = (ev.get("execution_completed") or [{}])[0].get("data", [{}])[0]
         res = done.get("resources_used", {})
-        golden = None
-        gpath = os.path.join(ROOT, "verifier", "tests", "golden", "corpus", f"{name}.json")
-        if os.path.exists(gpath):
-            golden = json.load(open(gpath))
+        golden = golden_of(name)
         row = {
             "label": pub["label"], "bounty": pub["bounty"], "item": name, "category": item["category"],
             "level": item["level"], "invariant_id": pub["input"]["invariant_id"], "expect": item["expect"],
@@ -48,6 +53,7 @@ def main():
             "commit_tx": ev["commit_tx"], "request_id": ev.get("request_id"),
             "resolve_tx": (ev.get("resolve") or {}).get("tx"), "deliver_tx": ev.get("deliver_tx"),
             "instructions": res.get("instructions"), "time_ms": res.get("time_ms"), "timing_s": pub.get("timing_s"),
+            "worker_limits_seen": (chain or {}).get("lim"),  # i/m/s the verifier saw enforced + its peak memory
         }
         # The chain verdict must equal the committed golden (same verifier bytes, different SALT → compare the
         # verdict fields that do not depend on the secrets).
@@ -60,12 +66,7 @@ def main():
     refusals = load("corpus/refusals.json")["refusals"] if os.path.exists(
         os.path.join(ROOT, "corpus", "refusals.json")) else []
     kinds = sorted({r["kind"] for r in refusals if r["matched"]})
-    fake_refusals = [r for r in runs if r["final_status"] == "Refused" and r["chain_verdict"]
-                     and not r["chain_verdict"]["broken"]]
-    for r in fake_refusals:  # the 'fake' kind: a worker verdict of no break, bond slashed
-        if "fake" not in kinds:
-            kinds.append("fake")
-    bounties = {}
+    bounties, limits = {}, None
     for p in sorted(glob.glob(os.path.join(ROOT, "contracts", "results", "d5-*.json"))):
         d = json.load(open(p))
         bounties[d["bounty_account"]] = {"create_tx": d.get("create_tx"), "global_hash": d.get("global_hash"),
@@ -73,21 +74,44 @@ def main():
                                          "invariants": [i["id"] for i in d["config"]["invariants"]],
                                          "deliver_ttl_ns": d["config"]["deliver_ttl_ns"],
                                          "verifier_wasm_hash": d["config"]["verifier_wasm_hash"]}
+        limits = {k: d["config"][k] for k in ("max_instructions", "max_memory_mb", "max_execution_seconds")}
 
     d5 = [r for r in runs if r["label"].startswith("d5-")]
     real = [r for r in d5 if r["category"] == "real" and r["bounty"].startswith("demo.")]
     fakes = [r for r in d5 if r["expect"] is not None and not r["expect"]["broken"]
              or r["category"] == "llm" and r["chain_verdict"] and not r["chain_verdict"]["broken"]]
-    llm_paid = [r for r in d5 if r["category"] == "llm" and r["final_status"] == "Paid"]
+    llm = [i for i in items.values() if i["category"] == "llm"]
+    llm_breaks = [i for i in llm if golden_of(i["name"]) and golden_of(i["name"])["broken"]]
+    llm_on_chain = [r for r in d5 if r["category"] == "llm"]
+
+    def heaviest(rows):
+        r = max(rows, key=lambda r: r["instructions"] or 0) if rows else None
+        if not r:
+            return None
+        g5 = {"run": r["label"], "instructions": r["instructions"], "time_ms": r["time_ms"]}
+        if limits:  # G5: the OutLayer-reported figures over the limits the bounty requested (bar: ≤ 50% each)
+            g5["instructions_pct_of_request"] = round(100 * r["instructions"] / limits["max_instructions"], 2)
+            g5["time_pct_of_request"] = round(100 * r["time_ms"] / (1000 * limits["max_execution_seconds"]), 2)
+        lim = r.get("worker_limits_seen") or {}
+        if lim.get("mem") and lim.get("m"):
+            g5["verifier_peak_mem_bytes"] = lim["mem"]
+            g5["mem_pct_of_enforced"] = round(100 * lim["mem"] / (lim["m"] << 20), 2)
+        return g5
     summary = {
         "real_paid_demo_bounty": f"{sum(r['final_status'] == 'Paid' for r in real)} of {len(real)}",
-        "non_breaking_submissions_paid": f"{sum(r['final_status'] == 'Paid' for r in fakes)} of {len(fakes)}",
-        "non_breaking_submissions_refused": f"{sum(r['final_status'] == 'Refused' for r in fakes)} of {len(fakes)}",
-        "llm_written_paid": len(llm_paid),
+        # Over what was SUBMITTED on testnet; items that really break their level were never submitted as fakes.
+        "submitted_non_breaking_paid": f"{sum(r['final_status'] == 'Paid' for r in fakes)} of {len(fakes)}",
+        "submitted_non_breaking_refused": f"{sum(r['final_status'] == 'Refused' for r in fakes)} of {len(fakes)}",
+        "llm_written": len(llm),
+        "llm_really_break_wasmtime": len(llm_breaks),
+        "llm_submitted_on_chain": len(llm_on_chain),
+        "llm_paid_on_chain": sum(r["final_status"] == "Paid" for r in llm_on_chain),
         "refusal_kinds_on_chain": f"{len(set(kinds))} of 6",
         "runs": len(runs), "golden_mismatches": bad,
-        "max_instructions": max((r["instructions"] or 0) for r in d5) if d5 else None,
-        "max_instructions_run": max(d5, key=lambda r: r["instructions"] or 0)["label"] if d5 else None,
+        "requested_limits": limits,
+        "g5_heaviest_real": heaviest([r for r in d5 if r["category"] == "real"]),
+        "g5_heaviest_fake": heaviest(fakes),
+        "memory": "verifier-reported peak linear memory (verdict lim.mem); OutLayer reports no worker memory figure",
     }
     # Every corpus item with no testnet run, and why. All of them still run under wasmtime (`make corpus`).
     on_chain = {r["item"] for r in d5}
@@ -95,14 +119,15 @@ def main():
     for name, item in items.items():
         if name in on_chain:
             continue
-        gpath = os.path.join(ROOT, "verifier", "tests", "golden", "corpus", f"{name}.json")
-        golden = json.load(open(gpath)) if os.path.exists(gpath) else None
-        if name in PRECOMMIT:
-            why = PRECOMMIT[name]
-        elif golden and golden["broken"]:
+        golden = golden_of(name)
+        if golden and golden["broken"]:
             why = "really breaks its level (golden broken=true): a testnet run would pay it, so it was not submitted"
+        elif item["category"] == "abuse":
+            day0 = f"day0/results/g6-{name}.json"
+            why = ABUSE_OFF_CHAIN + (f"; ran on testnet on day 0 against the earlier verifier pin ({day0})"
+                                     if os.path.exists(os.path.join(ROOT, day0)) else "")
         else:
-            why = "wasmtime only (make corpus); the heaviest abuse shapes ran on testnet"
+            why = "not run on testnet (wasmtime golden only, make corpus)"
         off_chain.append({"item": name, "category": item["category"], "reason": why})
     summary["corpus_items_on_chain"] = f"{len(on_chain & set(items))} of {len(items)}"
     out = {"v": 1, "network": "testnet", "explorer": TESTNET, "summary": summary, "bounties": bounties,
