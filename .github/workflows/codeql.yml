@@ -10,6 +10,8 @@ permissions:
   security-events: write
 jobs:
   analyze:
+    # Code scanning needs GitHub Advanced Security on private repos; it runs once the repository is public.
+    if: ${{ !github.event.repository.private }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
