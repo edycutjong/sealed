@@ -102,7 +102,7 @@ hunter                bounty (keyless)            token            OutLayer (TEE
 ## Limits
 
 - **Worker attestation.** On chain, `make verify` shows the request pinned the verifier hash and the operator's worker
-  key, scoped to `resolve_execution` on OutLayer, answered (`scripts/verify.py` docstring, `worker`). It checks that key,
+  key answered: a FunctionCall key limited to the OutLayer contract, its method list including `resolve_execution` (`scripts/verify.py` docstring, `worker`). It checks that key,
   not its TDX quote (OutLayer documents the quote check at key registration), and it does not show the worker ran
   exactly those bytes. `make replay` re-runs the same bytes locally and must reproduce the verdict. Replay and `make open` read only the bundle;
   `make verify`'s `bundle` check is what ties that bundle to the chain.

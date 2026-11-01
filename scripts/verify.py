@@ -8,7 +8,7 @@ bundle, label `RECORDED`). Each commit yields one line with these checks:
            those exact bytes, sha256-checked)
   worker   the verdict came back in a resolve tx for this request_id, sent TO the OutLayer contract the bounty
            calls (its live view_state), BY the operator OutLayer's get_config named at that block, signed by a
-           FunctionCall key scoped to resolve_execution on OutLayer. OutLayer documents registering worker keys after
+           FunctionCall key limited to the OutLayer contract whose method list includes resolve_execution. OutLayer documents registering worker keys after
            a TDX quote check (https://app.outlayer.ai/docs/tee-attestation); this script checks the key's scope, not
            the quote. On chain this shows the request pinned the hash and the operator's scoped worker key answered,
            NOT that the worker ran exactly those bytes (ARCHITECTURE.md §Limits).

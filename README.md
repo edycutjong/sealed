@@ -133,8 +133,9 @@ The sandbox tests run the contract against a mock OutLayer and a mock token; the
 
 1. **Testnet only.** The mainnet leg is prepared (`scripts/mainnet_leg.py`) and has not run.
 2. **Worker attestation.** `make verify` shows the request pinned the verifier hash and the operator's OutLayer worker
-   key (scoped to `resolve_execution`) answered. It checks the key, not its TDX quote, and does not show the worker ran
-   exactly those bytes. `make replay` re-runs the same bytes locally.
+   key answered (a FunctionCall key limited to OutLayer's contract, its method list including `resolve_execution`). It
+   checks the key, not its TDX quote, and does not show the worker ran exactly those bytes. `make replay` re-runs the
+   same bytes locally.
 3. **RPC trust.** `make verify` believes the archival RPC it queries; an RPC error becomes RECORDED (`verify.py` exit 2, `make` prints `Error 2`), never a pass.
 4. **Baseline models** are third-party, not NEAR AI Cloud, one run each, with a hunter claim on only 5 of the 21 fakes.
 5. **Stuck commits.** The dangling-`Pending` refund branch is covered by code review only, and the yield-timeout path was
