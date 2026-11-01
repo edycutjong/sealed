@@ -48,7 +48,7 @@ hash of the verifier WASM. Then:
    attested, and only then is the escrow owed and **paid**. The protocol gets exactly the exploit that was verified
    (`make open` opens all 6 paid deliveries offline to the exploit `make replay` re-runs).
 
-The protocol still decides what counts as a break, but before any bug exists and in public.
+The protocol still decides what counts as a break, but up front, before any claim, and in public.
 
 ## 🏗️ Architecture & Tech Stack
 
@@ -107,7 +107,7 @@ Testnet only; no wallet is needed to check any of it. Every hash is in `corpus/r
 | Request → verdict | p50 7.27 s · p95 10.85 s (29 runs) | `corpus/bench.json`, `make bench` |
 | Heaviest real run | 7 371 260 instructions (0.37% of the 2e9 limit) | `corpus/results.json` |
 | Heaviest fake | 479 555 711 instructions (23.98% of the limit) | `corpus/bench.json` |
-| LLM-only triage on the same corpus (fakes paid, of 21) | muse-wonder-1.0 1 · nemotron-3-ultra 3 · qwen3.8-omni-flash 3; the same models paid 12, 12 and 11 of the 15 real exploits | `make baseline` |
+| LLM-only triage on the same corpus (fakes it would pay, of 21) | muse-wonder-1.0 1 · nemotron-3-ultra 3 · qwen3.8-omni-flash 3; the same models would pay 12, 12 and 11 of the 15 real exploits | `make baseline` |
 
 The baseline models could not run code and are **not** NEAR AI Cloud; read its limits in
 [baseline/README.md](baseline/README.md) before quoting it.
@@ -199,8 +199,8 @@ hunter-agent/   LLM-hunter transcripts and proposed exploits       day0/        
 
 ## 📽️ Demo Materials
 
-Walk-through with explorer links: [DEMO.md](DEMO.md). Landing page: [sealed-exploit.vercel.app](https://sealed-exploit.vercel.app)
-(source `docs/index.html`; it replays two recorded testnet runs). Pitch deck: [/pitch/](https://sealed-exploit.vercel.app/pitch/)
+Walk-through with explorer links: [DEMO.md](DEMO.md). Landing page: [sealed.edycu.dev](https://sealed.edycu.dev)
+(source `docs/index.html`; it replays two recorded testnet runs). Pitch deck: [/pitch/](https://sealed.edycu.dev/pitch/)
 (`docs/pitch/index.html`). A video is not published yet.
 
 ## 📄 License

@@ -5,7 +5,7 @@ Written from the code at this commit; every claim points at the line that implem
 
 Sealed pays for one thing: **an executed break of a committed invariant on a committed snapshot**. The invariant is an
 Ethernaut level's own `validateInstance`, the snapshot is a frozen EVM state, and the break is run by a pinned WASI
-verifier inside a NEAR OutLayer TEE worker. The exploit stays sealed until the money is already owed.
+verifier inside a NEAR OutLayer TEE worker. The exploit stays sealed until the verifier has already awarded the payout.
 
 ## Components
 
@@ -85,7 +85,7 @@ hunter                bounty (keyless)            token            OutLayer (TEE
 | I5 | Every request pins `verifier_wasm_hash`; only `new` sets it | `lib.rs:657`, `:192` |
 | I6 | The bounty account has zero access keys for life | `scripts/deploy_bounty_testnet.py:115`; `make verify-demo` / `verify-d5` check it on chain: 0 keys now, global code = the committed `contracts/bounty.wasm`, and a create tx with no AddKey; the contract has no call that adds a key or deploys code |
 | I7 | Awarded ⇒ `h_exploit`, `invariant_id`, `h_snapshot` all match the commit | `bounty.rs:279`, `:298`, `:318` |
-| I8 | The exploit becomes public, and the escrow owed, only in a `deliver` with `sha256(enc) == h_enc` | `bounty.rs:209`, `:436` |
+| I8 | The sealed exploit (encrypted to the protocol's key) is published, and the escrow paid, only in a `deliver` with `sha256(enc) == h_enc` | `bounty.rs:209`, `:436` |
 
 ## Judge targets → what they re-check
 
