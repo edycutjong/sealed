@@ -43,6 +43,10 @@ test-contracts: contracts-wasm
 	cd contracts/itests && cargo test --test bounty -- --test-threads=4
 
 # ----- replay / verify (judge-facing; see DEMO.md) -----
+## Fresh-clone preflight: python3 + wasmtime + the committed verifier.wasm hash + archival RPC reachability.
+doctor:
+	@python3 scripts/doctor.py $(RPC)
+
 # Archival RPC for `make verify` CHAIN-CHECKED lines. Both the NEAR Foundation and FastNEAR archival nodes
 # serve testnet history; the Foundation node rate-limits shared IPs, so FastNEAR is the default. Override:
 #   make verify RPC=https://archival-rpc.testnet.near.org
@@ -79,7 +83,17 @@ refusals:
 results:
 	@python3 scripts/results.py
 
-.PHONY: replay verify verify-d5 corpus refusals results
+## Latency p50/p95 + verifier instructions/time/memory vs the enforced limits, recomputed from the evidence bundles
+## (OutLayer's on-chain event timestamps + resolve args) and checked against corpus/bench.json. No network.
+bench:
+	@python3 scripts/bench.py
+
+## Same, plus re-read every resolve_execution tx and block header from the archival RPC (block-time commit→verdict,
+## commit→PAID, deliver→PAID). Paced for the public nodes' rate limit (~3–4 min); exit 2 if the RPC is unreachable.
+bench-chain:
+	@python3 scripts/bench.py --chain --rpc $(RPC)
+
+.PHONY: doctor replay verify verify-d5 corpus refusals results bench bench-chain
 
 # ----- baseline / hunter agent (D6) -----
 ## The mirror image of `make replay`: the same corpus judged by an LLM that cannot execute anything. Prints, per recorded

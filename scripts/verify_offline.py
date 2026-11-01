@@ -12,10 +12,11 @@ For each corpus/published/<label>.json:
   4. h_exploit = sha256(EXPLOIT ‖ hunter ‖ SALT) = the commit_hash the hunter committed.
   5. For a delivered commit: sha256(rebuilt enc) = h_enc = sha256(enc in the deliver tx args).
 
-`make replay INPUT=<file>`: run a judge's own tx list ({target, invariant_id, txs:[{to|null,data,value}]})
-against the same verifier and print its verdict (fresh random SALT / EPH_SK, a placeholder hunter).
+`make replay INPUT=<file>`: run a judge's own tx list ({target, invariant_id, txs:[{to|null,data,value}]}) — or
+any corpus/vectors/*.json item as-is — against the same verifier and print its verdict (fresh random SALT /
+EPH_SK, a placeholder hunter). Exit 0 = the verifier ran (the verdict is the output, broken or not); 1 = bad input.
 Exit 0 only if every published commit replays to its on-chain verdict."""
-import base64, glob, hashlib, json, os, re, subprocess, sys
+import base64, glob, hashlib, json, os, re, shutil, subprocess, sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 VERIFIER = os.path.join(ROOT, "verifier.wasm")
@@ -37,6 +38,9 @@ def wasm_for(pinned):
 
 def run(inp, secrets, wasm=VERIFIER):
     env = {**os.environ, **secrets, "SEALED_DEBUG_ENC": "1", "SEALED_TRACE": "1"}
+    if shutil.which("wasmtime") is None:
+        raise SystemExit("replay: wasmtime not on PATH — install it first (`brew install wasmtime` or "
+                         "`curl https://wasmtime.dev/install.sh -sSf | bash`), then re-run")
     p = subprocess.run(["wasmtime", "run", "--env", "EXPLOIT", "--env", "SALT", "--env", "EPH_SK",
                         "--env", "SEALED_DEBUG_ENC", "--env", "SEALED_TRACE", wasm], input=json.dumps(inp).encode(),
                        capture_output=True, env=env)
@@ -74,9 +78,20 @@ def deliver_enc(ev):
 
 
 def judge_input(path):
-    j = json.load(open(path))
-    secrets = {"EXPLOIT": json.dumps(j["txs"], separators=(",", ":")), "SALT": os.urandom(32).hex(),
-               "EPH_SK": os.urandom(32).hex()}
+    try:
+        j = json.load(open(path))
+    except (OSError, ValueError) as e:
+        print(f"replay: INPUT={path}: {e}", file=sys.stderr)
+        return 1
+    if isinstance(j, dict) and isinstance(j.get("txs"), list):
+        exploit = json.dumps(j["txs"], separators=(",", ":"))
+    elif isinstance(j, dict) and isinstance((j.get("secrets") or {}).get("EXPLOIT"), str):
+        exploit = j["secrets"]["EXPLOIT"]  # a corpus/vectors item: its exploit string, byte for byte
+    else:
+        print(f'replay: INPUT={path}: expected {{"target": 0, "invariant_id": "...", "txs": [{{"to": "0x…", '
+              f'"data": "0x…", "value": "0"}}]}} or a corpus/vectors/*.json file', file=sys.stderr)
+        return 1
+    secrets = {"EXPLOIT": exploit, "SALT": os.urandom(32).hex(), "EPH_SK": os.urandom(32).hex()}
     commit = sha(secrets["EXPLOIT"].encode() + JUDGE.encode() + bytes.fromhex(secrets["SALT"]))
     inp = {"target": j.get("target", 0), "invariant_id": j.get("invariant_id", "fallback-owner-drained"),
            "hunter": JUDGE, "commit_hash": commit, "protocol_enc_pk": DEMO_PK}
