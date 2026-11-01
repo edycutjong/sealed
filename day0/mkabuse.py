@@ -14,7 +14,9 @@ abuse-mulmod.json  4 × CREATE looping MULMOD on 256-bit operands
 abuse-jumpdest.json 4 × CREATE looping 1000 JUMPDESTs (the cheapest opcode per gas)
 abuse-callself.json 4 × CREATE whose initcode CALLs itself in a loop (frame setup per 100 gas)
 abuse-blake2f.json 4 × CREATE calling the BLAKE2F precompile with 16 M rounds (1 gas per round) — the verifier
-                   EVM has no precompiles, so this is a call to an empty account"""
+                   EVM has no precompiles, so this is a call to an empty account
+Local-fuel-only shapes (fuel.py, results/g5b-fuel.json; not run on chain): abuse-exp (EXP on 256-bit operands),
+abuse-mcopy, abuse-log (LOG0 over 1 KB), abuse-cdcopy (CALLDATACOPY + CODECOPY), abuse-extcodecopy — all 4 txs."""
 import os
 from mkinput import envelope, write, INST
 
@@ -47,4 +49,9 @@ if __name__ == "__main__":
     write("abuse-jumpdest.json", envelope(creates(JUMPDEST), inv))
     write("abuse-callself.json", envelope(creates(CALLSELF), inv))
     write("abuse-blake2f.json", envelope(creates(BLAKE2F), inv))
+    write("abuse-exp.json", envelope(creates("0x7f" + "f" * 64 + "5b" + "80800a50" * 100 + "602156"), inv))
+    write("abuse-mcopy.json", envelope(creates("0x5b6104005f5f5e5f56"), inv))
+    write("abuse-log.json", envelope(creates("0x5b6104005fa05f56"), inv))
+    write("abuse-cdcopy.json", envelope(creates("0x5b6104005f5f37365f5f375f56"), inv))
+    write("abuse-extcodecopy.json", envelope(creates("0x5b6104005f5f303c5f56"), inv))
     write("abuse-big.json", envelope([{"to": INST, "data": "0x" + "ab" * (24 * 1024 + 1), "value": "0"}], inv))
