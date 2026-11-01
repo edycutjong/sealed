@@ -1,0 +1,6 @@
+# The verifier's bytes are the pinned hash: build it with exactly this compiler.
+# Contracts live in their own workspace (contracts/) on 1.85.0, the toolchain cargo-near and OutLayer pin.
+[toolchain]
+channel = "1.97.1"
+profile = "minimal"
+targets = ["wasm32-wasip1"]
