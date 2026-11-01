@@ -1,0 +1,630 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Sealed for judges: re-derive every number</title><meta name="description" content="A bug bounty that pays for an executed break of a committed invariant. Testnet: 5 of 5 exploits paid, 0 of 21 fakes."><link rel="canonical" href="https://sealed.edycu.dev/judge"><meta name="robots" content="index,follow"><meta name="theme-color" content="#EDE3CC"><meta name="author" content="Edy Cu"><meta property="og:type" content="website"><meta property="og:site_name" content="Sealed"><meta property="og:title" content="Sealed for judges: re-derive every number"><meta property="og:description" content="A bug bounty that pays for an executed break of a committed invariant. Testnet: 5 of 5 exploits paid, 0 of 21 fakes."><meta property="og:url" content="https://sealed.edycu.dev/judge"><meta property="og:image" content="https://sealed.edycu.dev/assets/og-1200x630.jpg?v=554484e7"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image"><link rel="icon" href="/assets/icon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="/assets/icon-512.png"><link rel="preload" href="/assets/fonts/bigshouldersstencil-800-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/librefranklin-400-800-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/ibmplexmono-400-latin.woff2" as="font" type="font/woff2" crossorigin><style>@font-face{font-family:"Big Shoulders Stencil Display";font-style:normal;font-weight:800;font-display:swap;src:url("/assets/fonts/bigshouldersstencil-800-latin-ext.woff2") format("woff2");unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:"Big Shoulders Stencil Display";font-style:normal;font-weight:800;font-display:swap;src:url("/assets/fonts/bigshouldersstencil-800-latin.woff2") format("woff2");unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:"Libre Franklin";font-style:normal;font-weight:400 800;font-display:swap;src:url("/assets/fonts/librefranklin-400-800-latin-ext.woff2") format("woff2");unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:"Libre Franklin";font-style:normal;font-weight:400 800;font-display:swap;src:url("/assets/fonts/librefranklin-400-800-latin.woff2") format("woff2");unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:"IBM Plex Mono";font-style:normal;font-weight:400;font-display:swap;src:url("/assets/fonts/ibmplexmono-400-latin-ext.woff2") format("woff2");unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:"IBM Plex Mono";font-style:normal;font-weight:400;font-display:swap;src:url("/assets/fonts/ibmplexmono-400-latin.woff2") format("woff2");unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:"IBM Plex Mono";font-style:normal;font-weight:600;font-display:swap;src:url("/assets/fonts/ibmplexmono-600-latin-ext.woff2") format("woff2");unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:"IBM Plex Mono";font-style:normal;font-weight:600;font-display:swap;src:url("/assets/fonts/ibmplexmono-600-latin.woff2") format("woff2");unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:"Big Shoulders Stencil Display Fallback";src:local("Arial Narrow Bold"), local("ArialNarrow-Bold"), local("Arial Narrow");size-adjust:98.98%;ascent-override:99.57%;descent-override:21.67%;line-gap-override:0.00%}
+@font-face{font-family:"Libre Franklin Fallback";src:local("Arial"), local("ArialMT");size-adjust:100.83%;ascent-override:95.80%;descent-override:24.40%;line-gap-override:0.00%}
+@font-face{font-family:"IBM Plex Mono Fallback";src:local("Courier New"), local("CourierNewPSMT");size-adjust:99.98%;ascent-override:102.52%;descent-override:27.50%;line-gap-override:0.00%}
+:root {
+  --bg:      #EDE3CC;  /* kraft evidence envelope — the ground everything is filed on */
+  --ink:     #1E1B16;  /* carbon-copy ink, slightly warm so it sits on kraft */
+  --muted:   #6E6457;  /* faded second-carbon text: timestamps, captions */
+  --before:  #C8361D;  /* state: sealed — tamper-evident tape red; the exploit is unopened */
+  --after:   #1D6A47;  /* state: paid — rubber-stamp green; fires only when the verdict pays */
+  --rule:    #B9AC90;  /* custody-form ruling lines */
+  --font-display: "Big Shoulders Stencil Display", "Big Shoulders Stencil Display Fallback", "Big Shoulders Display", "Oswald", sans-serif;
+  --font-body:    "Libre Franklin", "Libre Franklin Fallback", "Franklin Gothic", "Helvetica Neue", sans-serif;
+  --font-data:    "IBM Plex Mono", "IBM Plex Mono Fallback", ui-monospace, monospace;
+  --bag: color-mix(in srgb, var(--bg) 84%, #8a6a32);
+  --paper: color-mix(in srgb, var(--bg) 55%, #fffdf6);
+  --carbon: color-mix(in srgb, var(--ink) 92%, var(--bg));
+  --ink-soft: color-mix(in srgb, var(--ink) 78%, var(--bg));
+  --ease-stamp: cubic-bezier(.2, 1.5, .35, 1);
+  --ease-out: cubic-bezier(.16, 1, .3, 1);
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { overflow-x: clip; scroll-behavior: smooth; scroll-padding-top: 72px; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 400 17px/1.58 var(--font-body); -webkit-font-smoothing: antialiased; }
+::selection { background: var(--before); color: var(--paper); }
+:focus-visible { outline: 3px solid var(--before); outline-offset: 3px; }
+a { color: inherit; text-decoration-thickness: 1px; text-underline-offset: 3px; transition: text-decoration-color .2s, color .2s; }
+a:hover { text-decoration-thickness: 2px; text-decoration-color: currentColor; }
+code, .mono { font-family: var(--font-data); font-size: .88em; }
+.skip { position: absolute; left: -9999px; top: 8px; background: var(--ink); color: var(--paper); padding: 8px 14px; z-index: 50; }
+.skip:focus { left: 8px; }
+.grain { position: relative; isolation: isolate; }
+.grain::before { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; opacity: .8;
+  background:
+    repeating-linear-gradient(0deg, transparent 0 35px, color-mix(in srgb, var(--rule) 55%, transparent) 35px 36px),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .36 0 0 0 0 .27 0 0 0 0 .14 0 0 0 .34 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+.wrap { width: min(1240px, 100% - 12vw); margin-inline: auto; }
+
+/* ---------- nav ---------- */
+.top { position: sticky; top: 0; z-index: 20; background: color-mix(in srgb, var(--bg) 92%, transparent); backdrop-filter: blur(6px);
+  border-bottom: 1px solid color-mix(in srgb, var(--rule) 70%, transparent); }
+.top .wrap { display: flex; align-items: center; gap: 28px; height: 64px; }
+.brand { display: flex; align-items: center; gap: 10px; text-decoration: none; font: 800 27px/1 var(--font-display); letter-spacing: .03em; }
+.brand img { width: 34px; height: 34px; transition: transform .25s var(--ease-out); }
+.brand:hover img { transform: rotate(-8deg) scale(1.06); }
+.top nav { display: flex; gap: 22px; margin-left: auto; font: 600 12px var(--font-data); letter-spacing: .1em; text-transform: uppercase; }
+.top nav a { text-decoration: none; color: var(--ink-soft); padding: 6px 0; border-bottom: 2px solid transparent; transition: color .2s, border-color .2s; }
+.top nav a:hover { color: var(--ink); border-color: var(--ink); }
+.top .btn { padding: 9px 14px; font-size: 14px; }
+.top .btn.solid { margin-left: 0; }
+
+/* ---------- buttons ---------- */
+.btn { display: inline-flex; align-items: center; gap: 8px; font: 700 15px/1 var(--font-body); padding: 14px 18px; border: 2px solid var(--ink);
+  color: var(--ink); background: transparent; text-decoration: none; cursor: pointer; transition: transform .18s var(--ease-out), box-shadow .18s, background .18s, color .18s; }
+.btn:hover { transform: translate(-2px, -2px); box-shadow: 4px 4px 0 var(--ink); }
+.btn:active { transform: translate(0, 0); box-shadow: 0 0 0 var(--ink); }
+.btn.solid { background: var(--ink); color: var(--paper); }
+.btn.solid:hover { box-shadow: 4px 4px 0 color-mix(in srgb, var(--ink) 45%, var(--bg)); }
+.btn svg { width: 16px; height: 16px; flex: none; }
+
+/* ---------- hero ---------- */
+.hero { padding: 64px 0 88px; overflow: hidden; background: radial-gradient(ellipse 70% 80% at 72% 42%, color-mix(in srgb, var(--bg) 62%, #fffaf0) 0%, var(--bg) 46%, color-mix(in srgb, var(--bg) 86%, #6b4d1e) 100%); }
+.hero .wrap { display: grid; grid-template-columns: minmax(0, 1.08fr) minmax(0, .92fr); grid-template-areas: "copy exhibit"; gap: 56px; align-items: center; position: relative; }
+.hero-copy { grid-area: copy; min-width: 0; }
+.label { display: inline-flex; gap: 10px; align-items: center; font: 600 12px var(--font-data); letter-spacing: .16em; text-transform: uppercase; color: var(--muted);
+  border-top: 2px solid var(--ink); padding-top: 10px; }
+.label b { color: var(--ink); font-weight: 600; }
+h1 { font: 800 clamp(54px, 6vw, 88px)/.92 var(--font-display); text-transform: uppercase; letter-spacing: .016em; margin: 20px 0 26px; text-wrap: balance; }
+.tapeword { position: relative; display: inline-block; color: var(--paper); padding: .02em .14em 0; margin: .06em .02em 0; background: var(--before); transform: rotate(-2.2deg);
+  box-shadow: 0 3px 0 color-mix(in srgb, var(--ink) 18%, transparent); transform-origin: left center; }
+.tapeword::before, .tapeword::after { content: ""; position: absolute; left: 0; right: 0; height: 5px;
+  background: radial-gradient(circle at 5px 5px, var(--bg) 2.6px, transparent 3px) 0 0 / 10px 5px repeat-x; }
+.tapeword::before { top: -1px; transform: scaleY(-1); }
+.tapeword::after { bottom: -1px; }
+.owes { position: relative; white-space: nowrap; }
+.sub { font-size: 19px; line-height: 1.55; max-width: 54ch; margin: 0 0 28px; color: var(--ink-soft); }
+.sub strong { color: var(--ink); font-weight: 800; }
+.ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 22px; }
+.clone { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; font: 400 13px var(--font-data); color: var(--muted); }
+.copy { display: inline-flex; align-items: center; gap: 10px; font: 400 13px var(--font-data); background: var(--ink); color: var(--paper); border: 0; padding: 9px 12px; cursor: pointer;
+  transition: background .2s, transform .15s; max-width: 100%; text-align: left; }
+.copy:hover { background: color-mix(in srgb, var(--ink) 80%, var(--bg)); }
+.copy:active { transform: scale(.98); }
+.copy .k { color: color-mix(in srgb, var(--paper) 60%, transparent); }
+.copy .ok { display: none; color: color-mix(in srgb, var(--after) 45%, var(--paper)); }
+.copy.done .ok { display: inline; } .copy.done .cp { display: none; }
+
+/* ---------- the exhibit (signature) ---------- */
+.exhibit { grid-area: exhibit; margin: 0; min-width: 0; position: relative; padding: 24px 30px 20px; border-radius: 6px; overflow: hidden;
+  background: radial-gradient(ellipse at 40% 30%, color-mix(in srgb, var(--carbon) 84%, var(--bg)) 0%, var(--carbon) 70%);
+  box-shadow: 0 50px 80px -46px var(--ink), inset 0 1px 0 color-mix(in srgb, var(--paper) 12%, transparent); }
+.ex-bar { display: flex; align-items: flex-end; gap: 10px; }
+.ex-tabs { display: flex; gap: 6px; align-items: flex-end; flex-wrap: wrap; }
+.ex-tab { font: 700 12px var(--font-data); letter-spacing: .1em; text-transform: uppercase; padding: 10px 14px 9px; background: color-mix(in srgb, var(--paper) 9%, transparent);
+  border: 1px solid color-mix(in srgb, var(--paper) 24%, transparent); border-bottom: 0; color: color-mix(in srgb, var(--paper) 66%, transparent); cursor: pointer; transition: background .2s, color .2s, transform .2s var(--ease-out); }
+.ex-tab:hover { color: var(--paper); transform: translateY(-2px); }
+.ex-tab[aria-selected="true"] { background: var(--bag); color: var(--ink); border-color: var(--bag); }
+.ex-replay { margin-left: auto; font: 600 12px var(--font-data); letter-spacing: .08em; text-transform: uppercase; background: none; border: 0; border-bottom: 1px dashed var(--muted);
+  color: color-mix(in srgb, var(--paper) 78%, transparent); border-bottom-color: color-mix(in srgb, var(--paper) 45%, transparent); padding: 7px 4px; min-height: 30px; cursor: pointer; margin-bottom: 4px; transition: color .2s, border-color .2s; }
+.ex-replay:hover { color: var(--paper); border-color: var(--paper); border-bottom-style: solid; }
+.bag { position: relative; background: var(--bag); border: 1px solid color-mix(in srgb, var(--rule) 80%, var(--ink)); padding: 22px 26px 26px; transform: rotate(.5deg); box-shadow: 0 46px 70px -34px color-mix(in srgb, var(--ink) 72%, transparent), 0 14px 24px -18px color-mix(in srgb, var(--ink) 40%, transparent), 0 2px 0 color-mix(in srgb, var(--ink) 12%, transparent); }
+.bag::before { content: ""; position: absolute; left: -1px; right: -1px; top: -9px; height: 9px;
+  background: repeating-linear-gradient(90deg, color-mix(in srgb, var(--bag) 80%, var(--ink)) 0 2px, transparent 2px 6px); opacity: .55; }
+.bag[hidden] { display: none; }
+.bag-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; border-bottom: 2px solid var(--ink); padding-bottom: 8px; }
+.bag-head h2, .bag-head h3 { font: 800 34px/1 var(--font-display); text-transform: uppercase; margin: 0; letter-spacing: .02em; }
+.bag-head span { font: 600 12px var(--font-data); letter-spacing: .12em; color: var(--muted); text-transform: uppercase; white-space: nowrap; }
+.bag-meta { font: 400 12.5px var(--font-data); color: var(--ink-soft); margin: 8px 0 0; overflow-wrap: anywhere; }
+.tape { position: relative; height: 40px; margin: 16px -40px 26px; }
+.tape i { position: absolute; top: 0; height: 40px; display: flex; align-items: center; overflow: hidden; white-space: nowrap; background: var(--before); color: var(--paper);
+  font: 800 17px/1 var(--font-display); letter-spacing: .14em; box-shadow: 0 3px 0 color-mix(in srgb, var(--ink) 16%, transparent); transition: transform .55s var(--ease-out), opacity .55s; }
+.tape i::after { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(90deg, transparent 0 22px, color-mix(in srgb, var(--ink) 9%, transparent) 22px 23px); }
+.tape .l { left: 0; width: 62%; padding-left: 40px; clip-path: polygon(0 0, 100% 0, 97% 18%, 100% 36%, 97% 54%, 100% 72%, 97% 90%, 100% 100%, 0 100%); transform: rotate(-1.4deg); }
+.tape .r { right: 0; width: 38.6%; padding-left: 14px; clip-path: polygon(0 0, 3% 18%, 0 36%, 3% 54%, 0 72%, 3% 90%, 0 100%, 100% 100%, 100% 0); transform: rotate(-1.4deg); }
+.bag.torn .tape .l { transform: rotate(-4deg) translate(-24px, 5px); }
+.bag.torn .tape .r { transform: rotate(7deg) translate(38px, 10px); }
+.steps { list-style: none; margin: 0; padding: 0; counter-reset: s; }
+.steps li { display: grid; grid-template-columns: 26px minmax(0, 1fr) auto; gap: 2px 12px; padding: 9px 0; border-bottom: 1px solid var(--rule); counter-increment: s; transition: opacity .35s, transform .35s var(--ease-out); }
+.steps li::before { content: counter(s, decimal-leading-zero); font: 800 18px/1.15 var(--font-display); color: var(--muted); }
+.steps b { font-weight: 700; font-size: 15px; }
+.steps .t { font: 400 12px var(--font-data); color: var(--muted); text-align: right; white-space: nowrap; }
+.steps .d { grid-column: 2 / 4; font: 400 12.5px var(--font-data); color: var(--ink-soft); overflow-wrap: anywhere; }
+.steps .d a { color: var(--ink); padding-block: 5px; }
+.verdict-1 { color: var(--ink); font-weight: 600; }
+.ex-out { display: flex; align-items: flex-end; justify-content: space-between; gap: 14px; min-height: 136px; margin-top: -4px; }
+.tag { font: 600 13px var(--font-data); letter-spacing: .1em; text-transform: uppercase; border: 1.5px solid var(--ink); padding: 6px 9px; transform: rotate(-1.5deg); background: var(--paper); transition: opacity .3s, transform .3s var(--ease-out); }
+.stamp { width: 300px; max-width: 58%; flex: none; transform: rotate(-8deg); transform-origin: 60% 60%; margin: -26px -8px -6px 0; }
+.stamp svg { display: block; width: 100%; height: auto; overflow: visible; }
+.ex-cap { font: 400 13px/1.55 var(--font-data); color: color-mix(in srgb, var(--paper) 74%, transparent); margin: 18px 0 0; }
+.ex-cap a, .ex-cap code { color: var(--paper); }
+
+/* sequence states (JS only; the markup default is the settled final state) */
+.js .bag.pre .steps li { opacity: .18; transform: translateX(-6px); }
+.js .bag.pre .steps li.on { opacity: 1; transform: none; }
+.js .bag.pre .tag, .js .bag.pre .stamp { opacity: 0; }
+.js .bag.pre .tag.on { opacity: 1; }
+.js .bag .stamp.hit { animation: stamp .5s var(--ease-stamp) both; }
+@keyframes stamp { 0% { opacity: 0; transform: rotate(-8deg) scale(2.3); } 60% { opacity: 1; } 100% { opacity: 1; transform: rotate(-8deg) scale(1); } }
+.bag.shake { animation: thud .32s ease-out; }
+@keyframes thud { 30% { transform: translateY(3px) rotate(.25deg); } 70% { transform: translateY(-1px); } }
+
+/* ---------- receipts band ---------- */
+.receipts { background: var(--carbon); color: var(--paper); position: relative; padding: 46px 0 50px; }
+.receipts::before, .receipts::after { content: ""; position: absolute; left: 0; right: 0; height: 10px; background: radial-gradient(circle at 7px 0, var(--bg) 5px, transparent 5.5px) 0 0 / 14px 10px repeat-x; }
+.receipts::before { top: 0; }
+.receipts::after { bottom: 0; transform: scaleY(-1); }
+.receipts .wrap { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; }
+.rc { padding: 8px 26px; border-left: 1px dashed color-mix(in srgb, var(--paper) 25%, transparent); }
+.rc:first-child { border-left: 0; padding-left: 0; }
+.rc .n { display: block; font: 800 clamp(48px, 5vw, 76px)/1 var(--font-display); letter-spacing: .01em; font-variant-numeric: tabular-nums; }
+.rc .n small { font-size: .5em; color: color-mix(in srgb, var(--paper) 62%, transparent); margin: 0 .12em; }
+.rc .n.g { color: color-mix(in srgb, var(--after) 55%, var(--paper)); }
+.rc p { margin: 6px 0 4px; font-size: 15px; line-height: 1.4; color: color-mix(in srgb, var(--paper) 88%, transparent); }
+.rc code { font-size: 11.5px; color: color-mix(in srgb, var(--paper) 55%, transparent); }
+
+/* ---------- section scaffolding ---------- */
+.sec { padding: 104px 0; }
+.form-label { display: flex; align-items: center; gap: 12px; font: 600 12px var(--font-data); letter-spacing: .16em; text-transform: uppercase; color: var(--muted); margin: 0 0 14px; }
+.form-label::after { content: ""; flex: 1; height: 1px; background: var(--rule); max-width: 240px; }
+.sec h2 { font: 800 clamp(40px, 4.4vw, 64px)/.94 var(--font-display); text-transform: uppercase; margin: 0 0 16px; letter-spacing: .005em; text-wrap: balance; }
+.lede { max-width: 62ch; font-size: 18px; color: var(--ink-soft); margin: 0 0 40px; }
+
+/* custody log + terminal */
+.pair { display: grid; grid-template-columns: minmax(0, 1.12fr) minmax(0, .88fr); gap: 28px; align-items: start; }
+.log-card { background: var(--paper); border: 1px solid var(--rule); box-shadow: 0 20px 40px -32px color-mix(in srgb, var(--ink) 55%, transparent); position: relative; }
+.log-card header { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 16px 20px 12px; border-bottom: 3px solid var(--ink); }
+.log-card header h3 { font: 800 26px/1 var(--font-display); letter-spacing: .04em; text-transform: uppercase; margin: 0; }
+.log-card header span { font: 400 11.5px var(--font-data); color: var(--muted); text-align: right; }
+.log { width: 100%; border-collapse: collapse; font: 400 13px/1.35 var(--font-data); }
+.log th { font: 800 14px var(--font-display); letter-spacing: .1em; text-transform: uppercase; text-align: left; color: var(--muted); padding: 10px 12px; border-bottom: 1px solid var(--ink); }
+.log td { padding: 9px 12px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+.log td:first-child { font: 600 13px var(--font-body); }
+.log td:first-child small { display: block; font: 400 11px var(--font-data); color: var(--muted); margin-top: 2px; }
+.log a { text-decoration-color: color-mix(in srgb, var(--ink) 35%, transparent); padding-block: 5px; }
+.log a:hover { text-decoration-color: var(--ink); text-decoration-thickness: 2px; }
+.log tr { transition: background .2s; }
+.log tbody tr:hover { background: color-mix(in srgb, var(--bag) 45%, transparent); }
+.o-paid { color: var(--after); font-weight: 600; }
+.o-ref { color: var(--ink); font-weight: 600; }
+.o-ref small, .o-paid small { display: block; font-weight: 400; color: var(--muted); }
+.log-foot { padding: 12px 20px 16px; font: 400 12px var(--font-data); color: var(--muted); }
+.term { background: var(--carbon); color: color-mix(in srgb, var(--paper) 88%, transparent); border-radius: 4px; box-shadow: 0 24px 40px -28px var(--ink); overflow: hidden; position: sticky; top: 88px; }
+.term header { display: flex; align-items: center; gap: 8px; padding: 10px 14px; border-bottom: 1px solid color-mix(in srgb, var(--paper) 14%, transparent); font: 400 11.5px var(--font-data); color: color-mix(in srgb, var(--paper) 55%, transparent); }
+.term header i { width: 10px; height: 10px; border-radius: 50%; background: color-mix(in srgb, var(--paper) 22%, transparent); }
+.term header span { margin-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.term pre { margin: 0; padding: 16px 16px 18px; font: 400 12.3px/1.62 var(--font-data); white-space: pre-wrap; overflow-wrap: anywhere; min-height: 360px; }
+.term .p { color: color-mix(in srgb, var(--paper) 50%, transparent); }
+.term .c { color: var(--paper); font-weight: 600; }
+.term .ok { color: var(--paper); font-weight: 600; }
+.term .rf { color: var(--paper); }
+.term .dim { color: color-mix(in srgb, var(--paper) 72%, transparent); }
+.js .term pre.typing .ln { visibility: hidden; }
+.js .term pre.typing .ln.on { visibility: visible; }
+.caret { display: inline-block; width: .6em; height: 1.1em; background: var(--paper); vertical-align: text-bottom; animation: blink 1s steps(1) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+.term-cap { font: 400 11.5px var(--font-data); color: var(--muted); margin: 10px 2px 0; }
+
+/* bento */
+.bento { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 18px; }
+.card { background: var(--paper); border: 1px solid var(--rule); padding: 26px 26px 24px; position: relative; display: flex; flex-direction: column; gap: 10px; min-width: 0;
+  transition: transform .25s var(--ease-out), box-shadow .25s; }
+.card:hover { transform: translateY(-3px); box-shadow: 0 18px 30px -24px color-mix(in srgb, var(--ink) 70%, transparent); }
+.card.w4 { grid-column: span 4; } .card.w2 { grid-column: span 2; } .card.w3 { grid-column: span 3; }
+.card h3 { font: 800 30px/1 var(--font-display); text-transform: uppercase; letter-spacing: .02em; margin: 0; }
+.card p { margin: 0; font-size: 15.5px; color: var(--ink-soft); }
+.chip { align-self: flex-start; font: 600 11px var(--font-data); letter-spacing: .06em; border: 1px solid var(--ink); padding: 4px 8px; margin-top: auto; background: var(--bg); }
+.glyph { width: 46px; height: 46px; color: var(--ink); }
+.glyph .r { color: var(--before); }
+.flow { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; margin: 8px 0 6px; font: 400 12px/1.35 var(--font-data); }
+.flow div { border: 1px solid var(--ink); border-left-width: 0; padding: 10px 10px 12px; background: var(--bg); position: relative; min-width: 0; overflow-wrap: anywhere; }
+.flow div:first-child { border-left-width: 1px; }
+.flow div b { display: block; font: 800 15px/1.1 var(--font-display); letter-spacing: .08em; text-transform: uppercase; margin-bottom: 4px; }
+.flow div:last-child { background: var(--ink); color: var(--paper); }
+.flow div:last-child em { font-style: normal; color: var(--paper); font-weight: 600; }
+.zero { font: 800 120px/.8 var(--font-display); letter-spacing: -.01em; }
+.zero small { font: 600 12px var(--font-data); letter-spacing: .1em; text-transform: uppercase; display: block; color: var(--muted); margin-top: 8px; }
+.kinds { display: flex; flex-wrap: wrap; gap: 6px; margin: 2px 0 0; padding: 0; list-style: none; }
+.kinds li { font: 600 11px var(--font-data); letter-spacing: .05em; text-transform: uppercase; border: 1.5px solid var(--ink); padding: 4px 7px; transform: rotate(var(--r, -1deg)); background: var(--bg); }
+
+/* read vs run */
+.versus { background: color-mix(in srgb, var(--bag) 60%, var(--bg)); border-block: 1px solid var(--rule); }
+.slips { display: grid; gap: 12px; margin: 6px 0 18px; }
+.srow { display: grid; grid-template-columns: 220px minmax(0, 1fr) 92px; gap: 18px; align-items: center; }
+.srow .who { font: 600 13px var(--font-data); }
+.srow .who small { display: block; font-weight: 400; color: var(--muted); font-size: 11px; }
+.srow .bar { display: grid; grid-template-columns: repeat(21, minmax(0, 1fr)); gap: 4px; }
+.slip { height: 34px; border: 1.5px solid color-mix(in srgb, var(--ink) 55%, transparent); background: var(--paper); position: relative; transition: transform .2s var(--ease-out); }
+.slip:hover { transform: translateY(-3px); }
+.slip.pay { background: var(--ink); border-color: var(--ink); }
+.slip.pay::after { content: "PAID"; position: absolute; inset: 0; display: grid; place-items: center; font: 800 9px var(--font-display); letter-spacing: .06em; color: var(--paper); writing-mode: vertical-rl; }
+.srow .k { font: 800 34px/1 var(--font-display); text-align: right; }
+.srow .k small { font: 400 12px var(--font-data); color: var(--muted); }
+.srow.us { padding-top: 12px; border-top: 2px solid var(--ink); }
+.srow.us .who { font-weight: 600; }
+.srow.us .k { color: var(--ink); }
+.vs-cap { font: 400 12.5px/1.6 var(--font-data); color: var(--muted); max-width: 92ch; }
+
+/* disclosures */
+.folder { position: relative; background: var(--bag); padding: 44px 48px 40px; border: 1px solid color-mix(in srgb, var(--rule) 70%, var(--ink)); margin-top: 34px;
+  box-shadow: 0 30px 50px -40px var(--ink); }
+.folder::before { content: "DISCLOSURES · FILED WITH THE EXHIBIT"; position: absolute; left: -1px; top: -34px; height: 34px; padding: 0 22px; display: flex; align-items: center;
+  background: var(--bag); border: 1px solid color-mix(in srgb, var(--rule) 70%, var(--ink)); border-bottom: 0; font: 800 15px var(--font-display); letter-spacing: .12em; }
+.disc { list-style: none; margin: 0; padding: 0; counter-reset: d; }
+.disc li { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 4px 18px; padding: 20px 0; border-bottom: 1px solid var(--rule); counter-increment: d; }
+.disc li:first-child { padding-top: 0; }
+.disc li::before { content: counter(d, decimal-leading-zero); font: 800 46px/.9 var(--font-display); color: var(--ink); grid-row: span 2; }
+.disc blockquote { margin: 0; font-size: 20px; line-height: 1.5; max-width: 70ch; }
+.disc blockquote strong { font-weight: 800; }
+.disc cite { font: 400 12px var(--font-data); font-style: normal; color: var(--muted); }
+.disc-more { margin: 22px 0 0; font: 400 13px var(--font-data); }
+.disc-more a, .foot a { display: inline-block; padding-block: 6px; }
+
+/* faq */
+.faq { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: 56px; align-items: start; }
+.faq details { border-top: 2px solid var(--ink); padding: 0; }
+.faq details:last-child { border-bottom: 2px solid var(--ink); }
+.faq summary { list-style: none; cursor: pointer; padding: 20px 44px 20px 0; position: relative; font: 700 18px/1.35 var(--font-body); transition: color .2s; }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after { content: "+"; position: absolute; right: 4px; top: 12px; font: 800 34px/1 var(--font-display); transition: transform .3s var(--ease-out), color .2s; }
+.faq details[open] summary::after { transform: rotate(45deg); }
+.faq summary:hover { text-decoration: underline; text-underline-offset: 4px; }
+.faq details p { margin: 0 0 22px; color: var(--ink-soft); max-width: 66ch; }
+
+/* close + footer */
+.close { background: var(--carbon); color: var(--paper); padding: 96px 0 40px; position: relative; overflow: hidden; }
+.close::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 10px; background: radial-gradient(circle at 7px 0, var(--bg) 5px, transparent 5.5px) 0 0 / 14px 10px repeat-x; }
+.close h2 { font: 800 clamp(48px, 6vw, 92px)/.9 var(--font-display); text-transform: uppercase; margin: 0 0 18px; max-width: 14ch; }
+.close h2 .slip-word { display: inline-block; background: var(--paper); color: var(--ink); padding: .04em .16em 0; transform: rotate(-2deg); margin-top: .06em; }
+.close p { color: color-mix(in srgb, var(--paper) 78%, transparent); max-width: 60ch; margin: 0 0 28px; }
+.close .btn { border-color: var(--paper); color: var(--paper); }
+.close .btn:hover { box-shadow: 4px 4px 0 color-mix(in srgb, var(--paper) 40%, transparent); }
+.close .btn.solid { background: var(--paper); color: var(--ink); }
+.close .copy { background: color-mix(in srgb, var(--paper) 10%, var(--carbon)); border: 1px solid color-mix(in srgb, var(--paper) 25%, transparent); }
+.close .copy:hover { background: color-mix(in srgb, var(--paper) 22%, var(--carbon)); border-color: var(--paper); }
+.close .ctas { margin: 26px 0 0; }
+.foot { margin-top: 84px; padding-top: 22px; border-top: 1px solid color-mix(in srgb, var(--paper) 18%, transparent); display: flex; flex-wrap: wrap; gap: 10px 26px;
+  font: 400 12px var(--font-data); color: color-mix(in srgb, var(--paper) 55%, transparent); }
+.foot a { color: color-mix(in srgb, var(--paper) 78%, transparent); }
+.foot a:hover { color: var(--paper); }
+.foot .sp { margin-left: auto; }
+
+/* load sequence (JS adds .armed; content is visible without it) */
+.js.armed .hero .label, .js.armed .hero h1, .js.armed .hero .sub, .js.armed .hero .ctas, .js.armed .hero .clone, .js.armed .exhibit { animation: rise .8s var(--ease-out) both; }
+.js.armed .hero h1 { animation-delay: .08s; } .js.armed .hero .sub { animation-delay: .2s; } .js.armed .hero .ctas { animation-delay: .3s; }
+.js.armed .hero .clone { animation-delay: .38s; } .js.armed .exhibit { animation-delay: .25s; }
+.js.armed .hero .tapeword { animation: tape .6s .55s var(--ease-out) both; }
+@keyframes rise { from { opacity: 0; transform: translateY(14px); } }
+@keyframes tape { from { transform: rotate(-2.2deg) scaleX(0); } }
+@keyframes ink { from { transform: scaleX(0); } }
+.settled * { animation: none !important; }
+
+@media (max-width: 1080px) {
+  .hero .wrap { grid-template-columns: minmax(0, 1fr); grid-template-areas: none; gap: 0; }
+  .hero-copy { display: contents; }
+  .hero .label { order: 1; justify-self: start; } .hero h1 { order: 2; } .hero .ctas { order: 3; margin-bottom: 26px; } .exhibit { order: 4; grid-area: auto; margin: 4px 0 30px; }
+  .hero .sub { order: 5; } .hero .clone { order: 6; }
+  .bag { transform: none; }
+  .pair { grid-template-columns: minmax(0, 1fr); }
+  .term { position: relative; top: 0; }
+  .faq { grid-template-columns: minmax(0, 1fr); gap: 20px; }
+  }
+@media (max-width: 860px) {
+  .top nav { display: none; }
+  .top .wrap { gap: 12px; }
+  .top .btn.hide-s { display: none; }
+  .receipts .wrap { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 26px 0; }
+  .rc:nth-child(3) { border-left: 0; padding-left: 0; }
+  .bento { grid-template-columns: minmax(0, 1fr); }
+  .card.w4, .card.w2, .card.w3 { grid-column: auto; }
+  .srow { grid-template-columns: minmax(0, 1fr) 64px; gap: 6px 12px; }
+  .srow .bar { grid-column: 1 / -1; grid-row: 2; }
+  .srow .k { grid-row: 1; grid-column: 2; }
+  .slip { height: 26px; }
+  .slip.pay::after { font-size: 7px; }
+  .folder { padding: 34px 22px 26px; }
+  .folder::before { font-size: 12px; padding: 0 12px; letter-spacing: .08em; }
+  .disc li { grid-template-columns: 44px minmax(0, 1fr); gap: 4px 12px; }
+  .disc li::before { font-size: 34px; }
+  .disc blockquote { font-size: 17px; }
+}
+@media (max-width: 640px) {
+  body { font-size: 16px; }
+  .top .btn.solid { margin-left: auto; }
+  .label { display: block; letter-spacing: .12em; line-height: 1.7; }
+  .ex-tab .lg, .bag-head span { display: none; }
+  .ex-tab { padding: 9px 9px 8px; font-size: 11px; letter-spacing: .05em; }
+  .ex-replay { font-size: 11px; letter-spacing: .05em; }
+
+  .wrap { width: calc(100% - 40px); }
+  .hero { padding: 34px 0 60px; }
+  h1 { font-size: clamp(46px, 13.4vw, 64px); margin: 16px 0 18px; }
+  .sub { font-size: 17px; }
+  .tape { margin-inline: -16px; height: 34px; } .tape i { height: 34px; font-size: 14px; }
+  .bag { overflow: hidden; }
+  .ctas .btn { padding: 12px 14px; font-size: 14px; }
+  .bag { padding: 18px 16px 18px; }
+  .bag-head h2, .bag-head h3 { font-size: 27px; }
+  .steps li { grid-template-columns: 22px minmax(0, 1fr); }
+  .steps .t { grid-column: 2; text-align: left; }
+  .stamp { width: 210px; margin-top: -10px; }
+  .ex-out { min-height: 96px; }
+  .sec { padding: 72px 0; }
+  .log thead { display: none; }
+  .log, .log tbody, .log tr, .log td { display: block; width: 100%; }
+  .log tr { padding: 10px 16px; border-bottom: 1px solid var(--rule); }
+  .log td { border: 0; padding: 2px 0; }
+  .log a, .steps .d a { display: inline-block; padding-block: 4px; }
+  .exhibit { padding: 16px 14px 14px; }
+  .log td[data-k]::before { content: attr(data-k) " "; color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: .08em; }
+  .term pre { min-height: 0; font-size: 11.5px; }
+  .zero { font-size: 92px; }
+  .flow { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .flow div:nth-child(3) { border-left-width: 1px; }
+  .flow div:nth-child(n+3) { border-top-width: 0; }
+  .foot .sp { margin-left: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}
+@media print {
+  .top, .ex-tabs, .ex-replay, .copy, .skip { display: none !important; }
+  .bag[hidden] { display: block !important; margin-top: 18px; }
+  .receipts, .close, .term { background: #fff !important; color: var(--ink) !important; }
+  .grain::before { display: none; }
+  * { animation: none !important; transition: none !important; }
+}
+</style></head><body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="/" aria-label="Sealed, landing page"><img src="/assets/icon.svg" alt="" width="34" height="34">SEALED</a>
+    <nav aria-label="Sections">
+      <a href="#path">30-second path</a><a href="#receipts">Receipts</a><a href="#reproduce">Reproduce</a><a href="#limits">Limits</a>
+    </nav>
+    <a class="btn hide-s" href="/pitch/">Pitch deck</a>
+    <a class="btn solid" href="https://github.com/edycutjong/sealed">Source</a>
+  </div>
+</header>
+
+<main id="main">
+<section class="sec grain" aria-labelledby="jh">
+  <div class="wrap">
+    <p class="form-label"><b>For the bench</b> · NEAR Hackathon 2026 · Security track</p>
+    <h1 id="jh">Bug bounties that pay for an executed break of a committed invariant on a committed snapshot — before the protocol ever sees the exploit.</h1>
+    <p class="lede">Nothing here is a claim you take on trust. Re-run the exploits offline, then prove the payouts from chain data — <strong>5 of 5</strong> real exploits paid, <strong>0 of 21</strong> fakes. No NEAR account, no key.</p>
+    <div class="ctas">
+      <a class="btn solid" href="#path"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8h9M8 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>The 30-second path</a>
+      <a class="btn" href="https://testnet.nearblocks.io/txns/AodmFQ6tq4pBcxLreRDSCanKkZQY7m6nhM459NfPAg3s">The PAID tx on testnet</a>
+      <a class="btn" href="https://github.com/edycutjong/sealed/blob/main/DEMO.md">DEMO.md</a>
+    </div>
+  </div>
+</section>
+
+<section class="receipts" id="receipts" aria-label="Receipts">
+  <div class="wrap">
+    <div class="rc"><span class="n g" data-to="5"><span class="v">5</span><small>of</small>5</span><p>real Ethernaut exploits paid on the keyless demo bounty</p><code>corpus/results.json</code></div>
+    <div class="rc"><span class="n" data-to="21">0<small>of</small><span class="v">21</span></span><p>fakes paid: all 21 refused on chain, each with a reason</p><code>corpus/results.json</code></div>
+    <div class="rc"><span class="n" data-to="6"><span class="v">6</span><small>of</small>6</span><p>refusal kinds fired on chain, one tx hash each</p><code>corpus/refusals.json</code></div>
+    <div class="rc"><span class="n" data-to="7.27"><span class="v">7.27</span><small>s</small></span><p>request → verdict, p50 of 29 runs (p95 10.85 s)</p><code>corpus/bench.json</code></div>
+  </div>
+</section>
+
+<section class="sec" id="path" aria-labelledby="path-h">
+  <div class="wrap">
+    <p class="form-label">30-second make path · do X → see Y</p>
+    <h2 id="path-h">Run it, don't read it.</h2>
+    <p class="lede">Two commands settle the whole claim: one re-runs every published verdict on your machine, the other proves the demo payouts from chain data.</p>
+    <div class="bento">
+      <article class="card w3">
+        <h3>make replay</h3>
+        <p>Re-runs every published commit under wasmtime from the verifier wasm its bounty pinned (sha256-checked): <strong>29 OK · 0 FAIL</strong>, each with <code>validateInstance</code> → 1 for a real exploit, 0 for a fake. Offline.</p>
+        <span class="chip">offline · no NEAR account</span>
+      </article>
+      <article class="card w3">
+        <h3>make verify-demo</h3>
+        <p>Reads chain data from a public archival RPC and proves the <strong>5 of 5</strong> paid demo-bounty runs: pinned hash, the operator's scoped worker key, verdict, delivery hash and PAID (about 1.5 min).</p>
+        <span class="chip">archival RPC · ~25 calls</span>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="sec grain" id="chain" aria-labelledby="chain-h">
+  <div class="wrap">
+    <p class="form-label">On-chain receipts · every hash in corpus/results.json</p>
+    <h2 id="chain-h">The hand-offs, on chain.</h2>
+    <p class="lede">The headline numbers above resolve to individual testnet transactions and the hashes each bounty was pinned to.</p>
+    <div class="bento">
+      <article class="card w3">
+        <h3>Paid on chain</h3>
+        <p>A real Ethernaut exploit, awarded at the verdict and paid on delivery once <code>sha256(enc)</code> matched — 1 000 tUSDC. Open <a href="https://testnet.nearblocks.io/txns/AodmFQ6tq4pBcxLreRDSCanKkZQY7m6nhM459NfPAg3s">the PAID deliver tx</a>.</p>
+        <span class="chip">deliver AodmFQ6t…</span>
+      </article>
+      <article class="card w3">
+        <h3>Refused, with a reason</h3>
+        <p>A near-miss that does not break the level is refused on chain and its bond slashed: <code>REFUSED 2 no invariant broken</code>. Open <a href="https://testnet.nearblocks.io/txns/DUtubHScU3udGH58UxdTHWjwvDBjsHCsrupmBMxVYZiy">its commit tx</a>.</p>
+        <span class="chip">bond slashed</span>
+      </article>
+      <article class="card w3">
+        <h3>Pinned verifier</h3>
+        <p>Every bounty commits the verifier WASM by hash at funding; <code>make replay</code> checks the sha256 before it runs a byte, so the bytes you run are the bytes that ran on chain.</p>
+        <span class="chip">verifier.wasm d2972cd2</span>
+      </article>
+      <article class="card w3">
+        <h3>Keyless bounty</h3>
+        <p>The demo and corpus bounties run from one NEAR global contract code hash with zero access keys — nobody can pull awarded escrow.</p>
+        <span class="chip">global hash 7HtmeswB…</span>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="reproduce" aria-labelledby="rep-h">
+  <div class="wrap">
+    <p class="form-label">Copy-paste · no credentials</p>
+    <h2 id="rep-h">Reproduce it from a fresh clone.</h2>
+    <p class="lede">Needs only <code>python3</code> and <code>wasmtime</code> (<code>make open</code> also needs PyNaCl). No NEAR account, no key, testnet only.</p>
+    <div class="ctas">
+      <button class="copy" type="button" data-copy="git clone https://github.com/edycutjong/sealed && cd sealed && make replay"><span><span class="k">$</span> git clone …/sealed &amp;&amp; make replay</span><span class="cp">copy</span><span class="ok">copied</span></button>
+      <button class="copy" type="button" data-copy="make verify-demo"><span><span class="k">$</span> make verify-demo</span><span class="cp">copy</span><span class="ok">copied</span></button>
+      <button class="copy" type="button" data-copy="make open"><span><span class="k">$</span> make open</span><span class="cp">copy</span><span class="ok">copied</span></button>
+    </div>
+    <p class="lede" style="margin-top:22px">Every make target and its expected output is listed in the README <a href="https://github.com/edycutjong/sealed#reproduce-from-a-fresh-clone-no-near-account-no-keys">Reproduce</a> table and in <a href="https://github.com/edycutjong/sealed/blob/main/DEMO.md">DEMO.md</a>.</p>
+  </div>
+</section>
+
+<section class="sec grain" id="limits" aria-labelledby="lim-h">
+  <div class="wrap">
+    <p class="form-label">Honest by design</p>
+    <h2 id="lim-h">What this does not prove yet.</h2>
+    <div class="folder">
+      <ol class="disc">
+        <li><blockquote><strong>Testnet only.</strong> The mainnet leg is prepared (<code>scripts/mainnet_leg.py</code>) and has not run.</blockquote><cite>README · Honest limits, item 1</cite></li>
+        <li><blockquote><strong>Worker attestation.</strong> <code>make verify</code> shows the request pinned the verifier hash and the operator&#x27;s OutLayer worker key answered (a FunctionCall key limited to OutLayer&#x27;s contract, its method list including <code>resolve_execution</code>). It checks the key, not its TDX quote, and does not show the worker ran exactly those bytes. <code>make replay</code> re-runs the same bytes locally.</blockquote><cite>README · Honest limits, item 2</cite></li>
+        <li><blockquote><strong>No outside users yet.</strong> The measured demo is our own hunter agent plus the fakes corpus.</blockquote><cite>README · Honest limits, item 7</cite></li>
+      </ol>
+      <p class="disc-more"><a href="https://github.com/edycutjong/sealed#honest-limits-7">All 7 limits in the README</a> · <a href="https://github.com/edycutjong/sealed/blob/main/ARCHITECTURE.md#limits">ARCHITECTURE.md § Limits</a></p>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="close">
+  <div class="wrap">
+    <h2>Re-check it <span class="slip-word">yourself.</span></h2>
+    <p>Replay offline, then check the payouts from chain data. No NEAR account, no keys.</p>
+    <button class="copy" type="button" data-copy="git clone https://github.com/edycutjong/sealed && cd sealed && make replay && make verify-demo"><span><span class="k">$</span> make replay &amp;&amp; make verify-demo</span><span class="cp">copy</span><span class="ok">copied</span></button>
+    <div class="ctas">
+      <a class="btn solid" href="https://github.com/edycutjong/sealed">Source on GitHub</a>
+      <a class="btn" href="/">Landing page</a>
+      <a class="btn" href="/pitch/">Pitch deck</a>
+      <a class="btn" href="https://github.com/edycutjong/sealed/blob/main/DEMO.md">Five-minute demo path</a>
+    </div>
+    <div class="foot">
+      <span>Sealed · built for NEAR Hackathon 2026 · MIT</span>
+      <a href="https://github.com/edycutjong/sealed/blob/main/ARCHITECTURE.md">ARCHITECTURE.md</a>
+      <a href="https://github.com/edycutjong/sealed/blob/main/LICENSE">LICENSE</a>
+      <span class="sp">data from commit eb93a6e · judge entry point</span>
+    </div>
+  </div>
+</footer>
+<script>
+(() => {
+  const root = document.documentElement;
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  root.classList.add("js");
+  if (!reduced) {
+    root.classList.add("armed");
+    setTimeout(() => root.classList.remove("armed"), 2200);
+  }
+  const seen = (el, fn, threshold = 0.4) => {
+    if (!el) return;
+    if (!("IntersectionObserver" in window)) { fn(); return; }
+    const io = new IntersectionObserver((es) => {
+      if (es.some((e) => e.isIntersecting)) { io.disconnect(); fn(); }
+    }, { threshold });
+    io.observe(el);
+  };
+
+  /* the exhibit: replay a recorded run hand-off by hand-off, then tear the tape (paid) or stamp the intact tape (refused) */
+  const ex = document.querySelector(".exhibit");
+  if (ex) {
+    const tabs = [...ex.querySelectorAll(".ex-tab")];
+    const bags = Object.fromEntries([...ex.querySelectorAll(".bag")].map((b) => [b.dataset.ex, b]));
+    let timers = [], current = "a";
+    const clear = () => { timers.forEach(clearTimeout); timers = []; };
+    const settle = (bag) => {
+      bag.classList.remove("pre", "shake");
+      bag.querySelectorAll(".steps li").forEach((li) => li.classList.add("on"));
+      const st = bag.querySelector(".stamp"); st && st.classList.remove("hit");
+      if (bag.dataset.out === "paid") bag.classList.add("torn");
+    };
+    const show = (key) => {
+      current = key;
+      tabs.forEach((t) => t.setAttribute("aria-selected", String(t.dataset.ex === key)));
+      Object.entries(bags).forEach(([k, b]) => { b.hidden = k !== key; });
+    };
+    const play = (key) => {
+      clear(); show(key);
+      const bag = bags[key];
+      if (reduced) { settle(bag); return; }
+      const lis = [...bag.querySelectorAll(".steps li")];
+      const tag = bag.querySelector(".tag"), stamp = bag.querySelector(".stamp");
+      bag.classList.remove("torn", "shake"); bag.classList.add("pre");
+      lis.forEach((li) => li.classList.remove("on"));
+      tag && tag.classList.remove("on"); stamp.classList.remove("hit");
+      let t = 300;
+      lis.forEach((li) => {
+        timers.push(setTimeout(() => { li.classList.add("on"); if (li.dataset.tag !== undefined && tag) tag.classList.add("on"); }, t));
+        t += 700;
+      });
+      timers.push(setTimeout(() => {
+        if (bag.dataset.out === "paid") bag.classList.add("torn");
+        stamp.classList.add("hit"); bag.classList.add("shake");
+        if (tag) tag.classList.add("on");
+      }, t + 200));
+      timers.push(setTimeout(() => settle(bag), t + 1100));
+    };
+    tabs.forEach((t) => {
+      t.addEventListener("click", () => play(t.dataset.ex));
+      t.addEventListener("keydown", (e) => {
+        if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+        const i = tabs.indexOf(t), n = tabs[(i + (e.key === "ArrowRight" ? 1 : tabs.length - 1)) % tabs.length];
+        n.focus(); play(n.dataset.ex);
+      });
+    });
+    const rb = ex.querySelector(".ex-replay");
+    rb && rb.addEventListener("click", () => play(current));
+    seen(ex, () => play("a"), 0.4);
+  }
+
+  /* receipts count up from an already-visible final value */
+  const nums = [...document.querySelectorAll(".rc .n[data-to]")];
+  seen(document.querySelector(".receipts"), () => {
+    if (reduced) return;
+    nums.forEach((el) => {
+      const node = el.querySelector(".v"), to = parseFloat(el.dataset.to), dp = (el.dataset.to.split(".")[1] || "").length;
+      const t0 = performance.now(), dur = 1300;
+      const step = (now) => {
+        const p = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - p, 3);
+        node.textContent = (to * e).toFixed(dp);
+        if (p < 1) requestAnimationFrame(step); else node.textContent = el.dataset.to;
+      };
+      requestAnimationFrame(step);
+    });
+  }, 0.5);
+
+  /* the terminal types the captured run line by line */
+  const pre = document.querySelector(".term pre");
+  const timers2 = [];
+  if (pre && !reduced) {
+    const lines = [...pre.querySelectorAll(".ln")];
+    pre.classList.add("typing");
+    seen(pre, () => {
+      let t = 200;
+      lines.forEach((ln) => {
+        const isCmd = ln.classList.contains("cmd");
+        timers2.push(setTimeout(() => ln.classList.add("on"), t));
+        t += isCmd ? 650 : 110;
+      });
+      timers2.push(setTimeout(() => pre.classList.remove("typing"), t + 50));
+    }, 0.3);
+  }
+
+  /* copy-on-click run commands */
+  document.querySelectorAll(".copy[data-copy]").forEach((b) => {
+    b.addEventListener("click", async () => {
+      try { await navigator.clipboard.writeText(b.dataset.copy); } catch (e) { /* clipboard blocked: the command is still on screen */ }
+      b.classList.add("done"); setTimeout(() => b.classList.remove("done"), 1600);
+    });
+  });
+
+  addEventListener("beforeprint", () => {
+    document.querySelectorAll("details").forEach((d) => { d.open = true; });
+    document.querySelectorAll(".bag").forEach((b) => { b.classList.remove("pre"); b.querySelectorAll(".steps li").forEach((li) => li.classList.add("on")); });
+    if (pre) pre.classList.remove("typing");
+  });
+})();
+
+</script>
+</body></html>

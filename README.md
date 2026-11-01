@@ -2,12 +2,14 @@
   <img src="docs/assets/icon.svg" alt="Sealed Icon" width="144">
   <h1>Sealed 🔒</h1>
   <p><em>Bug bounties that pay for an executed break of a committed invariant on a committed snapshot — before the protocol ever sees the exploit.</em></p>
-  <img src="docs/assets/readme-hero.png" alt="Sealed — verified inside NEAR OutLayer, paid on NEAR" width="100%">
+  <img src="docs/assets/readme-hero-animated.svg" alt="Sealed — verified inside NEAR OutLayer, paid on NEAR" width="100%">
 
   **Proof, not a pitch:** on NEAR testnet the verifier paid **5 of 5** real Ethernaut exploits and **0 of 21** submitted fakes. Re-check it yourself, no NEAR account or key: `make replay` (offline) and `make verify` (from chain data).
 
   <br/>
 
+  [![Live Demo](https://img.shields.io/badge/🚀_Live-Demo-06b6d4?style=for-the-badge)](https://sealed.edycu.dev)
+  [![Pitch Deck](https://img.shields.io/badge/📊_Pitch-Deck-f59e0b?style=for-the-badge)](https://sealed.edycu.dev/pitch/)
   [![Built for NEAR Hackathon](https://img.shields.io/badge/NEAR-Hackathon_2026-8b5cf6?style=for-the-badge)](https://nearhackathon.com)
 
   <br/>
@@ -17,6 +19,8 @@
   ![NEAR](https://img.shields.io/badge/NEAR_testnet-000000?style=flat&logo=near&logoColor=white)
   ![Python](https://img.shields.io/badge/Python_3-3776AB?style=flat&logo=python&logoColor=white)
   [![License](https://img.shields.io/badge/License-MIT-yellow)](LICENSE)
+  [![CI](https://github.com/edycutjong/sealed/actions/workflows/ci.yml/badge.svg)](https://github.com/edycutjong/sealed/actions/workflows/ci.yml)
+  [![Release](https://img.shields.io/github/v/release/edycutjong/sealed?sort=semver)](https://github.com/edycutjong/sealed/releases/latest)
 
 </div>
 
@@ -51,6 +55,10 @@ hash of the verifier WASM. Then:
 The protocol still decides what counts as a break, but up front, before any claim, and in public.
 
 ## 🏗️ Architecture & Tech Stack
+
+![Sealed architecture: a hunter commits an exploit hash and bond to the keyless global bounty contract and uploads the sealed exploit to OutLayer secrets; the contract requests execution pinned by wasm hash; an OutLayer TEE worker runs the pinned revm verifier and resolves a verdict; the contract AWARDS escrow to the earliest verifying commit or REFUSES with a reason; on deliver, once sha256(enc) matches the committed h_enc, it pays via ft_transfer.](docs/assets/architecture.png)
+
+Text-equivalent (renders on GitHub):
 
 ```mermaid
 flowchart LR
@@ -103,7 +111,8 @@ Testnet only; no wallet is needed to check any of it. Every hash is in `corpus/r
 | Real exploits paid / submitted | 5 of 5 (demo bounty) | `corpus/results.json` |
 | Non-breaking submissions paid | 0 of 21 (21 of 21 refused; all 21 ran on the corpus bounty) | `corpus/results.json` |
 | Corpus | 52 items vs golden verdicts | `make corpus` |
-| Tests | 34: 11 verifier golden, 3 contract unit, 20 near-workspaces sandbox | `make test` |
+| Tests | 42: 19 verifier (11 golden · 5 unit · 3 CLI), 3 contract unit, 20 near-workspaces sandbox | `make test` |
+| Verifier line coverage | ~95% of shipped logic (`lib.rs` 97% · CLI 86%); the `snapgen` dev tool is excluded | `make cov` (cargo-llvm-cov) |
 | Request → verdict | p50 7.27 s · p95 10.85 s (29 runs) | `corpus/bench.json`, `make bench` |
 | Heaviest real run | 7 371 260 instructions (0.37% of the 2e9 limit) | `corpus/results.json` |
 | Heaviest fake | 479 555 711 instructions (23.98% of the limit) | `corpus/bench.json` |

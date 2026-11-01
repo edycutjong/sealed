@@ -5,7 +5,7 @@ CARGO_HOME ?= $(HOME)/.cargo
 REMAP := --remap-path-prefix=$(CARGO_HOME)=/cargo --remap-path-prefix=$(CURDIR)=/sealed
 WASM := target/wasm32-wasip1/release/verifier.wasm
 
-.PHONY: verifier-wasm verifier-check test test-verifier test-contracts contracts-wasm
+.PHONY: verifier-wasm verifier-check test test-verifier test-contracts contracts-wasm cov
 
 ## Rebuild verifier.wasm from source and write its sha256 (the hash every bounty pins).
 verifier-wasm:
@@ -20,6 +20,10 @@ verifier-check:
 	@shasum -a 256 -c <(sed 's#verifier.wasm#$(WASM)#' verifier.wasm.sha256)
 
 test: test-verifier test-contracts
+
+## Verifier line coverage (needs cargo-llvm-cov: `cargo install cargo-llvm-cov`). The snapgen dev tool reads 0%.
+cov:
+	cargo llvm-cov --package verifier --summary-only
 
 ## Golden verdicts (native) + the committed verifier.wasm under wasmtime must print the same verdict bytes.
 test-verifier:

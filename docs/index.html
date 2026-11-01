@@ -5,22 +5,22 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Sealed: your exploit stays sealed until the bounty owes you</title>
 <meta name="description" content="A bug bounty that pays for an executed break of a committed invariant. Testnet: 5 of 5 exploits paid, 0 of 21 fakes.">
-<link rel="canonical" href="https://sealed-exploit.vercel.app/">
+<link rel="canonical" href="https://sealed.edycu.dev/">
 <meta name="theme-color" content="#EDE3CC">
 <meta name="author" content="Edy Cu">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Sealed">
 <meta property="og:title" content="Sealed: your exploit stays sealed until the bounty owes you">
 <meta property="og:description" content="A bug bounty that pays for an executed break of a committed invariant. Testnet: 5 of 5 exploits paid, 0 of 21 fakes.">
-<meta property="og:url" content="https://sealed-exploit.vercel.app/">
-<meta property="og:image" content="https://sealed-exploit.vercel.app/assets/og-1200x630.jpg?v=554484e7">
+<meta property="og:url" content="https://sealed.edycu.dev/">
+<meta property="og:image" content="https://sealed.edycu.dev/assets/og-1200x630.jpg?v=554484e7">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="Sealed Exploit share card: an evidence bag taped SEALED, DO NOT OPEN and stamped PAID, a receipt with the tx redacted, and a no-op exploit stamped REFUSED.">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Sealed: your exploit stays sealed until the bounty owes you">
 <meta name="twitter:description" content="A bug bounty that pays for an executed break of a committed invariant. Testnet: 5 of 5 exploits paid, 0 of 21 fakes.">
-<meta name="twitter:image" content="https://sealed-exploit.vercel.app/assets/og-1200x630.jpg?v=554484e7">
+<meta name="twitter:image" content="https://sealed.edycu.dev/assets/og-1200x630.jpg?v=554484e7">
 <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="assets/icon-512.png">
 <link rel="preload" href="assets/fonts/bigshouldersstencil-800-latin.woff2" as="font" type="font/woff2" crossorigin>
@@ -598,7 +598,7 @@ h1 { font: 800 clamp(54px, 6vw, 88px)/.92 var(--font-display); text-transform: u
       <div class="srow"><div class="who">qwen3.8-omni-flash<small>LLM · reads, cannot run</small></div><div class="bar"><span class="slip" title="abuse-create: REFUSE"></span><span class="slip" title="abuse-input: REFUSE"></span><span class="slip" title="abuse-keccak: REFUSE"></span><span class="slip" title="abuse-loop: REFUSE"></span><span class="slip pay" title="llm-muse-telephone: PAY"></span><span class="slip pay" title="llm-qwen-delegation: PAY"></span><span class="slip pay" title="llm-qwen-fallback: PAY"></span><span class="slip" title="llm-qwen-king: REFUSE"></span><span class="slip" title="llm-qwen-telephone: REFUSE"></span><span class="slip" title="malformed-bad-address: REFUSE"></span><span class="slip" title="malformed-bad-hex: REFUSE"></span><span class="slip" title="malformed-not-json: REFUSE"></span><span class="slip" title="malformed-too-many-txs: REFUSE"></span><span class="slip" title="nearmiss-delegation-wrong-contract: REFUSE"></span><span class="slip" title="nearmiss-fallback-no-receive: REFUSE"></span><span class="slip" title="nearmiss-force-transfer: REFUSE"></span><span class="slip" title="nearmiss-king-eoa: REFUSE"></span><span class="slip" title="nearmiss-telephone-direct: REFUSE"></span><span class="slip" title="noop-telephone: REFUSE"></span><span class="slip" title="wrong-snapshot-fallback-on-telephone: REFUSE"></span><span class="slip" title="wrong-snapshot-king-on-force: REFUSE"></span></div><div class="k">3<small> of 21</small></div></div>
       <div class="srow us"><div class="who">Sealed verifier<small>OutLayer TEE · runs it</small></div><div class="bar"><span class="slip" title="abuse-create: REFUSED on chain"></span><span class="slip" title="abuse-input: REFUSED on chain"></span><span class="slip" title="abuse-keccak: REFUSED on chain"></span><span class="slip" title="abuse-loop: REFUSED on chain"></span><span class="slip" title="llm-muse-telephone: REFUSED on chain"></span><span class="slip" title="llm-qwen-delegation: REFUSED on chain"></span><span class="slip" title="llm-qwen-fallback: REFUSED on chain"></span><span class="slip" title="llm-qwen-king: REFUSED on chain"></span><span class="slip" title="llm-qwen-telephone: REFUSED on chain"></span><span class="slip" title="malformed-bad-address: REFUSED on chain"></span><span class="slip" title="malformed-bad-hex: REFUSED on chain"></span><span class="slip" title="malformed-not-json: REFUSED on chain"></span><span class="slip" title="malformed-too-many-txs: REFUSED on chain"></span><span class="slip" title="nearmiss-delegation-wrong-contract: REFUSED on chain"></span><span class="slip" title="nearmiss-fallback-no-receive: REFUSED on chain"></span><span class="slip" title="nearmiss-force-transfer: REFUSED on chain"></span><span class="slip" title="nearmiss-king-eoa: REFUSED on chain"></span><span class="slip" title="nearmiss-telephone-direct: REFUSED on chain"></span><span class="slip" title="noop-telephone: REFUSED on chain"></span><span class="slip" title="wrong-snapshot-fallback-on-telephone: REFUSED on chain"></span><span class="slip" title="wrong-snapshot-king-on-force: REFUSED on chain"></span></div><div class="k">0<small> of 21</small></div></div>
     </div>
-    <p class="vs-cap">Same submission per column. Third-party models, not NEAR AI Cloud, one run each; every fake a model paid is one of the 5 that carried a hunter claim. On the 15 real exploits they paid 12, 12 and 11 (one qwen call failed with HTTP 403 and counts as a refusal; one nemotron reply on a fake had no verdict and also counts as not paying). Record: <code>baseline/run.json</code>.</p>
+    <p class="vs-cap">Same submission per column. Third-party models, not NEAR AI Cloud, one run each; every fake a model paid is one of the 5 that carried a hunter claim. On the 15 submissions that really break a level they would pay 12, 12 and 11 (one qwen call failed with HTTP 403 and counts as a refusal; one nemotron reply on a fake had no verdict and also counts as not paying). Record: <code>baseline/run.json</code>.</p>
   </div>
 </section>
 
@@ -650,7 +650,7 @@ h1 { font: 800 clamp(54px, 6vw, 88px)/.92 var(--font-display); text-transform: u
       <span>Sealed · built for NEAR Hackathon 2026 · MIT</span>
       <a href="https://github.com/edycutjong/sealed/blob/main/ARCHITECTURE.md">ARCHITECTURE.md</a>
       <a href="https://github.com/edycutjong/sealed/blob/main/LICENSE">LICENSE</a>
-      <span class="sp">data from commit f552bbb · fonts: Big Shoulders Stencil, Libre Franklin, IBM Plex Mono (OFL)</span>
+      <span class="sp">data from commit eb93a6e · fonts: Big Shoulders Stencil, Libre Franklin, IBM Plex Mono (OFL)</span>
     </div>
   </div>
 </footer>

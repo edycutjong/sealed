@@ -13,17 +13,17 @@
 <title>Sealed · pitch deck</title>
 <meta name="author" content="Edy Cu">
 <meta name="description" content="Sealed pitch deck: a bug bounty that pays for an executed break of a committed invariant. Testnet: 5 of 5 real exploits paid, 0 of 21 fakes.">
-<link rel="canonical" href="https://sealed-exploit.vercel.app/pitch/">
+<link rel="canonical" href="https://sealed.edycu.dev/pitch/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Sealed">
 <meta property="og:title" content="Sealed · pitch deck">
 <meta property="og:description" content="Your exploit stays sealed until the bounty owes you. Testnet: 5 of 5 exploits paid, 0 of 21 fakes.">
-<meta property="og:url" content="https://sealed-exploit.vercel.app/pitch/">
-<meta property="og:image" content="https://sealed-exploit.vercel.app/assets/og-1200x630.jpg?v=554484e7">
+<meta property="og:url" content="https://sealed.edycu.dev/pitch/">
+<meta property="og:image" content="https://sealed.edycu.dev/assets/og-1200x630.jpg?v=554484e7">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://sealed-exploit.vercel.app/assets/og-1200x630.jpg?v=554484e7">
+<meta name="twitter:image" content="https://sealed.edycu.dev/assets/og-1200x630.jpg?v=554484e7">
 <link rel="icon" href="../assets/icon.svg" type="image/svg+xml">
 <link rel="preload" href="../assets/fonts/bigshouldersstencil-800-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../assets/fonts/librefranklin-400-800-latin.woff2" as="font" type="font/woff2" crossorigin>
@@ -361,14 +361,14 @@ h2 { font-size: 92px; margin-bottom: 28px; }
   <div class="badge">Built for NEAR Hackathon 2026 · Security track</div>
   <div>
     <h1>Your exploit stays <span class="tapeword">sealed</span> until the bounty <span class="owes">owes&nbsp;you</span>.</h1>
-    <span class="ver">v0.1.0 · testnet · sealed-exploit.vercel.app</span>
+    <span class="ver">v0.1.0 · testnet · sealed.edycu.dev</span>
   </div>
   <div data-stage><div class="cover-ex"><div class="term"><header><i></i><i></i><i></i><span>fresh clone · no NEAR credentials</span></header><pre><span class="p">$</span> <span class="c">make replay</span>
 <span class="ok">REPLAY-OK</span> d5-real-fallback: broken · wasm d2972cd2 · h_exploit 336ea1fb468c… = commit · verdict = chain · enc 508 B = h_enc
 <span class="dim">…</span>
 <span class="c">replay: 29 OK · 0 FAIL · verifier.wasm d2972cd2659c2ad4…</span>
 <span class="p">$</span> <span class="caret"></span></pre></div><div class="cover-tape" aria-hidden="true">SEALED · DO NOT OPEN · SEALED · DO NOT OPEN · SEALED</div><div class="cover-stamp"><svg viewBox="0 0 260 132" role="img" aria-label="PAID stamp, 1 000 tUSDC"><g filter="url(#rubber)" fill="none" stroke="currentColor"><rect x="6" y="6" width="248" height="120" rx="12" stroke-width="7"/><rect x="17" y="17" width="226" height="98" rx="6" stroke-width="2"/></g><text x="130" y="84" text-anchor="middle" fill="currentColor" filter="url(#rubber)" style="font:800 74px var(--font-display);letter-spacing:.04em">PAID</text><text x="130" y="104" text-anchor="middle" fill="currentColor" style="font:600 13px var(--font-data);letter-spacing:.08em">1 000 TUSDC</text></svg><p>deliver AodmFQ6t… · PAID 2 1000000000</p></div></div></div><!--/stage-->
-  <footer class="foot">SEALED · v0.1.0 · data f552bbb</footer>
+  <footer class="foot">SEALED · v0.1.0 · data eb93a6e</footer>
   <aside class="speaker-notes">A white-hat with a working exploit has one bad option today: send it and trust the team. Sealed makes the bounty owe the money before the protocol sees the exploit. Every number on these slides names the file or command that reproduces it.</aside>
 </section>
 
@@ -469,7 +469,7 @@ h2 { font-size: 92px; margin-bottom: 28px; }
     <p class="lead">Each line names the command that reproduces it.</p>
   </div>
   <div data-stage><div class="rcpt">
-    <h3>Property receipt</h3><p class="sub">Exhibit 01 · NEAR testnet · data from commit f552bbb</p>
+    <h3>Property receipt</h3><p class="sub">Exhibit 01 · NEAR testnet · data from commit eb93a6e</p>
     <dl>
       <dt>Real exploits paid</dt><dd class="g">5 of 5<small>make results</small></dd>
       <dt>Fakes paid</dt><dd>0 of 21<small>make results</small></dd>
@@ -516,7 +516,7 @@ h2 { font-size: 92px; margin-bottom: 28px; }
     <div class="cmds"><code>git clone https://github.com/edycutjong/sealed</code><code>make replay &amp;&amp; make verify-demo</code></div>
     <p class="close">Nothing is opened before the money is owed.</p>
   </div>
-  <div data-stage><div class="qrbox"><svg role="img" aria-label="QR code for https://sealed-exploit.vercel.app/" width="330" height="330" class="segno"><g transform="scale(10)"><path fill="#f6f1e3" d="M0 0h33v33h-33z"/><path class="qrline" stroke="#1e1b16" d="M2 2.5h7m2 0h1m3 0h3m2 0h1m1 0h1m1 0h7m-29 1h1m5 0h1m1 0h1m1 0h1m4 0h1m1 0h1m4 0h1m5 0h1m-29 1h1m1 0h3m1 0h1m1 0h2m4 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h3m1 0h1m-29 1h1m1 0h3m1 0h1m1 0h2m2 0h1m1 0h4m4 0h1m1 0h3m1 0h1m-29 1h1m1 0h3m1 0h1m2 0h7m3 0h2m1 0h1m1 0h3m1 0h1m-29 1h1m5 0h1m2 0h1m3 0h2m2 0h1m2 0h1m1 0h1m5 0h1m-29 1h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7m-21 1h2m1 0h1m1 0h1m4 0h1m-19 1h1m5 0h1m1 0h2m1 0h2m1 0h2m1 0h1m1 0h1m1 0h2m2 0h3m-27 1h1m1 0h3m3 0h2m1 0h1m1 0h1m1 0h1m1 0h2m3 0h2m1 0h2m-24 1h1m1 0h2m2 0h2m3 0h2m3 0h1m3 0h1m-23 1h1m1 0h1m4 0h1m1 0h2m1 0h3m2 0h3m1 0h1m1 0h1m-21 1h3m1 0h6m1 0h1m3 0h1m1 0h2m4 0h1m-28 1h2m1 0h1m2 0h1m2 0h1m1 0h4m3 0h2m1 0h3m2 0h2m-29 1h2m1 0h1m1 0h2m2 0h3m1 0h3m1 0h2m4 0h4m-27 1h1m1 0h2m1 0h1m4 0h2m1 0h2m1 0h1m1 0h1m3 0h1m1 0h1m1 0h1m1 0h1m-29 1h1m1 0h2m1 0h2m3 0h2m2 0h4m1 0h1m1 0h1m3 0h2m-27 1h2m1 0h1m4 0h2m1 0h1m3 0h2m1 0h3m1 0h3m1 0h3m-29 1h2m1 0h6m1 0h1m2 0h4m1 0h3m3 0h2m2 0h1m-29 1h1m1 0h1m4 0h1m1 0h1m2 0h1m1 0h1m6 0h1m1 0h2m-25 1h1m5 0h2m1 0h2m1 0h1m2 0h3m2 0h5m1 0h3m-21 1h1m3 0h2m1 0h1m2 0h3m3 0h2m-26 1h7m2 0h1m1 0h6m2 0h2m1 0h1m1 0h3m-27 1h1m5 0h1m3 0h2m1 0h1m5 0h2m3 0h1m3 0h1m-29 1h1m1 0h3m1 0h1m6 0h1m1 0h2m2 0h7m1 0h2m-29 1h1m1 0h3m1 0h1m2 0h1m1 0h3m1 0h4m2 0h1m3 0h2m1 0h1m-29 1h1m1 0h3m1 0h1m2 0h1m5 0h1m4 0h8m-28 1h1m5 0h1m2 0h7m2 0h2m1 0h3m1 0h2m1 0h1m-29 1h7m1 0h2m1 0h1m1 0h2m2 0h3m4 0h3"/></g></svg><p>sealed-exploit.vercel.app</p></div></div><!--/stage-->
+  <div data-stage><div class="qrbox"><svg role="img" aria-label="QR code for https://sealed.edycu.dev/" width="290" height="290" class="segno"><g transform="scale(10)"><path fill="#f6f1e3" d="M0 0h29v29h-29z"/><path class="qrline" stroke="#1e1b16" d="M2 2.5h7m1 0h2m1 0h1m6 0h7m-25 1h1m5 0h1m1 0h2m3 0h2m3 0h1m5 0h1m-25 1h1m1 0h3m1 0h1m1 0h3m1 0h4m2 0h1m1 0h3m1 0h1m-25 1h1m1 0h3m1 0h1m2 0h2m1 0h2m2 0h1m1 0h1m1 0h3m1 0h1m-25 1h1m1 0h3m1 0h1m1 0h1m5 0h1m1 0h1m1 0h1m1 0h3m1 0h1m-25 1h1m5 0h1m2 0h1m2 0h2m4 0h1m5 0h1m-25 1h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7m-15 1h4m2 0h1m-17 1h1m2 0h6m1 0h1m3 0h4m2 0h1m1 0h3m-21 1h2m1 0h4m1 0h1m2 0h1m3 0h5m-24 1h1m2 0h4m1 0h1m3 0h1m2 0h1m2 0h2m1 0h1m2 0h1m-23 1h3m2 0h1m1 0h3m2 0h2m2 0h1m2 0h4m-25 1h3m1 0h1m1 0h1m2 0h1m2 0h1m1 0h1m1 0h1m1 0h1m5 0h1m-25 1h1m6 0h2m1 0h1m1 0h1m1 0h2m4 0h1m2 0h1m-24 1h3m1 0h6m2 0h1m1 0h3m1 0h1m1 0h5m-25 1h1m4 0h1m1 0h4m1 0h1m1 0h1m2 0h3m1 0h2m1 0h1m-25 1h1m2 0h2m1 0h2m2 0h4m1 0h6m1 0h2m-16 1h1m1 0h3m3 0h1m3 0h1m1 0h2m-24 1h7m1 0h2m1 0h1m1 0h1m2 0h1m1 0h1m1 0h1m3 0h1m-25 1h1m5 0h1m1 0h4m1 0h4m3 0h1m2 0h2m-25 1h1m1 0h3m1 0h1m1 0h1m1 0h3m1 0h7m-21 1h1m1 0h3m1 0h1m1 0h5m1 0h5m4 0h2m-25 1h1m1 0h3m1 0h1m4 0h2m4 0h1m2 0h5m-25 1h1m5 0h1m2 0h1m4 0h1m4 0h2m1 0h3m-25 1h7m1 0h2m1 0h1m4 0h3m2 0h1m2 0h1"/></g></svg><p>sealed.edycu.dev</p></div></div><!--/stage-->
   <footer class="foot">SEALED · v0.1.0 · MIT · github.com/edycutjong/sealed</footer>
   <aside class="speaker-notes">The ask: judge it by running it. Two commands, no keys. The QR opens the landing page with the key transactions linked.</aside>
 </section>

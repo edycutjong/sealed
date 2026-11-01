@@ -376,3 +376,58 @@ pub fn error_verdict(invariant_id: &str, err: String, lim: Option<Limits>) -> Ve
         lim,
     }
 }
+
+#[cfg(test)]
+mod unit_tests {
+    //! Private parsing/guard helpers (`cap`, `hex32`, `u256`) and the public verdict builders. These
+    //! are module-private, so Rust visibility requires the tests to live here rather than in `tests/`.
+    use super::*;
+
+    #[test]
+    fn cap_leaves_short_strings_and_truncates_on_a_char_boundary() {
+        assert_eq!(cap("short".to_string()), "short");
+        // ASCII: a plain byte truncation lands exactly on MAX_ERR.
+        let ascii = cap("a".repeat(MAX_ERR + 20));
+        assert_eq!(ascii.len(), MAX_ERR);
+        // 3-byte chars (U+20AC): a naive cut at MAX_ERR lands mid-char, so the boundary back-off runs.
+        let wide = cap("\u{20ac}".repeat(30)); // 90 bytes
+        assert!(wide.len() <= MAX_ERR);
+        assert!(wide.chars().all(|c| c == '\u{20ac}'));
+        assert!(std::str::from_utf8(wide.as_bytes()).is_ok(), "truncation stays valid UTF-8");
+    }
+
+    #[test]
+    fn hex32_accepts_32_bytes_and_names_both_error_shapes() {
+        let ok = hex32(&"ab".repeat(32)).expect("64 hex chars = 32 bytes");
+        assert_eq!(ok.len(), 32);
+        assert_eq!(hex32(&format!("0x{}", "cd".repeat(32))).unwrap().len(), 32, "0x prefix is stripped");
+        assert_eq!(hex32("zz"), Err("bad hex".to_string()));
+        assert_eq!(hex32("0x1234"), Err("want 32 bytes".to_string()));
+    }
+
+    #[test]
+    fn u256_parses_empty_hex_and_decimal_and_rejects_garbage() {
+        assert_eq!(u256("").unwrap(), U256::ZERO);
+        assert_eq!(u256("0x10").unwrap(), U256::from(16u64));
+        assert_eq!(u256("255").unwrap(), U256::from(255u64));
+        assert!(u256("0xZZ").is_err());
+    }
+
+    #[test]
+    fn error_verdict_is_a_capped_not_broken_verdict() {
+        let v = error_verdict(&"i".repeat(100), "boom".to_string(), None);
+        assert!(!v.broken);
+        assert_eq!(v.err.as_deref(), Some("boom"));
+        assert!(v.invariant_id.len() <= MAX_ERR, "the invariant id is capped too");
+        assert!(v.h_exploit.is_empty());
+    }
+
+    #[test]
+    fn parse_exploit_guards_tx_count_calldata_and_json() {
+        let one = br#"[{"to":"0x0000000000000000000000000000000000000001","data":"0x","value":""}]"#;
+        assert_eq!(parse_exploit(one).unwrap().len(), 1);
+        let many = format!("[{}]", vec![r#"{"to":null,"data":"0x","value":""}"#; MAX_TXS + 1].join(","));
+        assert!(parse_exploit(many.as_bytes()).unwrap_err().contains("too many txs"));
+        assert!(parse_exploit(b"not json").unwrap_err().contains("json"));
+    }
+}
