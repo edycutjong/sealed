@@ -1,0 +1,24 @@
+{
+ "label": "d5-llm-qwen-king",
+ "bounty": "corpus.sealed-dev-11010702.testnet",
+ "commit_id": 17,
+ "input": {
+  "target": 4,
+  "invariant_id": "king-throne-locked",
+  "hunter": "sealed-hunter-b-11010702.testnet",
+  "commit_hash": "e146589ed577c0560194d92978607e72ccf2bd82e19319afa8f1e969a846dafd",
+  "protocol_enc_pk": "9110d7d50b64d770c267f401786ebfc1ce5861b55c25a8eb50916aa253b3b316"
+ },
+ "secrets": {
+  "EXPLOIT": "[\n  {\"to\": null, \"data\": \"0x60006000600060003473d3264fed42a0dc00663d0aa2b0abb90a19b347f25af1506005602d60003060056000f360006000fd\", \"value\": \"1000000000000000\"}\n]",
+  "SALT": "d4e6f2d6c31a80eb00d56b32b84e18cc0a44d6b36fd261e63d3d296cd5a2b414",
+  "EPH_SK": "760eaf4f93d0d39765a3e1ceaa48294ebeadaeca8f1eb3aa92418cc0e493f11f"
+ },
+ "exploit_name": "corpus:llm-qwen-king",
+ "final_status": {
+  "Refused": "no invariant broken"
+ },
+ "timing_s": {
+  "commit_to_verdict_s": 20.7
+ }
+}

@@ -27,3 +27,7 @@ one, and all 5 fail on a byte-level detail you can check with `SEALED_TRACE=1`:
 | `llm-muse-telephone` | the PUSH32 is followed by one extra `0x00` byte, which is STOP, so the constructor halts before its call |
 
 Selectors are keccak-256 prefixes of the signatures (`contribute()`, `pwn()`, `changeOwner(address)`).
+
+All 5 were committed verbatim to the testnet corpus bounty and the OutLayer worker refused all 5, slashing the bond
+(`corpus/evidence/d5-llm-*.json`, rows in `corpus/results.json`; `make verify-d5` re-checks them from chain). The 10
+that work were not submitted, because a testnet run would pay them.

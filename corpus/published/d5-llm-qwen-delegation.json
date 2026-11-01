@@ -1,0 +1,24 @@
+{
+ "label": "d5-llm-qwen-delegation",
+ "bounty": "corpus.sealed-dev-11010702.testnet",
+ "commit_id": 15,
+ "input": {
+  "target": 2,
+  "invariant_id": "delegation-owner-taken",
+  "hunter": "sealed-hunter-b-11010702.testnet",
+  "commit_hash": "b7e6e4e16ad998aa3a204a65b1aaa679e92d45149f0b81d56eb4250e9fd5c7c7",
+  "protocol_enc_pk": "9110d7d50b64d770c267f401786ebfc1ce5861b55c25a8eb50916aa253b3b316"
+ },
+ "secrets": {
+  "EXPLOIT": "[\n  {\"to\": \"0x1780ddd8723ddc88d5def27cc1dfb16a73077434\", \"data\": \"0xdd01383d\", \"value\": \"0\"}\n]",
+  "SALT": "aad1c81ad2881c7f27a64164793a6f6333a9bf50dfae0c83bffcdb0bab63b306",
+  "EPH_SK": "1581de12b65f51758c34c9da04a2dacd42c0021646901b8f944394a0bdd05d8d"
+ },
+ "exploit_name": "corpus:llm-qwen-delegation",
+ "final_status": {
+  "Refused": "no invariant broken"
+ },
+ "timing_s": {
+  "commit_to_verdict_s": 14.4
+ }
+}

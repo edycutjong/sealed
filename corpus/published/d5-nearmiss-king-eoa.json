@@ -1,0 +1,24 @@
+{
+ "label": "d5-nearmiss-king-eoa",
+ "bounty": "corpus.sealed-dev-11010702.testnet",
+ "commit_id": 8,
+ "input": {
+  "target": 4,
+  "invariant_id": "king-throne-locked",
+  "hunter": "sealed-hunter-a-11010702.testnet",
+  "commit_hash": "8f1f3fbe2095c30a648de85de97a826bb84da91a0f313770418212a0b92cfe42",
+  "protocol_enc_pk": "9110d7d50b64d770c267f401786ebfc1ce5861b55c25a8eb50916aa253b3b316"
+ },
+ "secrets": {
+  "EXPLOIT": "[{\"to\":\"0xd3264fed42a0dc00663d0aa2b0abb90a19b347f2\",\"data\":\"0x\",\"value\":\"1000000000000000\"}]",
+  "SALT": "840e18f287e99929a4dc98dd7ce8be156790657d63525781e10eceebdbfe09cb",
+  "EPH_SK": "f2aaa6093356f9f4088d83b241d2a28a1ea00649cfe67bb5a646e1bf4f51ca4a"
+ },
+ "exploit_name": "corpus:nearmiss-king-eoa",
+ "final_status": {
+  "Refused": "no invariant broken"
+ },
+ "timing_s": {
+  "commit_to_verdict_s": 13.5
+ }
+}

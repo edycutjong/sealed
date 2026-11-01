@@ -1,0 +1,979 @@
+{
+ "v": 1,
+ "network": "testnet",
+ "explorer": "https://testnet.nearblocks.io/txns/",
+ "summary": {
+  "real_paid_demo_bounty": "5 of 5",
+  "non_breaking_submissions_paid": "0 of 20",
+  "non_breaking_submissions_refused": "20 of 20",
+  "llm_written_paid": 0,
+  "refusal_kinds_on_chain": "6 of 6",
+  "runs": 28,
+  "golden_mismatches": [],
+  "max_instructions": 479555711,
+  "max_instructions_run": "d5-abuse-keccak",
+  "corpus_items_on_chain": "25 of 49"
+ },
+ "bounties": {
+  "corpus.sealed-dev-11010702.testnet": {
+   "create_tx": "GWgM5NCLY75JQyUhnRXXaP1Uhs49aUYM3hxLocpuoRou",
+   "global_hash": "7HtmeswBuR9JLCcU31QCioUGEmudjyYrNcbAr1jghRUv",
+   "access_keys": 0,
+   "invariants": [
+    "fallback-owner-drained",
+    "telephone-owner-taken",
+    "delegation-owner-taken",
+    "force-balance-nonzero",
+    "king-throne-locked"
+   ],
+   "deliver_ttl_ns": 120000000000,
+   "verifier_wasm_hash": "d2972cd2659c2ad4fe799511a40dfef620c0ed8154001a9b53afcfcb3aa7b1d0"
+  },
+  "demo.sealed-dev-11010702.testnet": {
+   "create_tx": "9FrSN6h6gnuTaqHnzy4AjGoYCfzJkhHeDKpG4wcdDpTU",
+   "global_hash": "7HtmeswBuR9JLCcU31QCioUGEmudjyYrNcbAr1jghRUv",
+   "access_keys": 0,
+   "invariants": [
+    "fallback-owner-drained",
+    "telephone-owner-taken",
+    "delegation-owner-taken",
+    "force-balance-nonzero",
+    "king-throne-locked"
+   ],
+   "deliver_ttl_ns": 3600000000000,
+   "verifier_wasm_hash": "d2972cd2659c2ad4fe799511a40dfef620c0ed8154001a9b53afcfcb3aa7b1d0"
+  }
+ },
+ "refusal_kinds": [
+  "delivery mismatch",
+  "duplicate",
+  "expired award",
+  "fake",
+  "invariant busy",
+  "pool pull"
+ ],
+ "refusals": [
+  {
+   "kind": "delivery mismatch",
+   "tx": "FTdPqnJmLcqjs9eAixAVxML2W1DStFQ48XpaSvgvUTiV",
+   "signer": "sealed-hunter-a-11010702.testnet",
+   "logs": [
+    "REFUSED 0 delivery mismatch"
+   ],
+   "matched": "REFUSED 0 delivery mismatch"
+  },
+  {
+   "kind": "invariant busy",
+   "tx": "7yHvtQpEYmPKEczD8zYfyyNUw9mKu7k1DjD5YKWCzonx",
+   "signer": "sealed-hunter-b-11010702.testnet",
+   "logs": [
+    "REFUSED: claim pending"
+   ],
+   "matched": "REFUSED: claim pending"
+  },
+  {
+   "kind": "pool pull",
+   "tx": "EWPNBudg3Ti764jYhDiJc2mm4SPnSsoVBkadJYYmJwoK",
+   "signer": "sealed-dev-11010702.testnet",
+   "logs": [
+    "REFUSED: claim pending"
+   ],
+   "matched": "REFUSED: claim pending"
+  },
+  {
+   "kind": "duplicate",
+   "tx": "39JpmTh6mYMt1pz2vgdk4NXnPVuMCp2EyCDdsyNJVHoq",
+   "signer": "sealed-hunter-b-11010702.testnet",
+   "logs": [
+    "REFUSED: invariant already paid"
+   ],
+   "matched": "REFUSED: invariant already paid"
+  },
+  {
+   "kind": "expired award",
+   "tx": "3oaUKM3xRpxL9QkhKSmmv1c3kM79s6Me3DsgoDMHfUVy",
+   "signer": "sealed-hunter-b-11010702.testnet",
+   "logs": [
+    "EXPIRED 0; escrow 1000000000 back to pool, bond slashed"
+   ],
+   "matched": "EXPIRED 0; escrow 1000000000 back to pool, bond slashed"
+  },
+  {
+   "kind": "fake",
+   "tx": "DUtubHScU3udGH58UxdTHWjwvDBjsHCsrupmBMxVYZiy",
+   "signer": "sealed-hunter-a-11010702.testnet",
+   "logs": [
+    "COMMIT 2 fallback-owner-drained by sealed-hunter-a-11010702.testnet; reserved 2000000000",
+    "PENDING 2 fallback-owner-drained",
+    "EVENT_JSON:{\"standard\":\"near-outlayer\",\"version\":\"1.0.0\",\"event\":\"execution_requested\",\"data\":[{\"request_data\":\"{\\\"request_id\\\":6070,\\\"sender_id\\\":\\\"sealed-hunter-a-11010702.testnet\\\",\\\"predecessor_id\\\":\\\"corpus.sealed-dev-11010702.testnet\\\",\\\"code_source\\\":{\\\"WasmUrl\\\":{\\\"url\\\":\\\"https://6pa7yka0ghwew5xh.public.blob.vercel-storage.com/wasm/d2972cd2659c2ad4fe799511a40dfef620c0ed8154001a9b53afcfcb3aa7b1d0.wasm\\\",\\\"hash\\\":\\\"d2972cd2659c2ad4fe799511a40dfef620c0ed8154001a9b53afcfcb3aa7b1d0\\\",\\\"build_target\\\":\\\"wasm32-wasip1\\\"}},\\\"resource_limits\\\":{\\\"max_instructions\\\":2000000000,\\\"max_memory_mb\\\":512,\\\"max_execution_seconds\\\":120},\\\"input_data\\\":\\\"{\\\\\\\"commit_hash\\\\\\\":\\\\\\\"68dd5b7ac73bb4935cc603e924903610feb00ed7994652d5fc094979bb9812b8\\\\\\\",\\\\\\\"hunter\\\\\\\":\\\\\\\"sealed-hunter-a-11010702.testnet\\\\\\\",\\\\\\\"invariant_id\\\\\\\":\\\\\\\"fallback-owner-drained\\\\\\\",\\\\\\\"protocol_enc_pk\\\\\\\":\\\\\\\"9110d7d50b64d770c267f401786ebfc1ce5861b55c25a8eb50916aa253b3b316\\\\\\\",\\\\\\\"target\\\\\\\":0}\\\",\\\"input_data_in_state\\\":false,\\\"secrets_ref\\\":{\\\"profile\\\":\\\"c-68dd5b7a\\\",\\\"account_id\\\":\\\"sealed-hunter-a-11010702.testnet\\\"},\\\"response_format\\\":\\\"Text\\\",\\\"payment\\\":\\\"100000000000000000000000\\\",\\\"attached_usd\\\":\\\"0\\\",\\\"timestamp\\\":1793508162022147571,\\\"compile_only\\\":false,\\\"force_rebuild\\\":false,\\\"store_on_fastfs\\\":false,\\\"use_bound_identity\\\":false,\\\"project_uuid\\\":null,\\\"project_id\\\":null}\",\"data_id\":[2,110,199,220,254,107,30,5,48,238,240,251,26,181,127,92,146,94,131,210,96,148,124,89,7,107,200,34,77,83,1,243],\"timestamp\":1793508162022147571}]}",
+    "[[yNEAR charged: \"1230600700000000000000\"]]",
+    "EVENT_JSON:{\"standard\":\"near-outlayer\",\"version\":\"1.0.0\",\"event\":\"execution_completed\",\"data\":[{\"sender_id\":\"sealed-hunter-a-11010702.testnet\",\"code_source\":{\"WasmUrl\":{\"url\":\"https://6pa7yka0ghwew5xh.public.blob.vercel-storage.com/wasm/d2972cd2659c2ad4fe799511a40dfef620c0ed8154001a9b53afcfcb3aa7b1d0.wasm\",\"hash\":\"d2972cd2659c2ad4fe799511a40dfef620c0ed8154001a9b53afcfcb3aa7b1d0\",\"build_target\":\"wasm32-wasip1\"}},\"resources_used\":{\"instructions\":7279880,\"time_ms\":2306,\"compile_time_ms\":null},\"success\":true,\"error_message\":null,\"payment_charged\":\"1230600700000000000000\",\"payment_refunded\":\"98769399300000000000000\",\"compilation_note\":\"Cached WASM from 2026-11-01T04:27:35.907526+00:00\",\"timestamp\":1793508168747247072}]}",
+    "Execution completed successfully. Output: Text(378 bytes), Resources: { instructions: 7279880, time_ms: 2306 }, Cost: 1230600700000000000000 yoctoNEAR, Refund: 98769399300000000000000 yoctoNEAR, Cached WASM from 2026-11-01T04:27:35.907526+00:00",
+    "REFUSED 2 no invariant broken"
+   ],
+   "matched": "REFUSED 2 no invariant broken"
+  }
+ ],
+ "runs": [
+  {
+   "label": "d3-fake-noop",
+   "bounty": "d3.sealed-dev-11010702.testnet",
+   "item": "noop",
+   "category": "d3",
+   "level": "fallback",
+   "invariant_id": "fallback-owner-drained",
+   "expect": null,
+   "final_status": "Refused",
+   "chain_verdict": {
+    "broken": false,
+    "err": null,
+    "gas_used": 0
+   },
+   "commit_tx": "CryNBXS2tAqWkcTYebz7fPMrkTNv7DQ2BN6j5RQQKhCQ",
+   "request_id": 6060,
+   "resolve_tx": "GiqRsavGGRhYL6LCNtihRXLo2onQ3GFtvqSoDyyKevd4",
+   "deliver_tx": null,
+   "instructions": 7048046,
+   "time_ms": 2304,
+   "timing_s": {
+    "commit_to_verdict_s": 21.2
+   }
+  },
+  {
+   "label": "d3-paid-fallback",
+   "bounty": "d3.sealed-dev-11010702.testnet",
+   "item": "fallback",
+   "category": "d3",
+   "level": "fallback",
+   "invariant_id": "fallback-owner-drained",
+   "expect": null,
+   "final_status": "Paid",
+   "chain_verdict": {
+    "broken": true,
+    "err": null,
+    "gas_used": 106932
+   },
+   "commit_tx": "5E3ZEoDGsMkVyLQvNJtcJciFaSEx1gQT9q3rSQWid1J1",
+   "request_id": 6062,
+   "resolve_tx": "5yVJRwzMvmeDmd5qENXhBaPHsuPQKXVSgHCbD1FAsrwt",
+   "deliver_tx": "5xmBFX4EFCm54CDKMAsiGbsx3Kiy4giaCMLK5P34Mr7i",
+   "instructions": 7367526,
+   "time_ms": 2275,
+   "timing_s": {
+    "commit_to_verdict_s": 17.5,
+    "deliver_to_paid_s": 9.5
+   }
+  },
+  {
+   "label": "d5-abuse-create",
+   "bounty": "corpus.sealed-dev-11010702.testnet",
+   "item": "abuse-create",
+   "category": "abuse",
+   "level": "fallback",
+   "invariant_id": "fallback-owner-drained",
+   "expect": {
+    "broken": false
+   },
+   "final_status": "Refused",
+   "chain_verdict": {
+    "broken": false,
+    "err": null,
+    "gas_used": 600000
+   },
+   "commit_tx": "9EaWVeUnpM65K3kx67dkuPwaKCqdDFCpXPKYwXKfr9Eq",
+   "request_id": 6088,
+   "resolve_tx": "9MG6pWdFwLxUqz2fdFgnbBJBRbBiHomGF5cpZLa9Lte8",
+   "deliver_tx": null,
+   "instructions": 7773530,
+   "time_ms": 2289,
+   "timing_s": {
+    "commit_to_verdict_s": 15.8
+   }
+  },
+  {
+   "label": "d5-abuse-keccak",
+   "bounty": "corpus.sealed-dev-11010702.testnet",
+   "item": "abuse-keccak",
+   "category": "abuse",
+   "level": "fallback",
+   "invariant_id": "fallback-owner-drained",
+   "expect": {
+    "broken": false
+   },
+   "final_status": "Refused",
+   "chain_verdict": {
+    "broken": false,
+    "err": null,
+    "gas_used": 600000
+   },
+   "commit_tx": "4MV8dDw7CrP6ECWmnWwHyjWnJsaifqsEucKFUmUB6yZj",
+   "request_id": 6086,
+   "resolve_tx": "AwXDN6GYxNXfWiETW1BZqtagQx1xVDaqaGeNPTVW7nfZ",
+   "deliver_tx": null,
+   "instructions": 479555711,
+   "time_ms": 2664,
+   "timing_s": {
+    "commit_to_verdict_s": 16.4
+   }
+  },
+  {
+   "label": "d5-abuse-loop",
+   "bounty": "corpus.sealed-dev-11010702.testnet",
+   "item": "abuse-loop",
+   "category": "abuse",
+   "level": "fallback",
+   "invariant_id": "fallback-owner-drained",
+   "expect": {
+    "broken": false
+   },
+   "final_status": "Refused",
+   "chain_verdict": {
+    "broken": false,
+    "err": null,
+    "gas_used": 600000
+   },
+   "commit_tx": "3ZqTFwRjPE3X36i3YmdESJTtVFNSgCfL7HKZwfMeTQMu",
+   "request_id": 6087,
+   "resolve_tx": "GPUe66w6v4McemFwcGmc3X4dDWyRTuUWumC5WBpntwxc",
+   "deliver_tx": null,
+   "instructions": 19504259,
+   "time_ms": 2113,
+   "timing_s": {
+    "commit_to_verdict_s": 14.6
+   }
+  },
+  {
+   "label": "d5-expire-fallback",
+   "bounty": "corpus.sealed-dev-11010702.testnet",
+   "item": "real-fallback",
+   "category": "real",
+   "level": "fallback",
+   "invariant_id": "fallback-owner-drained",
+   "expect": {
+    "broken": true,
+    "err": null
+   },
+   "final_status": "Voided",
+   "chain_verdict": {
+    "broken": true,
+    "err": null,
+    "gas_used": 106932
+   },
+   "commit_tx": "HLPrmriuSRQv1SnaXPiWhZiC5AAeiD58zAg7NeQzNnD7",
+   "request_id": 6068,
+   "resolve_tx": "DGM4zaoNQweczkoGcJiDsGBSNAyvvxXR7gu7hEyjErsS",
+   "deliver_tx": null,
+   "instructions": 7371260,
+   "time_ms": 2290,
+   "timing_s": {
+    "commit_to_verdict_s": 14.4
+   }
+  },
+  {
+   "label": "d5-llm-muse-telephone",
+   "bounty": "corpus.sealed-dev-11010702.testnet",
+   "item": "llm-muse-telephone",
+   "category": "llm",
+   "level": "telephone",
+   "invariant_id": "telephone-owner-taken",
+   "expect": null,
+   "final_status": "Refused",
+   "chain_verdict": {
+    "broken": false,
+    "err": null,
+    "gas_used": 53905
+   },
+   "commit_tx": "7mnMB9FerGiPUx6zBZjkpjEdyddNBjzhoe8ZGMKgoYVK",
+   "request_id": 6077,
+   "resolve_tx": "2Wxv9vfPSPvcH5AU5U6mj9faj7scW3FzLExfnQn2a4j9",
+   "deliver_tx": null,
+   "instructions": 5983810,
+   "time_ms": 2337,
+   "timing_s": {
+    "commit_to_verdict_s": 14.7
+   }
+  },
+  {
+   "label": "d5-llm-qwen-delegation",
+   "bounty": "corpus.sealed-dev-11010702.testnet",
+   "item": "llm-qwen-delegation",
+   "category": "llm",
+   "level": "delegation",
+   "invariant_id": "delegation-owner-taken",
+   "expect": null,
+   "final_status": "Refused",
+   "chain_verdict": {
+    "broken": false,
+    "err": null,
+    "gas_used": 26373
+   },
+   "commit_tx": "EnACoAvChCT46irLE7JUSa1C3Z684WYTQ2tDScCK6yVx",
+   "request_id": 6083,
+   "resolve_tx": "HZ7cWdLFBkwhhVuhCc3ZAn4FPVSyKhwEGBBi3nWn8hjT",
+   "deliver_tx": null,
+   "instructions": 6268265,
+   "time_ms": 2287,
+   "timing_s": {
+    "commit_to_verdict_s": 14.4
+   }
+  },
+  {
+   "label": "d5-llm-qwen-fallback",
+   "bounty": "corpus.sealed-dev-11010702.testnet",
+   "item": "llm-qwen-fallback",
+   "category": "llm",
+   "level": "fallback",
+   "invariant_id": "fallback-owner-drained",
+   "expect": null,
+   "final_status": "Refused",
+   "chain_verdict": {
+    "broken": false,
+    "err": null,
+    "gas_used": 68176
+   },
+   "commit_tx": "6PAjFqGAiEJXi9dX1utArTvs5CYc4s8CdyhuCUhSvqS7",
+   "request_id": 6079,
+   "resolve_tx": "FraSczBaLFFzWLpYQEYzJzk8nzM11AenXvzG1NLgXK4t",
+   "deliver_tx": null,
+   "instructions": 7263386,
+   "time_ms": 2102,
+   "timing_s": {
+    "commit_to_verdict_s": 14.9
+   }
+  },
+  {
+   "label": "d5-llm-qwen-king",
+   "bounty": "corpus.sealed-dev-11010702.testnet",
+   "item": "llm-qwen-king",
+   "category": "llm",
+   "level": "king",
+   "invariant_id": "king-throne-locked",
+   "expect": null,
+   "final_status": "Refused",
+   "chain_verdict": {
+    "broken": false,
+    "err": null,
+    "gas_used": 80999
+   },
+   "commit_tx": "4QAGxQ5QsmcjoUkCjttbrtssgSvruvqvUyNBWxLimPM6",
+   "request_id": 6085,
+   "resolve_tx": "9UaJrTLQZWXEhXXXpJaWxR4phr7vvTDbRTAyXqB6A36S",
+   "deliver_tx": null,
+   "instructions": 6619009,
+   "time_ms": 2211,
+   "timing_s": {
+    "commit_to_verdict_s": 20.7
+   }
+  },
+  {
+   "label": "d5-llm-qwen-telephone",
+   "bounty": "corpus.sealed-dev-11010702.testnet",
+   "item": "llm-qwen-telephone",
+   "category": "llm",
+   "level": "telephone",
+   "invariant_id": "telephone-owner-taken",
+   "expect": null,
+   "final_status": "Refused",
+   "chain_verdict": {
+    "broken": false,
+    "err": null,
+    "gas_used": 56573
+   },
+   "commit_tx": "J33kMyV1PpjJtgLeJ6KzBAMF8qeNAp1oCsbi3FtVPcuS",
+   "request_id": 6081,
+   "resolve_tx": "7qUy597akuonDLrGDSAMjEocrN2tSfVwsp9APF9gR7JL",
+   "deliver_tx": null,
+   "instructions": 5991675,
+   "time_ms": 2293,
+   "timing_s": {
+    "commit_to_verdict_s": 14.6
+   }
+  },
+  {
+   "label": "d5-malformed-bad-address",
+   "bounty": "corpus.sealed-dev-11010702.testnet",
+   "item": "malformed-bad-address",
+   "category": "malformed",
+   "level": "delegation",
+   "invariant_id": "delegation-owner-taken",
+   "expect": {
+    "broken": false,
+    "err": "exploit invalid: to"
+   },
+   "final_status": "Refused",
+   "chain_verdict": {
+    "broken": false,
+    "err": "exploit invalid: to",
+    "gas_used": 0
+   },
+   "commit_tx": "6Ti5xDi778fEFnUB1RGGCkUxdbbCnRkfJtGXfa4R7mUe",
+   "request_id": 6073,
+   "resolve_tx": "ZYhmWW1tsY3c8r7mXGtEoGEntiF9QjvjoS7zsfFkxKo",
+   "deliver_tx": null,
+   "instructions": 6132868,
+   "time_ms": 1991,
+   "timing_s": {
+    "commit_to_verdict_s": 14.7
+   }
+  },
+  {
+   "label": "d5-malformed-bad-hex",
+   "bounty": "corpus.sealed-dev-11010702.testnet",
+   "item": "malformed-bad-hex",
+   "category": "malformed",
+   "level": "telephone",
+   "invariant_id": "telephone-owner-taken",
+   "expect": {
+    "broken": false,
+    "err": "exploit invalid: data"
+   },
+   "final_status": "Refused",
+   "chain_verdict": {
+    "broken": false,
+    "err": "exploit invalid: data",
+    "gas_used": 0
+   },
+   "commit_tx": "5MoNnYjdMUvktdfAxHjus1FYqrWmSwNg3A1yZrwyQZGW",
+   "request_id": 6071,
+   "resolve_tx": "8dvE6JU8h416GhKgsDFX52aqWirhN1n2bc7m3LDs2UoS",
+   "deliver_tx": null,
+   "instructions": 5800412,
+   "time_ms": 2287,
+   "timing_s": {
+    "commit_to_verdict_s": 15.4
+   }
+  },
+  {
+   "label": "d5-malformed-not-json",
+   "bounty": "corpus.sealed-dev-11010702.testnet",
+   "item": "malformed-not-json",
+   "category": "malformed",
+   "level": "telephone",
+   "invariant_id": "telephone-owner-taken",
+   "expect": {
+    "broken": false,
+    "err": "exploit invalid: json"
+   },
+   "final_status": "Refused",
+   "chain_verdict": {
+    "broken": false,
+    "err": "exploit invalid: json",
+    "gas_used": 0
+   },
+   "commit_tx": "A7e6suYG3adH4uvXsMenxkoHy7KtjJULDn7c1WwuubyT",
+   "request_id": 6069,
+   "resolve_tx": "2SfWcmJohoZ4T6Dg3wwaw6w4hcbNVemT7WfXHssNmAii",
+   "deliver_tx": null,
+   "instructions": 5776787,
+   "time_ms": 2088,
+   "timing_s": {
+    "commit_to_verdict_s": 13.6
+   }
+  },
+  {
+   "label": "d5-malformed-too-many-txs",
+   "bounty": "corpus.sealed-dev-11010702.testnet",
+   "item": "malformed-too-many-txs",
+   "category": "malformed",
+   "level": "delegation",
+   "invariant_id": "delegation-owner-taken",
+   "expect": {
+    "broken": false,
+    "err": "exploit invalid: too many txs"
+   },
+   "final_status": "Refused",
+   "chain_verdict": {
+    "broken": false,
+    "err": "exploit invalid: too many txs",
+    "gas_used": 0
+   },
+   "commit_tx": "DckKaojv5yhzRna8WprkY7W9URRQJRuhL6scFYgK4iyE",
+   "request_id": 6075,
+   "resolve_tx": "HNegGLwsCr2cR9UNEPcK6GpKhcEq44ZTBYFx4WA2iGAd",
+   "deliver_tx": null,
+   "instructions": 6261532,
+   "time_ms": 2299,
+   "timing_s": {
+    "commit_to_verdict_s": 13.3
+   }
+  },
+  {
+   "label": "d5-nearmiss-delegation-wrong-contract",
+   "bounty": "corpus.sealed-dev-11010702.testnet",
+   "item": "nearmiss-delegation-wrong-contract",
+   "category": "near-miss",
+   "level": "delegation",
+   "invariant_id": "delegation-owner-taken",
+   "expect": {
+    "broken": false,
+    "err": null
+   },
+   "final_status": "Refused",
+   "chain_verdict": {
+    "broken": false,
+    "err": null,
+    "gas_used": 43372
+   },
+   "commit_tx": "FugFwG2HuohyS5B8htQgM1KfYwpyQgSvL6urDNPGwonA",
+   "request_id": 6072,
+   "resolve_tx": "BLHJai6pfgjUr22iD1XZGgjNSHFgQc2UmTKA9sCpFezy",
+   "deliver_tx": null,
+   "instructions": 6249796,
+   "time_ms": 2282,
+   "timing_s": {
+    "commit_to_verdict_s": 14.4
+   }
+  },
+  {
+   "label": "d5-nearmiss-fallback-no-receive",
+   "bounty": "corpus.sealed-dev-11010702.testnet",
+   "item": "nearmiss-fallback-no-receive",
+   "category": "near-miss",
+   "level": "fallback",
+   "invariant_id": "fallback-owner-drained",
+   "expect": {
+    "broken": false,
+    "err": null
+   },
+   "final_status": "Refused",
+   "chain_verdict": {
+    "broken": false,
+    "err": null,
+    "gas_used": 71820
+   },
+   "commit_tx": "DUtubHScU3udGH58UxdTHWjwvDBjsHCsrupmBMxVYZiy",
+   "request_id": 6070,
+   "resolve_tx": "6h8JbkoV3VK3PAr5jR1HAsHoqcXcenLK17ChW2LFmS6R",
+   "deliver_tx": null,
+   "instructions": 7279880,
+   "time_ms": 2306,
+   "timing_s": {
+    "commit_to_verdict_s": 13.5
+   }
+  },
+  {
+   "label": "d5-nearmiss-force-transfer",
+   "bounty": "corpus.sealed-dev-11010702.testnet",
+   "item": "nearmiss-force-transfer",
+   "category": "near-miss",
+   "level": "force",
+   "invariant_id": "force-balance-nonzero",
+   "expect": {
+    "broken": false,
+    "err": null
+   },
+   "final_status": "Refused",
+   "chain_verdict": {
+    "broken": false,
+    "err": null,
+    "gas_used": 21023
+   },
+   "commit_tx": "HT76CtBcycbUQZ68nE6rDdjKLjARWwDn1wQE4stM1wUK",
+   "request_id": 6074,
+   "resolve_tx": "BrN5HVG2RTnfH5bP9wgMKTXj9dEKQssK3mKVSDbcRKLg",
+   "deliver_tx": null,
+   "instructions": 5273278,
+   "time_ms": 2258,
+   "timing_s": {
+    "commit_to_verdict_s": 14.6
+   }
+  },
+  {
+   "label": "d5-nearmiss-king-eoa",
+   "bounty": "corpus.sealed-dev-11010702.testnet",
+   "item": "nearmiss-king-eoa",
+   "category": "near-miss",
+   "level": "king",
+   "invariant_id": "king-throne-locked",
+   "expect": {
+    "broken": false,
+    "err": null
+   },
+   "final_status": "Refused",
+   "chain_verdict": {
+    "broken": false,
+    "err": null,
+    "gas_used": 37962
+   },
+   "commit_tx": "F1Gikir1FA5m3WdqSLzKTvuKrXTADYzVaoLV5Ms5y2aE",
+   "request_id": 6076,
+   "resolve_tx": "8G5sRfxtGKogFexjpXSQvTn76W1tT32qQFckkgp73JCD",
+   "deliver_tx": null,
+   "instructions": 6517705,
+   "time_ms": 2305,
+   "timing_s": {
+    "commit_to_verdict_s": 13.5
+   }
+  },
+  {
+   "label": "d5-nearmiss-telephone-direct",
+   "bounty": "corpus.sealed-dev-11010702.testnet",
+   "item": "nearmiss-telephone-direct",
+   "category": "near-miss",
+   "level": "telephone",
+   "invariant_id": "telephone-owner-taken",
+   "expect": {
+    "broken": false,
+    "err": null
+   },
+   "final_status": "Refused",
+   "chain_verdict": {
+    "broken": false,
+    "err": null,
+    "gas_used": 21698
+   },
+   "commit_tx": "53kE8u36jBGQ37kqpDGmduuydxDUULJnUYfWt4RYvh4w",
+   "request_id": 6084,
+   "resolve_tx": "H7BVVWEdBdj34K8nuDLxfDc9MJkHzK9uAuEbZtdJcgfP",
+   "deliver_tx": null,
+   "instructions": 5941572,
+   "time_ms": 2601,
+   "timing_s": {
+    "commit_to_verdict_s": 22.3
+   }
+  },
+  {
+   "label": "d5-noop-telephone",
+   "bounty": "corpus.sealed-dev-11010702.testnet",
+   "item": "noop-telephone",
+   "category": "near-miss",
+   "level": "telephone",
+   "invariant_id": "telephone-owner-taken",
+   "expect": {
+    "broken": false,
+    "err": null
+   },
+   "final_status": "Refused",
+   "chain_verdict": {
+    "broken": false,
+    "err": null,
+    "gas_used": 0
+   },
+   "commit_tx": "C3979ExEY3NanFHLte15m11ZRKNVMBtf83um5Xs7T9AK",
+   "request_id": 6078,
+   "resolve_tx": "41TXVgiCeDAuzYqDXbd26As2d3mh8gNVCQM6gznutc58",
+   "deliver_tx": null,
+   "instructions": 5847382,
+   "time_ms": 2321,
+   "timing_s": {
+    "commit_to_verdict_s": 14.6
+   }
+  },
+  {
+   "label": "d5-real-delegation",
+   "bounty": "demo.sealed-dev-11010702.testnet",
+   "item": "real-delegation",
+   "category": "real",
+   "level": "delegation",
+   "invariant_id": "delegation-owner-taken",
+   "expect": {
+    "broken": true,
+    "err": null
+   },
+   "final_status": "Paid",
+   "chain_verdict": {
+    "broken": true,
+    "err": null,
+    "gas_used": 31457
+   },
+   "commit_tx": "ztZrSgbBQJ1utwt6Qh7Mq4foZW9guNv3SWyHEKzTL1D",
+   "request_id": 6064,
+   "resolve_tx": "68CT937PJdDMkUz6EYaXKScLwDYAybjJYRzQB91XCZBL",
+   "deliver_tx": "7MPsnNaawzehWSEnNbnsF2jycwUXgkuDxUkgsV3o9L8C",
+   "instructions": 6274484,
+   "time_ms": 2295,
+   "timing_s": {
+    "commit_to_verdict_s": 13.9,
+    "deliver_to_paid_s": 7.1
+   }
+  },
+  {
+   "label": "d5-real-fallback",
+   "bounty": "demo.sealed-dev-11010702.testnet",
+   "item": "real-fallback",
+   "category": "real",
+   "level": "fallback",
+   "invariant_id": "fallback-owner-drained",
+   "expect": {
+    "broken": true,
+    "err": null
+   },
+   "final_status": "Paid",
+   "chain_verdict": {
+    "broken": true,
+    "err": null,
+    "gas_used": 106932
+   },
+   "commit_tx": "FNbCUc53YNayqd6NBqaaxnZTeGAVGABHfPsoHz7Gkc2s",
+   "request_id": 6065,
+   "resolve_tx": "2vdtrvQmZmpt4NGfAD2FyBQy9d5PjLR4dEJuQCF8MXTX",
+   "deliver_tx": "AodmFQ6tq4pBcxLreRDSCanKkZQY7m6nhM459NfPAg3s",
+   "instructions": 7370050,
+   "time_ms": 2302,
+   "timing_s": {
+    "commit_to_verdict_s": 14.6,
+    "deliver_to_paid_s": 6.3
+   }
+  },
+  {
+   "label": "d5-real-force",
+   "bounty": "demo.sealed-dev-11010702.testnet",
+   "item": "real-force",
+   "category": "real",
+   "level": "force",
+   "invariant_id": "force-balance-nonzero",
+   "expect": {
+    "broken": true,
+    "err": null
+   },
+   "final_status": "Paid",
+   "chain_verdict": {
+    "broken": true,
+    "err": null,
+    "gas_used": 64284
+   },
+   "commit_tx": "C86BJPB8g6Gw21Swn3U6ztxsr7ag5qGA1AhkWNfAbZSw",
+   "request_id": 6066,
+   "resolve_tx": "22iqznng87P5HKdRHSXHA4eBqEAth5e9eFRWWGq5TAKe",
+   "deliver_tx": "Hs4NVh89qsHuzxsuvj1giUEHPVtELgqFWPokYDqwvZe1",
+   "instructions": 5492538,
+   "time_ms": 2301,
+   "timing_s": {
+    "commit_to_verdict_s": 14.3,
+    "deliver_to_paid_s": 6.4
+   }
+  },
+  {
+   "label": "d5-real-king",
+   "bounty": "demo.sealed-dev-11010702.testnet",
+   "item": "real-king",
+   "category": "real",
+   "level": "king",
+   "invariant_id": "king-throne-locked",
+   "expect": {
+    "broken": true,
+    "err": null
+   },
+   "final_status": "Paid",
+   "chain_verdict": {
+    "broken": true,
+    "err": null,
+    "gas_used": 90085
+   },
+   "commit_tx": "r15hDvSKDraTQbcc6TDQopJ6Hm7i4v1M2ckRReAWJsZ",
+   "request_id": 6067,
+   "resolve_tx": "Bbw73pxgGA84RmtgBaMXPuRHA3B656AHq3GGh9MB9PVQ",
+   "deliver_tx": "4UGJJjijbEBFovRxvB7GbtSF5HiPhKFhgUzzTHT17UJ9",
+   "instructions": 7107238,
+   "time_ms": 2307,
+   "timing_s": {
+    "commit_to_verdict_s": 14.7,
+    "deliver_to_paid_s": 6.8
+   }
+  },
+  {
+   "label": "d5-real-telephone",
+   "bounty": "demo.sealed-dev-11010702.testnet",
+   "item": "real-telephone",
+   "category": "real",
+   "level": "telephone",
+   "invariant_id": "telephone-owner-taken",
+   "expect": {
+    "broken": true,
+    "err": null
+   },
+   "final_status": "Paid",
+   "chain_verdict": {
+    "broken": true,
+    "err": null,
+    "gas_used": 70141
+   },
+   "commit_tx": "G6cmgSjpZ61ncxSJiUVN72B4jUbNMzS9aatgvwwqyr5u",
+   "request_id": 6063,
+   "resolve_tx": "7xHaZQYzS1SFdo6Z1XQDhjY2s1T5QhaCxpfiYEg7odQC",
+   "deliver_tx": "DQHctP4DpCFBepMayAqjz9dVpgWaxGdjizksFE91aoa",
+   "instructions": 6379342,
+   "time_ms": 2268,
+   "timing_s": {
+    "commit_to_verdict_s": 20.0,
+    "deliver_to_paid_s": 6.1
+   }
+  },
+  {
+   "label": "d5-wrong-snapshot-fallback-on-telephone",
+   "bounty": "corpus.sealed-dev-11010702.testnet",
+   "item": "wrong-snapshot-fallback-on-telephone",
+   "category": "wrong-snapshot",
+   "level": "telephone",
+   "invariant_id": "telephone-owner-taken",
+   "expect": {
+    "broken": false,
+    "err": null
+   },
+   "final_status": "Refused",
+   "chain_verdict": {
+    "broken": false,
+    "err": null,
+    "gas_used": 63340
+   },
+   "commit_tx": "7nwPQfCyR8xo8Fd1fwUeTCYD9NQYw7QgaMDYenznjCrF",
+   "request_id": 6080,
+   "resolve_tx": "7u1gZM3AdPQ732y1cZemA1rV3VzuZmcnFmDRMvHZYh67",
+   "deliver_tx": null,
+   "instructions": 5994515,
+   "time_ms": 2286,
+   "timing_s": {
+    "commit_to_verdict_s": 14.8
+   }
+  },
+  {
+   "label": "d5-wrong-snapshot-king-on-force",
+   "bounty": "corpus.sealed-dev-11010702.testnet",
+   "item": "wrong-snapshot-king-on-force",
+   "category": "wrong-snapshot",
+   "level": "force",
+   "invariant_id": "force-balance-nonzero",
+   "expect": {
+    "broken": false,
+    "err": null
+   },
+   "final_status": "Refused",
+   "chain_verdict": {
+    "broken": false,
+    "err": null,
+    "gas_used": 71801
+   },
+   "commit_tx": "4ypmjZSr7ahxRttBGqCAQ2LeT91zmsZNQCyJ7rtNt7jU",
+   "request_id": 6082,
+   "resolve_tx": "4S1yFPxpnwnHH3Yc5gvYCDC6L4mamkPTRVfeeUVq7ULZ",
+   "deliver_tx": null,
+   "instructions": 5845116,
+   "time_ms": 2766,
+   "timing_s": {
+    "commit_to_verdict_s": 15.5
+   }
+  }
+ ],
+ "off_chain": [
+  {
+   "item": "llm-grok-fallback",
+   "category": "llm",
+   "reason": "really breaks its level (golden broken=true): a testnet run would pay it, so it was not submitted"
+  },
+  {
+   "item": "llm-grok-telephone",
+   "category": "llm",
+   "reason": "really breaks its level (golden broken=true): a testnet run would pay it, so it was not submitted"
+  },
+  {
+   "item": "llm-grok-delegation",
+   "category": "llm",
+   "reason": "really breaks its level (golden broken=true): a testnet run would pay it, so it was not submitted"
+  },
+  {
+   "item": "llm-grok-force",
+   "category": "llm",
+   "reason": "really breaks its level (golden broken=true): a testnet run would pay it, so it was not submitted"
+  },
+  {
+   "item": "llm-grok-king",
+   "category": "llm",
+   "reason": "really breaks its level (golden broken=true): a testnet run would pay it, so it was not submitted"
+  },
+  {
+   "item": "llm-muse-fallback",
+   "category": "llm",
+   "reason": "really breaks its level (golden broken=true): a testnet run would pay it, so it was not submitted"
+  },
+  {
+   "item": "llm-muse-delegation",
+   "category": "llm",
+   "reason": "really breaks its level (golden broken=true): a testnet run would pay it, so it was not submitted"
+  },
+  {
+   "item": "llm-muse-force",
+   "category": "llm",
+   "reason": "really breaks its level (golden broken=true): a testnet run would pay it, so it was not submitted"
+  },
+  {
+   "item": "llm-muse-king",
+   "category": "llm",
+   "reason": "really breaks its level (golden broken=true): a testnet run would pay it, so it was not submitted"
+  },
+  {
+   "item": "llm-qwen-force",
+   "category": "llm",
+   "reason": "really breaks its level (golden broken=true): a testnet run would pay it, so it was not submitted"
+  },
+  {
+   "item": "abuse-big",
+   "category": "abuse",
+   "reason": "wasmtime only (make corpus); the heaviest abuse shapes ran on testnet"
+  },
+  {
+   "item": "abuse-blake2f",
+   "category": "abuse",
+   "reason": "wasmtime only (make corpus); the heaviest abuse shapes ran on testnet"
+  },
+  {
+   "item": "abuse-callself",
+   "category": "abuse",
+   "reason": "wasmtime only (make corpus); the heaviest abuse shapes ran on testnet"
+  },
+  {
+   "item": "abuse-cdcopy",
+   "category": "abuse",
+   "reason": "wasmtime only (make corpus); the heaviest abuse shapes ran on testnet"
+  },
+  {
+   "item": "abuse-exp",
+   "category": "abuse",
+   "reason": "wasmtime only (make corpus); the heaviest abuse shapes ran on testnet"
+  },
+  {
+   "item": "abuse-extcodecopy",
+   "category": "abuse",
+   "reason": "wasmtime only (make corpus); the heaviest abuse shapes ran on testnet"
+  },
+  {
+   "item": "abuse-input",
+   "category": "abuse",
+   "reason": "stopped before commit: `outlayer secrets set` attaches a fixed 0.1 NEAR storage deposit and the 49 KB secret row needs 0.66428 NEAR, so OutLayer's secrets contract panics and no commit is made (tx 5rA2ohujEPgbq139JNb9wwbJnC2zUU8mcR3qTHEDM6ws, signer sealed-hunter-a-11010702.testnet)"
+  },
+  {
+   "item": "abuse-jumpdest",
+   "category": "abuse",
+   "reason": "wasmtime only (make corpus); the heaviest abuse shapes ran on testnet"
+  },
+  {
+   "item": "abuse-log",
+   "category": "abuse",
+   "reason": "wasmtime only (make corpus); the heaviest abuse shapes ran on testnet"
+  },
+  {
+   "item": "abuse-mcopy",
+   "category": "abuse",
+   "reason": "wasmtime only (make corpus); the heaviest abuse shapes ran on testnet"
+  },
+  {
+   "item": "abuse-mem",
+   "category": "abuse",
+   "reason": "wasmtime only (make corpus); the heaviest abuse shapes ran on testnet"
+  },
+  {
+   "item": "abuse-mulmod",
+   "category": "abuse",
+   "reason": "wasmtime only (make corpus); the heaviest abuse shapes ran on testnet"
+  },
+  {
+   "item": "abuse-over",
+   "category": "abuse",
+   "reason": "wasmtime only (make corpus); the heaviest abuse shapes ran on testnet"
+  },
+  {
+   "item": "abuse-sstore",
+   "category": "abuse",
+   "reason": "wasmtime only (make corpus); the heaviest abuse shapes ran on testnet"
+  }
+ ]
+}

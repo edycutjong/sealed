@@ -1,0 +1,24 @@
+{
+ "label": "d5-wrong-snapshot-fallback-on-telephone",
+ "bounty": "corpus.sealed-dev-11010702.testnet",
+ "commit_id": 12,
+ "input": {
+  "target": 1,
+  "invariant_id": "telephone-owner-taken",
+  "hunter": "sealed-hunter-a-11010702.testnet",
+  "commit_hash": "2c8029989568231519e34fe89de76f40b83a1d929851c88066a85cddf4ed0272",
+  "protocol_enc_pk": "9110d7d50b64d770c267f401786ebfc1ce5861b55c25a8eb50916aa253b3b316"
+ },
+ "secrets": {
+  "EXPLOIT": "[{\"to\":\"0xd3264fed42a0dc00663d0aa2b0abb90a19b347f2\",\"data\":\"0xd7bb99ba\",\"value\":\"1\"},{\"to\":\"0xd3264fed42a0dc00663d0aa2b0abb90a19b347f2\",\"data\":\"0x\",\"value\":\"1\"},{\"to\":\"0xd3264fed42a0dc00663d0aa2b0abb90a19b347f2\",\"data\":\"0x3ccfd60b\",\"value\":\"0\"}]",
+  "SALT": "cefc32ea955af87f45fcf3885453cd4c17890e52ee09b11f4d9104173f2e66fb",
+  "EPH_SK": "c72d0dc18a050fc3460d16278a3bd6bbc204c1e98289418fcba3a8644d57eae9"
+ },
+ "exploit_name": "corpus:wrong-snapshot-fallback-on-telephone",
+ "final_status": {
+  "Refused": "no invariant broken"
+ },
+ "timing_s": {
+  "commit_to_verdict_s": 14.8
+ }
+}

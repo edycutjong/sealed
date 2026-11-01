@@ -1,0 +1,24 @@
+{
+ "label": "d5-abuse-loop",
+ "bounty": "corpus.sealed-dev-11010702.testnet",
+ "commit_id": 19,
+ "input": {
+  "target": 0,
+  "invariant_id": "fallback-owner-drained",
+  "hunter": "sealed-hunter-b-11010702.testnet",
+  "commit_hash": "8603479597cc7ac6ef3d0b53190a28d25676f0deb5c207ad9eb5a6ca191da21e",
+  "protocol_enc_pk": "9110d7d50b64d770c267f401786ebfc1ce5861b55c25a8eb50916aa253b3b316"
+ },
+ "secrets": {
+  "EXPLOIT": "[{\"to\":null,\"data\":\"0x5b5f56\",\"value\":\"0\"},{\"to\":null,\"data\":\"0x5b5f56\",\"value\":\"0\"},{\"to\":null,\"data\":\"0x5b5f56\",\"value\":\"0\"},{\"to\":null,\"data\":\"0x5b5f56\",\"value\":\"0\"}]",
+  "SALT": "9f747b999d365c8d2b375d0c8747ee11d26f1d9ad5ef7f14e3c9419439d4ad91",
+  "EPH_SK": "60da0efec773ef588fdfef14a5d20e800184fc2313d2526e8542a04d3975218f"
+ },
+ "exploit_name": "corpus:abuse-loop",
+ "final_status": {
+  "Refused": "no invariant broken"
+ },
+ "timing_s": {
+  "commit_to_verdict_s": 14.6
+ }
+}

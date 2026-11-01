@@ -9,6 +9,12 @@ import glob, json, os
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TESTNET = "https://testnet.nearblocks.io/txns/"
+# Items stopped before any commit, with the failed tx (the deposit is refunded when the call panics).
+PRECOMMIT = {
+    "abuse-input": "stopped before commit: `outlayer secrets set` attaches a fixed 0.1 NEAR storage deposit and the "
+                   "49 KB secret row needs 0.66428 NEAR, so OutLayer's secrets contract panics and no commit is made "
+                   "(tx 5rA2ohujEPgbq139JNb9wwbJnC2zUU8mcR3qTHEDM6ws, signer sealed-hunter-a-11010702.testnet)",
+}
 
 
 def load(p):
@@ -81,9 +87,26 @@ def main():
         "refusal_kinds_on_chain": f"{len(set(kinds))} of 6",
         "runs": len(runs), "golden_mismatches": bad,
         "max_instructions": max((r["instructions"] or 0) for r in d5) if d5 else None,
+        "max_instructions_run": max(d5, key=lambda r: r["instructions"] or 0)["label"] if d5 else None,
     }
+    # Every corpus item with no testnet run, and why. All of them still run under wasmtime (`make corpus`).
+    on_chain = {r["item"] for r in d5}
+    off_chain = []
+    for name, item in items.items():
+        if name in on_chain:
+            continue
+        gpath = os.path.join(ROOT, "verifier", "tests", "golden", "corpus", f"{name}.json")
+        golden = json.load(open(gpath)) if os.path.exists(gpath) else None
+        if name in PRECOMMIT:
+            why = PRECOMMIT[name]
+        elif golden and golden["broken"]:
+            why = "really breaks its level (golden broken=true): a testnet run would pay it, so it was not submitted"
+        else:
+            why = "wasmtime only (make corpus); the heaviest abuse shapes ran on testnet"
+        off_chain.append({"item": name, "category": item["category"], "reason": why})
+    summary["corpus_items_on_chain"] = f"{len(on_chain & set(items))} of {len(items)}"
     out = {"v": 1, "network": "testnet", "explorer": TESTNET, "summary": summary, "bounties": bounties,
-           "refusal_kinds": sorted(set(kinds)), "refusals": refusals, "runs": runs}
+           "refusal_kinds": sorted(set(kinds)), "refusals": refusals, "runs": runs, "off_chain": off_chain}
     json.dump(out, open(os.path.join(ROOT, "corpus", "results.json"), "w"), indent=1)
     print(json.dumps(summary, indent=1))
     return 1 if bad else 0

@@ -1,0 +1,24 @@
+{
+ "label": "d5-llm-muse-telephone",
+ "bounty": "corpus.sealed-dev-11010702.testnet",
+ "commit_id": 9,
+ "input": {
+  "target": 1,
+  "invariant_id": "telephone-owner-taken",
+  "hunter": "sealed-hunter-b-11010702.testnet",
+  "commit_hash": "295537f64e39cce2e9f714a7b8005e2db63b8d8d70fb6d06e29c89900febe727",
+  "protocol_enc_pk": "9110d7d50b64d770c267f401786ebfc1ce5861b55c25a8eb50916aa253b3b316"
+ },
+ "secrets": {
+  "EXPLOIT": "[\n  {\"to\": null, \"data\": \"0x7fa6f9dae100000000000000000000000000000000000000000000000000000000005f527320000000000000000000000000000000000000026004525f5f60245f5f73d3264fed42a0dc00663d0aa2b0abb90a19b347f25af15f5ff3\", \"value\": \"0\"}\n]",
+  "SALT": "30a4cb9d853db393e630397d6c77655f67261c29ce9f96278e801a94bfe20eda",
+  "EPH_SK": "acaa6dbd2506935acdec2cb303d47ea5d5571b25140a4bf0ad5e45104021db96"
+ },
+ "exploit_name": "corpus:llm-muse-telephone",
+ "final_status": {
+  "Refused": "no invariant broken"
+ },
+ "timing_s": {
+  "commit_to_verdict_s": 14.7
+ }
+}
