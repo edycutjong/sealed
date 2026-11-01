@@ -2,80 +2,21 @@
 
 ## Turn 1 — model reply (verbatim)
 
-The bug is a denial-of-service in `King.receive()`: it pays the previous king with `transfer()` before updating kingship, so if the previous king is a contract that always reverts on receiving Ether, every later claim reverts. The transaction deploys such a reverting contract whose constructor forwards 0.99 ether to the King instance to seize the throne, after which the level's attempt to reclaim kingship fails when paying the malicious king.
+The bug is that `King.receive()` uses `transfer()` to pay the previous king before updating `king`, so a king contract that always reverts on receiving Ether makes every subsequent kingship attempt revert. My transaction deploys such a reverting contract whose constructor immediately claims the throne with 0.1 Ether, locking the King contract permanently.
 
 ```json
-[{"to": null, "data": "0x60006000600060003173d3264fed42a0dc00663d0aa2b0abb90a19b347f25af160285760006000fd5b60fe60005360016000f3", "value": "990000000000000000"}]
+[{"to": null, "data": "0x60006000600060003473d3264fed42a0dc00663d0aa2b0abb90a19b347f25af1156030576005603660003960056000f35b60006000fd60006000fd", "value": "100000000000000000"}]
 ```
 
 ### Turn 1 — local verifier (committed verifier.wasm, wasmtime)
 
 ```
-tx 1: halt
-validateInstance → 0
-broken: False
+tx 1: success data 0x60006000fd
+validateInstance → 1
+broken: True
 ```
 
-## Turn 2 — model reply (verbatim)
+**Result: invariant broken on turn 1.**
 
-I was wrong because the output shows tx 1 halted while validateInstance returned 0, so my transaction executed without satisfying the level's validation condition.
-
-```json
-{
-  "transactions": [
-    {
-      "to": "instance",
-      "value": "100000000000000",
-      "data": "0xd7bb99ba"
-    },
-    {
-      "to": "instance",
-      "value": "100000000000000",
-      "data": "0x"
-    },
-    {
-      "to": "instance",
-      "value": "0",
-      "data": "0x3ccfd60b"
-    }
-  ]
-}
-```
-
-**No parseable ```json transaction array in the reply.**
-
-## Turn 3 — model reply (verbatim)
-
-I was wrong because the verifier showed my reply held no valid JSON transaction array and validateInstance returned nothing.
-
-```json
-[]
-```
-
-### Turn 3 — local verifier (committed verifier.wasm, wasmtime)
-
-```
-(no transactions ran)
-validateInstance → 0
-broken: False
-```
-
-## Turn 4 — model reply (verbatim)
-
-I was wrong because the output shows that no transactions ran and validateInstance returned 0, meaning my previous submission executed nothing and did not break the level.
-
-```json
-{
-  "transactions": [
-    {
-      "to": "instance",
-      "value": "0",
-      "data": "0x"
-    }
-  ]
-}
-```
-
-**No parseable ```json transaction array in the reply.**
-
-**Result: not broken in 4 turns.**
+Next step on testnet (needs a funded hunter account and an open bounty on this invariant):
+`python3 scripts/hunter.py --bounty <bounty> --hunter <account> --exploit hunter-agent/king-muse-wonder-1.0-low-exploit.json --label agent-king --invariant king-throne-locked`
