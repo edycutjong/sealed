@@ -1,0 +1,24 @@
+{
+ "label": "d5-nearmiss-telephone-direct",
+ "bounty": "corpus.sealed-dev-11010702.testnet",
+ "commit_id": 16,
+ "input": {
+  "target": 1,
+  "invariant_id": "telephone-owner-taken",
+  "hunter": "sealed-hunter-b-11010702.testnet",
+  "commit_hash": "2a983bde5b4c72478f0101b40aee37ebd72ddc839a10de43ec5a7f6808b602b3",
+  "protocol_enc_pk": "9110d7d50b64d770c267f401786ebfc1ce5861b55c25a8eb50916aa253b3b316"
+ },
+ "secrets": {
+  "EXPLOIT": "[{\"to\":\"0xd3264fed42a0dc00663d0aa2b0abb90a19b347f2\",\"data\":\"0xa6f9dae10000000000000000000000002000000000000000000000000000000000000002\",\"value\":\"0\"}]",
+  "SALT": "6124b5869d957508ead35c986794bd086268dc3f348d3b029a4ce5c35f720aab",
+  "EPH_SK": "f1667c60553046cdc8bd4bc64f0698170e38838df4dd34ec0a0c3b5401043f1f"
+ },
+ "exploit_name": "corpus:nearmiss-telephone-direct",
+ "final_status": {
+  "Refused": "no invariant broken"
+ },
+ "timing_s": {
+  "commit_to_verdict_s": 22.3
+ }
+}

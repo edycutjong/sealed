@@ -1,0 +1,24 @@
+{
+ "label": "d5-malformed-too-many-txs",
+ "bounty": "corpus.sealed-dev-11010702.testnet",
+ "commit_id": 7,
+ "input": {
+  "target": 2,
+  "invariant_id": "delegation-owner-taken",
+  "hunter": "sealed-hunter-b-11010702.testnet",
+  "commit_hash": "ff3ba38caa7bfa60784f39743b32c34fa822b4e612f974c70773cded867ae5b3",
+  "protocol_enc_pk": "9110d7d50b64d770c267f401786ebfc1ce5861b55c25a8eb50916aa253b3b316"
+ },
+ "secrets": {
+  "EXPLOIT": "[{\"to\":\"0xd3264fed42a0dc00663d0aa2b0abb90a19b347f2\",\"data\":\"0x\",\"value\":\"0\"},{\"to\":\"0xd3264fed42a0dc00663d0aa2b0abb90a19b347f2\",\"data\":\"0x\",\"value\":\"0\"},{\"to\":\"0xd3264fed42a0dc00663d0aa2b0abb90a19b347f2\",\"data\":\"0x\",\"value\":\"0\"},{\"to\":\"0xd3264fed42a0dc00663d0aa2b0abb90a19b347f2\",\"data\":\"0x\",\"value\":\"0\"},{\"to\":\"0xd3264fed42a0dc00663d0aa2b0abb90a19b347f2\",\"data\":\"0x\",\"value\":\"0\"}]",
+  "SALT": "fed6a074bd0dc6749cdf7eba65d653c4ebcd6e134efcdd18aa59ec9c0f7aaa44",
+  "EPH_SK": "0ff1de42dd4471455d981d767bb5e56bf06398364b9106c88172be8e5f04711f"
+ },
+ "exploit_name": "corpus:malformed-too-many-txs",
+ "final_status": {
+  "Refused": "exploit invalid: too many txs"
+ },
+ "timing_s": {
+  "commit_to_verdict_s": 13.3
+ }
+}

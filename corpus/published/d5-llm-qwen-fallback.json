@@ -1,0 +1,24 @@
+{
+ "label": "d5-llm-qwen-fallback",
+ "bounty": "corpus.sealed-dev-11010702.testnet",
+ "commit_id": 11,
+ "input": {
+  "target": 0,
+  "invariant_id": "fallback-owner-drained",
+  "hunter": "sealed-hunter-b-11010702.testnet",
+  "commit_hash": "35bb01f5b243be68e719e10fadc94fe66dd93ee5251cd3c83bdde4785fc9a4a5",
+  "protocol_enc_pk": "9110d7d50b64d770c267f401786ebfc1ce5861b55c25a8eb50916aa253b3b316"
+ },
+ "secrets": {
+  "EXPLOIT": "[\n  {\"to\": \"0xd3264fed42a0dc00663d0aa2b0abb90a19b347f2\", \"data\": \"0xf057478d\", \"value\": \"1\"},\n  {\"to\": \"0xd3264fed42a0dc00663d0aa2b0abb90a19b347f2\", \"data\": \"0x\", \"value\": \"1\"},\n  {\"to\": \"0xd3264fed42a0dc00663d0aa2b0abb90a19b347f2\", \"data\": \"0x3ccfd60b\", \"value\": \"0\"}\n]",
+  "SALT": "9c9eabec490fea010cb19c0e5de68acbe10b4a7a63a3bcc123295891ca686def",
+  "EPH_SK": "2704c9d1de3d9e49d899eddc3f18431079aa74cd699d23fce051b9ade5a0d22c"
+ },
+ "exploit_name": "corpus:llm-qwen-fallback",
+ "final_status": {
+  "Refused": "no invariant broken"
+ },
+ "timing_s": {
+  "commit_to_verdict_s": 14.9
+ }
+}

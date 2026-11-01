@@ -1,0 +1,24 @@
+{
+ "label": "d5-noop-telephone",
+ "bounty": "corpus.sealed-dev-11010702.testnet",
+ "commit_id": 10,
+ "input": {
+  "target": 1,
+  "invariant_id": "telephone-owner-taken",
+  "hunter": "sealed-hunter-a-11010702.testnet",
+  "commit_hash": "0797fa251f78bafc4243e298dc287f05ddc76d84245a639e822c1394fe1e39e5",
+  "protocol_enc_pk": "9110d7d50b64d770c267f401786ebfc1ce5861b55c25a8eb50916aa253b3b316"
+ },
+ "secrets": {
+  "EXPLOIT": "[]",
+  "SALT": "1282c63dd310eb6127ae41167468d578f44c514247fedf70a1f9ac3fde7fb919",
+  "EPH_SK": "fe04acd815ccebc9cbbf6e781c464f203bb42a389309e6a62cd0fb025e0e2d98"
+ },
+ "exploit_name": "corpus:noop-telephone",
+ "final_status": {
+  "Refused": "no invariant broken"
+ },
+ "timing_s": {
+  "commit_to_verdict_s": 14.6
+ }
+}

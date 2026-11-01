@@ -1,0 +1,24 @@
+{
+ "label": "d5-malformed-bad-address",
+ "bounty": "corpus.sealed-dev-11010702.testnet",
+ "commit_id": 5,
+ "input": {
+  "target": 2,
+  "invariant_id": "delegation-owner-taken",
+  "hunter": "sealed-hunter-b-11010702.testnet",
+  "commit_hash": "64c20127b6af5d5b5ef4780a0ac455dd03b8b548b283bb47ea1d0cd528e3c7bc",
+  "protocol_enc_pk": "9110d7d50b64d770c267f401786ebfc1ce5861b55c25a8eb50916aa253b3b316"
+ },
+ "secrets": {
+  "EXPLOIT": "[{\"to\":\"0x1234\",\"data\":\"0xdd365b8b\",\"value\":\"0\"}]",
+  "SALT": "b1f6afacefbde7fb9ec51f81daf42429b6d2a2ff740bf6dfbee94624fd649379",
+  "EPH_SK": "570bd27a252f7b7471b1eddcebb09a4c7236df76d97b70af578912919e1be175"
+ },
+ "exploit_name": "corpus:malformed-bad-address",
+ "final_status": {
+  "Refused": "exploit invalid: to"
+ },
+ "timing_s": {
+  "commit_to_verdict_s": 14.7
+ }
+}

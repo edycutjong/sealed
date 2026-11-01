@@ -1,0 +1,24 @@
+{
+ "label": "d5-abuse-create",
+ "bounty": "corpus.sealed-dev-11010702.testnet",
+ "commit_id": 20,
+ "input": {
+  "target": 0,
+  "invariant_id": "fallback-owner-drained",
+  "hunter": "sealed-hunter-a-11010702.testnet",
+  "commit_hash": "deb20d1cdad65baaf16840fe0d7f15f088994784eff9fdab60c806a5a432b137",
+  "protocol_enc_pk": "9110d7d50b64d770c267f401786ebfc1ce5861b55c25a8eb50916aa253b3b316"
+ },
+ "secrets": {
+  "EXPLOIT": "[{\"to\":null,\"data\":\"0x5b385f5f39385f5ff0505f56\",\"value\":\"0\"},{\"to\":null,\"data\":\"0x5b385f5f39385f5ff0505f56\",\"value\":\"0\"},{\"to\":null,\"data\":\"0x5b385f5f39385f5ff0505f56\",\"value\":\"0\"},{\"to\":null,\"data\":\"0x5b385f5f39385f5ff0505f56\",\"value\":\"0\"}]",
+  "SALT": "be63ebd5777f9c2cb567100c20ef126774703a2fc6b614e5b9c734af0ca2b65c",
+  "EPH_SK": "49badd192c3fe46dc23187410dba142956492e27a084322381350c5d6d109924"
+ },
+ "exploit_name": "corpus:abuse-create",
+ "final_status": {
+  "Refused": "no invariant broken"
+ },
+ "timing_s": {
+  "commit_to_verdict_s": 15.8
+ }
+}

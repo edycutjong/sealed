@@ -1,0 +1,24 @@
+{
+ "label": "d5-abuse-keccak",
+ "bounty": "corpus.sealed-dev-11010702.testnet",
+ "commit_id": 18,
+ "input": {
+  "target": 0,
+  "invariant_id": "fallback-owner-drained",
+  "hunter": "sealed-hunter-b-11010702.testnet",
+  "commit_hash": "2ee849079cdbef3745e4b330e1f7d2e37b9461a8d48ef8fc0de0c553a09c1455",
+  "protocol_enc_pk": "9110d7d50b64d770c267f401786ebfc1ce5861b55c25a8eb50916aa253b3b316"
+ },
+ "secrets": {
+  "EXPLOIT": "[{\"to\":null,\"data\":\"0x5b6104005f20505f56\",\"value\":\"0\"},{\"to\":null,\"data\":\"0x5b6104005f20505f56\",\"value\":\"0\"},{\"to\":null,\"data\":\"0x5b6104005f20505f56\",\"value\":\"0\"},{\"to\":null,\"data\":\"0x5b6104005f20505f56\",\"value\":\"0\"}]",
+  "SALT": "24ff2d53b87afba573eea6324ad49795250338d513da671a3bdbdc62ae32d7e4",
+  "EPH_SK": "3ec9977d20c58e5319d7423e39c9a7c5ce1f02cd3d740e596dad15a1df6985a5"
+ },
+ "exploit_name": "corpus:abuse-keccak",
+ "final_status": {
+  "Refused": "no invariant broken"
+ },
+ "timing_s": {
+  "commit_to_verdict_s": 16.4
+ }
+}

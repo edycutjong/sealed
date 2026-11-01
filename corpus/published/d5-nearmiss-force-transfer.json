@@ -1,0 +1,24 @@
+{
+ "label": "d5-nearmiss-force-transfer",
+ "bounty": "corpus.sealed-dev-11010702.testnet",
+ "commit_id": 6,
+ "input": {
+  "target": 3,
+  "invariant_id": "force-balance-nonzero",
+  "hunter": "sealed-hunter-a-11010702.testnet",
+  "commit_hash": "ff2b14a63a93d1fa2af3517d34acf746776e2b69ea827b7f208340d37d80689f",
+  "protocol_enc_pk": "9110d7d50b64d770c267f401786ebfc1ce5861b55c25a8eb50916aa253b3b316"
+ },
+ "secrets": {
+  "EXPLOIT": "[{\"to\":\"0xd3264fed42a0dc00663d0aa2b0abb90a19b347f2\",\"data\":\"0x\",\"value\":\"1\"}]",
+  "SALT": "142e0f2d74e4c35d84d827218df031eba9f8422673bea7fac4b2d2fb07c92486",
+  "EPH_SK": "806e0de7343a0a8f77d462ac1719170058dde1912d2d58fc64c58a903f2814d0"
+ },
+ "exploit_name": "corpus:nearmiss-force-transfer",
+ "final_status": {
+  "Refused": "no invariant broken"
+ },
+ "timing_s": {
+  "commit_to_verdict_s": 14.6
+ }
+}
