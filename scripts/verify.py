@@ -278,12 +278,44 @@ def bounty_integrity(bounty, online, url, require_keyless):
     acct = ar["result"]
     glob, want = acct.get("global_contract_hash"), committed_code_hash()
     code = ("global code = committed contracts/bounty.wasm " + want[:8] + "…" if glob == want
-            else f"global code {glob[:8]}… ≠ committed contracts/bounty.wasm {want[:8]}…" if glob
+            else f"global code {str(glob)[:8]}… ≠ committed contracts/bounty.wasm {want[:8]}…" if glob
             else "global code by account id" if acct.get("global_contract_account_id") else "own code")
     keyless = len(keys) == 0 and glob == want
     tag = f"{len(keys)} key(s), {code}"
+    if keyless:  # "for life" (I6): it was also BORN keyless — the create tx added no key and set this code
+        born = born_keyless(bounty, want, url)
+        if born is None:
+            return f"bounty {bounty}: {tag}; create tx not re-checked (RPC error or not in corpus/results.json)", None
+        keyless, tag = born[0], f"{tag}; {born[1]}"
     ok = keyless if require_keyless else True
     return f"bounty {bounty}: {tag}" + ("" if ok else "  FAIL (--require-keyless)"), ok
+
+
+def born_keyless(bounty, want, url):
+    """The bounty's create tx (corpus/results.json) must be sent by its parent to it and hold only CreateAccount,
+    Transfer, UseGlobalContract(code_hash = want) and FunctionCall `new` — no AddKey, no DeployContract — and
+    succeed. With 0 keys from birth, nothing can sign for the account, and the bounty contract has no call that
+    adds a key or changes code, so the code hash and the 0 keys hold for life. None = not checkable."""
+    create = json.load(open(os.path.join(ROOT, "corpus", "results.json")))["bounties"].get(bounty, {}).get("create_tx")
+    if not create:
+        return None
+    try:
+        r = near.rpc("EXPERIMENTAL_tx_status", {"tx_hash": create, "sender_account_id": bounty.split(".", 1)[1],
+                                                "wait_until": "FINAL"}, url)
+    except OSError:
+        return None
+    if "result" not in r:
+        return None
+    t = r["result"].get("transaction", {})
+    kinds = [a if isinstance(a, str) else next(iter(a)) for a in t.get("actions", [])]
+    hashes = [a["UseGlobalContract"].get("code_hash") for a in t.get("actions", [])
+              if isinstance(a, dict) and "UseGlobalContract" in a]
+    calls = [a["FunctionCall"]["method_name"] for a in t.get("actions", []) if isinstance(a, dict) and "FunctionCall" in a]
+    born = (t.get("receiver_id") == bounty and "SuccessValue" in (r["result"].get("status") or {})
+            and set(kinds) <= {"CreateAccount", "Transfer", "UseGlobalContract", "FunctionCall"}
+            and "CreateAccount" in kinds and hashes == [want] and calls == ["new"])
+    return born, (f"born keyless: create tx {create[:8]}… = {' · '.join(kinds)}, no AddKey" if born
+                  else f"create tx {create[:8]}… is not a keyless global-code birth ({' · '.join(kinds)})")
 
 
 def main():
