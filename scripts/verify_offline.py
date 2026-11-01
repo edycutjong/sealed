@@ -15,7 +15,7 @@ For each corpus/published/<label>.json:
 `make replay INPUT=<file>`: run a judge's own tx list ({target, invariant_id, txs:[{to|null,data,value}]})
 against the same verifier and print its verdict (fresh random SALT / EPH_SK, a placeholder hunter).
 Exit 0 only if every published commit replays to its on-chain verdict."""
-import base64, glob, hashlib, json, os, subprocess, sys
+import base64, glob, hashlib, json, os, re, subprocess, sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 VERIFIER = os.path.join(ROOT, "verifier.wasm")
@@ -36,14 +36,28 @@ def wasm_for(pinned):
 
 
 def run(inp, secrets, wasm=VERIFIER):
-    env = {**os.environ, **secrets, "SEALED_DEBUG_ENC": "1"}
+    env = {**os.environ, **secrets, "SEALED_DEBUG_ENC": "1", "SEALED_TRACE": "1"}
     p = subprocess.run(["wasmtime", "run", "--env", "EXPLOIT", "--env", "SALT", "--env", "EPH_SK",
-                        "--env", "SEALED_DEBUG_ENC", wasm], input=json.dumps(inp).encode(),
+                        "--env", "SEALED_DEBUG_ENC", "--env", "SEALED_TRACE", wasm], input=json.dumps(inp).encode(),
                        capture_output=True, env=env)
     if p.returncode != 0:
         raise RuntimeError(p.stderr.decode()[-400:])
-    enc = next((l[4:] for l in p.stderr.decode().splitlines() if l.startswith("enc=")), None)
-    return json.loads(p.stdout), enc
+    err = p.stderr.decode().splitlines()
+    enc = next((l[4:] for l in err if l.startswith("enc=")), None)
+    return json.loads(p.stdout), enc, validate_call(err)
+
+
+def validate_call(stderr_lines):
+    """The invariant check itself, from the verifier's trace: the EVM call validateInstance(instance, player) on the
+    level's factory and what it returned (1 = broken). None when the exploit was rejected before that call."""
+    for l in stderr_lines:
+        m = re.match(r"trace: call (validateInstance\((0x[0-9a-f]+),(0x[0-9a-f]+)\)) from 0x[0-9a-f]+ "
+                     r"on factory (0x[0-9a-f]+) -> (\w+) ?(0x[0-9a-f]*)?", l)
+        if m:
+            ret = m.group(6) or ""
+            shown = str(int(ret, 16)) if m.group(5) == "success" and ret else m.group(5)
+            return f"factory {m.group(4)[:10]}….validateInstance({m.group(2)[:10]}…, {m.group(3)[:10]}…) → {shown}"
+    return None
 
 
 def strip(v):
@@ -65,8 +79,10 @@ def judge_input(path):
     commit = sha(secrets["EXPLOIT"].encode() + JUDGE.encode() + bytes.fromhex(secrets["SALT"]))
     inp = {"target": j.get("target", 0), "invariant_id": j.get("invariant_id", "fallback-owner-drained"),
            "hunter": JUDGE, "commit_hash": commit, "protocol_enc_pk": DEMO_PK}
-    v, _ = run(inp, secrets)
+    v, _, call = run(inp, secrets)
     print(json.dumps(strip(v)))
+    print(f"EVM {call}" if call else "EVM no validateInstance call (exploit rejected before the invariant check)",
+          file=sys.stderr)
     return 0
 
 
@@ -93,7 +109,7 @@ def main():
         sent = json.loads(ev["request_execution_args"]["input_data"])
         if sent != pub["input"]:
             fails.append("published input != input_data the bounty sent")
-        v, enc = run(sent, pub["secrets"], wasm)
+        v, enc, call = run(sent, pub["secrets"], wasm)
         chain = ev.get("verdict_output")
         chain = json.loads(chain) if isinstance(chain, str) else chain
         if not isinstance(chain, dict) or strip(chain) != strip(v):
@@ -108,6 +124,7 @@ def main():
         extra = f" · enc {len(d)} B = h_enc" if d is not None else ""
         print(f"{tag} {label}: {what} · wasm {pinned[:8]} · h_exploit {v['h_exploit'][:12]}… = commit · verdict = chain{extra}"
               + ("" if not fails else " · " + "; ".join(fails)))
+        print(f"    EVM {call}" if call else "    EVM no validateInstance call (exploit rejected before the invariant check)")
         ok, bad = ok + (not fails), bad + bool(fails)
     print(f"replay: {ok} OK · {bad} FAIL · verifier.wasm {wasm_hash[:16]}…")
     return 0 if bad == 0 else 1
