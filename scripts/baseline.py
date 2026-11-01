@@ -209,6 +209,8 @@ def show(only=None):
         for n in no_reply:
             first = open(os.path.join(OUT, "transcripts", model, n + ".txt")).read().strip().splitlines()[:1]
             why = first[0][:90] if first and first[0].startswith("[no reply") else "reply had no VERDICT line"
+            if "403" in why:
+                why += " (response body not captured; DashScope's free quota had run out)"
             kind = "fake" if n in fakes else "real exploit"
             print(f"    unanswered, counted as NOT paying ({kind}): {n} — {why}")
     print("\n  transcripts: baseline/transcripts/<model>/<item>.txt · prompt: python3 scripts/baseline.py prompt <item>")

@@ -101,8 +101,8 @@ def main():
     lv = LEVELS[a.level]
     msgs = FIRST.format(goal=baseline.GOAL[lv["invariant_id"]], level=a.level, instance=lv["instance"],
                         source=open(os.path.join(ROOT, "levels", "src", "ethernaut", baseline.SOURCE[a.level])).read().rstrip())
-    log = [f"# Hunter agent run — {a.level} — {a.model} ({a.provider}) — {time.strftime('%Y-%m-%d', time.gmtime())}\n"]
-    history, prompt, won, found = [], msgs, False, None  # each prompt = the task + every earlier answer and its local run
+    log = [f"# Hunter agent run — {a.level} — {a.model} (provider: {a.provider}; NEAR AI Cloud only if nearai) — {time.strftime('%Y-%m-%d', time.gmtime())}\n"]
+    history, prompt, won, found, failed = [], msgs, False, None, False  # each prompt = the task + every earlier answer and its local run
     for turn in range(1, a.turns + 1):
         for attempt in range(3):  # a flaky provider call is retried; three failures end the run with the error shown
             try:
@@ -113,6 +113,7 @@ def main():
                 time.sleep(3 * (attempt + 1))
         else:
             log.append(f"**Provider failed 3 times on turn {turn}: {err}**\n")
+            failed = True
             break
         log += [f"## Turn {turn} — model reply (verbatim)\n", reply.strip() + "\n"]
         txs = extract(reply)
@@ -131,7 +132,7 @@ def main():
         history.append((reply.strip(), REVISE.format(trace=trace, ret=ret)))
         prompt = with_history(msgs, history)
     safe = re.sub(r"[^\w.-]+", "_", a.model)
-    log.append(f"**Result: {'invariant broken on turn ' + str(turn) if won else 'not broken in ' + str(a.turns) + ' turns'}.**\n")
+    log.append(f"**Result: {'invariant broken on turn ' + str(turn) if won else 'PROVIDER ERROR on turn ' + str(turn) + ' (not a model result)' if failed else 'not broken in ' + str(a.turns) + ' turns'}.**\n")
     if won:
         out = os.path.join(OUT, f"{a.level}-{safe}-exploit.json")
         os.makedirs(OUT, exist_ok=True)
@@ -141,8 +142,8 @@ def main():
                    f"--label agent-{a.level} --invariant {lv['invariant_id']}`\n")
     os.makedirs(OUT, exist_ok=True)
     open(os.path.join(OUT, f"{a.level}-{safe}.md"), "w").write("\n".join(log))
-    print(f"{'BROKEN' if won else 'NOT BROKEN'} — transcript hunter-agent/{a.level}-{safe}.md")
-    return 0 if won else 1
+    print(f"{'BROKEN' if won else 'ERROR' if failed else 'NOT BROKEN'} — transcript hunter-agent/{a.level}-{safe}.md")
+    return 0 if won else 2 if failed else 1
 
 
 if __name__ == "__main__":
