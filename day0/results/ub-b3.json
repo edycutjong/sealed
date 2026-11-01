@@ -1,0 +1,5 @@
+{"check":"U-B B3 (warm start)","result":"PARTIAL","at":"2026-11-01T00:51Z","api":"https://1click.chaindefuser.com/v0/quote (no JWT)",
+ "request":{"dry":true,"swapType":"EXACT_INPUT","originAsset":"nep141:sol-5ce3bf3a31af18be40ba30f721101b4341690186.omft.near","destinationAsset":"nep141:17208628f84f5d6ad33f0da3bbbeb27ffcb398eac501a31bd6ad2011e36133a1","amount":"5000000","recipientType":"DESTINATION_CHAIN"},
+ "existing_recipient":{"recipient":"outlayer.near","amountOut":"4999163","minAmountOut":"4949171","timeEstimate_s":20},
+ "nonexistent_recipient":{"recipient":"inv1.sealed-invoices.near","response":"500 Internal server error (correlationId ede65d1d-1005-4f37-b0f4-9293b18d5e14)"},
+ "notes":["dry quotes carry no depositAddress; the address needs a non-dry quote (deferred to the human-signed mainnet leg)","the invoice account must exist before it is quoted as a recipient"]}
