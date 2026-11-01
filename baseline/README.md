@@ -23,7 +23,7 @@ Ground truth is the verifier's golden verdict (it executes the submission and ca
   32 non-breaking corpus items arrive with no explanation, which is a harder case for an approver to say yes to. The comparison is
   "can a model be talked into paying", not a full triage workflow.
 - The three triagers also judged submissions written by their own family (qwen read qwen's, muse read muse's).
-- A reply that cannot be parsed (or an API failure) is recorded as `None` and counted as not paying; `make baseline` names each one. Two exist: nemotron's `abuse-input` (a 49 KB fake; no VERDICT line, which would help the baseline) and qwen's `real-king` (a real exploit; DashScope's free quota ran out, which hurts the baseline). The qwen row also cannot be re-run today for that reason.
+- A reply that cannot be parsed (or an API failure) is recorded as `None` and counted as not paying; `make baseline` names each one. Two exist: nemotron's `abuse-input` (a 49 KB fake; no VERDICT line, which would help the baseline) and qwen's `real-king` (a real exploit; HTTP 403 on every try, and by the time it was retried DashScope reported the free quota exhausted, though the first failure's response body was not captured; this hurts the baseline). The qwen row also cannot be re-run today for that reason.
 - A triager that refuses everything would score 0 fakes; the line "of the 15 submissions that really break a level it would pay
   n" is the other half. The executing verifier pays 5 of 5 real exploits on the demo bounty.
 - Prompts, replies and verdicts are one run each; no repeats, so there is no variance estimate.

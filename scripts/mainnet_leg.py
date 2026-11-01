@@ -88,7 +88,8 @@ def quote(a):
     dl = (datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=a.deadline_h)).strftime("%Y-%m-%dT%H:%M:%SZ")
     body = {"dry": not a.live, "swapType": "EXACT_INPUT", "slippageTolerance": 100, "originAsset": CHAINS["near"],
             "depositType": "ORIGIN_CHAIN", "destinationAsset": CHAINS[a.to], "amount": str(a.amount),
-            "refundTo": a.refund_to or "example.near",  # dry quotes never move funds "refundType": "ORIGIN_CHAIN", "recipient": a.recipient,
+            "refundTo": a.refund_to or "example.near",  # placeholder only for dry quotes, which never move funds
+            "refundType": "ORIGIN_CHAIN", "recipient": a.recipient,
             "recipientType": "DESTINATION_CHAIN", "deadline": dl}
     code, r = http(ONECLICK + "/v0/quote", body)
     print(json.dumps({"http": code, **r}, indent=1)[:2500])
