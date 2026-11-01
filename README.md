@@ -171,7 +171,10 @@ make test          # verifier golden + contract unit + near-workspaces sandbox (
 make corpus        # 52 items vs golden verdicts, wasmtime only
 ```
 
-No CI workflow yet; the checks above run locally.
+`.github/workflows/ci.yml` runs four jobs: verifier golden tests plus a byte-for-byte rebuild of `verifier.wasm`; the
+credential-free `replay`/`corpus`/`refusals`/`results`/`bench` targets; the contract unit and sandbox tests (I1–I8);
+and `scripts/check_submission_readiness.py` with gitleaks over the full history. CodeQL (Python, Rust) and Dependabot are
+configured in `.github/`. Developer-experience notes on OutLayer and global contracts: [docs/DX-REPORT.md](docs/DX-REPORT.md).
 
 ## 📁 Project Structure
 
