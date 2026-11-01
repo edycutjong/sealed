@@ -91,7 +91,7 @@ hunter                bounty (keyless)            token            OutLayer (TEE
 | Target | Script | Re-checks |
 |---|---|---|
 | `make replay` | `scripts/verify_offline.py` | each published commit under wasmtime from the committed wasm (hash-checked) = the on-chain verdict |
-| `make verify` / `verify-d5` | `scripts/verify.py` | per commit, from the archival RPC: pinned hash (bounty's live state), the resolve tx went to the bounty's OutLayer contract from the operator OutLayer's config named at that block, with a key scoped to it; the bundle equals the chain; verdict, `h_enc`, `PAID` for this commit id; `verify-d5` adds I6 |
+| `make verify` / `verify-d5` | `scripts/verify.py` | per commit, from the archival RPC: pinned hash (bounty's live state), the resolve tx went to the bounty's OutLayer contract from the operator OutLayer's config named at that block, with a key scoped to it; the bundle equals the chain; verdict, `h_enc`, `PAID` for this commit id; `view_commit` status matches the line; the bundle set equals `corpus/results.json` runs, each commit once; `verify-d5` adds I6 |
 | `make corpus` | `scripts/corpus_check.py` | all 52 corpus items against their golden verdicts |
 | `make refusals` | `scripts/refusals.py` | the 6 refusal kinds seen on chain, with tx hashes |
 | `make bench` / `bench-chain` | `scripts/bench.py` | latency p50/p95 and resources vs limits, recomputed from the bundles (`bench-chain` re-reads the chain) |
@@ -120,6 +120,12 @@ hunter                bounty (keyless)            token            OutLayer (TEE
   (`lib.rs:415-443`), so a set of fresh accounts can keep one invariant busy at the cost of the OutLayer fee and gas per
   cycle rather than a bond. A commit whose payout account is unregistered reserves the amount for the one or two blocks
   before its registration callback refunds it in full.
+- **Storage.** Every commit that passes the guards is stored for good (`commits` is append-only, `lib.rs:151`), and
+  each `(hunter, invariant)` that gets an infra refund keeps one timestamp; the bounty account pays that storage from
+  its own NEAR balance (4 NEAR on the demo bounty, ~0.004 NEAR per stored commit). A spammer who commits with an
+  unregistered payout account is refunded in full and pays only gas, so a bounty can be run out of storage balance;
+  anyone can top a keyless bounty up with a plain NEAR transfer. Charging storage to the hunter needs a contract change
+  (not made: it would replace the global code hash the testnet evidence pins).
 - **Seal key reuse.** The seal's nonce is derived from `EPH_SK` (`seal.rs:5`), so a hunter client must draw a fresh
   `EPH_SK` per commit; `scripts/hunter.py` draws 32 random bytes each time.
 - **Testnet only.** The mainnet leg (`scripts/mainnet_leg.py`) prints the commands; it never signs and has not run.
