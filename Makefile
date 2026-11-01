@@ -5,7 +5,7 @@ CARGO_HOME ?= $(HOME)/.cargo
 REMAP := --remap-path-prefix=$(CARGO_HOME)=/cargo --remap-path-prefix=$(CURDIR)=/sealed
 WASM := target/wasm32-wasip1/release/verifier.wasm
 
-.PHONY: verifier-wasm verifier-check test test-verifier test-contracts
+.PHONY: verifier-wasm verifier-check test test-verifier test-contracts contracts-wasm
 
 ## Rebuild verifier.wasm from source and write its sha256 (the hash every bounty pins).
 verifier-wasm:
@@ -25,5 +25,13 @@ test: test-verifier test-contracts
 test-verifier:
 	cargo test --locked --release -p verifier
 
-test-contracts:
-	cd contracts && cargo test --locked
+# ----- contracts (bounty / test token) -----
+## Build the contract wasms (Rust 1.85.0, near-sys 0.2.4 pinned) and wasm-opt -Oz the bounty.
+contracts-wasm:
+	cd contracts && cargo +1.85.0 build --locked --target wasm32-unknown-unknown --release
+	wasm-opt -Oz contracts/target/wasm32-unknown-unknown/release/bounty.wasm -o contracts/bounty.wasm
+	shasum -a 256 contracts/bounty.wasm
+
+## near-workspaces sandbox tests for the bounty (I1–I8). Needs the wasms built first.
+test-contracts: contracts-wasm
+	cd contracts/itests && cargo test --test bounty -- --test-threads=4

@@ -1,0 +1,14 @@
+{
+  "note": "P1b first testnet deploy of the bounty contract (D2). Keyed subaccount for iteration; the PRODUCTION bounty is created keyless on the global-contract hash (G9 proved a global-hash account has 0 access keys). The verifier url+hash here pin the D1 committed verifier (92a4681d); P1c re-uploads those exact bytes before any real run.",
+  "network": "testnet",
+  "at": "2026-11-01",
+  "bounty_account": "b1.sealed-dev-11010702.testnet",
+  "bounty_wasm_sha256": "00320e9e61b1e70b2682a67ddfbc51edae111a49009c8d5c989b9b73fdaec16f",
+  "bounty_wasm_bytes": 218783,
+  "create_account_tx": "BRt8Z3pFXsBAMvMqgH5BSvuzPVKGG2bbQ18YCZ9PVSAg",
+  "deploy_tx": "FBZF12dJ9wG9FJmu1y6Yjnyt9d8wBD8v1GxsX1VRWhzT",
+  "init_tx": "8L3U89aU3uKqr6v5jq9mj2KFPZeF92D1oszpiB1fkQeJ",
+  "verifier_wasm_hash": "92a4681dd4eebe23cd0d230bd3d8012a902e94a51cfa8654e5300e547c6a179a",
+  "snapshot_hash": "57263dfb780961cfb0391a49684340ba627e7e39159b1d513fd2e2861c60a073",
+  "view_state": {"pool": "0", "reserved": "0", "escrow": "0", "invariant": "fallback-owner-drained Open"}
+}
