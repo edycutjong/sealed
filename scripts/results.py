@@ -11,7 +11,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TESTNET = "https://testnet.nearblocks.io/txns/"
 # Abuse shapes run under wasmtime only: each testnet run slashes a 0.5 NEAR bond, so testnet carries the heaviest
 # shape by fuel (keccak) and three the plan names (gas loop, CREATE bomb, oversized input — its 49 KB secret row needs
-# a 0.7 NEAR storage deposit, see OUTLAYER_BIN in hunter.py); day 0 ran 15 shapes on chain.
+# a 0.7 NEAR storage deposit, see OUTLAYER_BIN in hunter.py); day 0 ran 12 abuse shapes on chain.
 ABUSE_OFF_CHAIN = ("wasmtime only (make corpus): testnet ran the heaviest shape (keccak) plus loop, CREATE and oversized "
                    "input")
 

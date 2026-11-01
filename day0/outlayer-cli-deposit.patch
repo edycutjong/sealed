@@ -1,0 +1,22 @@
+diff --git a/src/commands/secrets.rs b/src/commands/secrets.rs
+index 7e5dff9..92d2cb3 100644
+--- a/src/commands/secrets.rs
++++ b/src/commands/secrets.rs
+@@ -974,7 +974,7 @@ pub async fn set(
+ 
+     // Store on contract
+     let caller = ContractCaller::from_credentials(&creds, network)?;
+-    let deposit = 100_000_000_000_000_000_000_000u128; // 0.1 NEAR
++    let deposit: u128 = std::env::var("SEALED_SECRETS_DEPOSIT_YOCTO").ok().and_then(|v| v.parse().ok()).unwrap_or(100_000_000_000_000_000_000_000u128); // 0.1 NEAR default (local day-0 patch)
+     let gas = 50_000_000_000_000u64; // 50 TGas
+ 
+     caller
+@@ -1180,7 +1180,7 @@ pub async fn update(
+ 
+     // Store merged result on contract
+     let caller = ContractCaller::from_credentials(&creds, network)?;
+-    let deposit = 100_000_000_000_000_000_000_000u128; // 0.1 NEAR
++    let deposit: u128 = std::env::var("SEALED_SECRETS_DEPOSIT_YOCTO").ok().and_then(|v| v.parse().ok()).unwrap_or(100_000_000_000_000_000_000_000u128); // 0.1 NEAR default (local day-0 patch)
+     let gas = 50_000_000_000_000u64;
+ 
+     caller
