@@ -58,16 +58,18 @@
   --ease-out: cubic-bezier(.16, 1, .3, 1);
 }
 /* ---------- the exhibit (signature) ---------- */
-.exhibit { grid-area: exhibit; margin: 0; min-width: 0; }
+.exhibit { grid-area: exhibit; margin: 0; min-width: 0; position: relative; padding: 24px 30px 20px; border-radius: 6px;
+  background: radial-gradient(ellipse at 40% 30%, color-mix(in srgb, var(--carbon) 84%, var(--bg)) 0%, var(--carbon) 70%);
+  box-shadow: 0 50px 80px -46px var(--ink), inset 0 1px 0 color-mix(in srgb, var(--paper) 12%, transparent); }
 .ex-bar { display: flex; align-items: flex-end; gap: 10px; }
 .ex-tabs { display: flex; gap: 6px; align-items: flex-end; flex-wrap: wrap; }
-.ex-tab { font: 700 12px var(--font-data); letter-spacing: .1em; text-transform: uppercase; padding: 10px 14px 9px; background: color-mix(in srgb, var(--bag) 70%, var(--bg));
-  border: 1px solid color-mix(in srgb, var(--rule) 80%, var(--ink)); border-bottom: 0; color: var(--muted); cursor: pointer; transition: background .2s, color .2s, transform .2s var(--ease-out); }
-.ex-tab:hover { color: var(--ink); transform: translateY(-2px); }
-.ex-tab[aria-selected="true"] { background: var(--bag); color: var(--ink); }
+.ex-tab { font: 700 12px var(--font-data); letter-spacing: .1em; text-transform: uppercase; padding: 10px 14px 9px; background: color-mix(in srgb, var(--paper) 9%, transparent);
+  border: 1px solid color-mix(in srgb, var(--paper) 24%, transparent); border-bottom: 0; color: color-mix(in srgb, var(--paper) 66%, transparent); cursor: pointer; transition: background .2s, color .2s, transform .2s var(--ease-out); }
+.ex-tab:hover { color: var(--paper); transform: translateY(-2px); }
+.ex-tab[aria-selected="true"] { background: var(--bag); color: var(--ink); border-color: var(--bag); }
 .ex-replay { margin-left: auto; font: 600 12px var(--font-data); letter-spacing: .08em; text-transform: uppercase; background: none; border: 0; border-bottom: 1px dashed var(--muted);
-  color: var(--ink-soft); padding: 7px 4px; min-height: 30px; cursor: pointer; margin-bottom: 4px; transition: color .2s, border-color .2s; }
-.ex-replay:hover { color: var(--ink); border-color: var(--ink); border-bottom-style: solid; }
+  color: color-mix(in srgb, var(--paper) 78%, transparent); border-bottom-color: color-mix(in srgb, var(--paper) 45%, transparent); padding: 7px 4px; min-height: 30px; cursor: pointer; margin-bottom: 4px; transition: color .2s, border-color .2s; }
+.ex-replay:hover { color: var(--paper); border-color: var(--paper); border-bottom-style: solid; }
 .bag { position: relative; background: var(--bag); border: 1px solid color-mix(in srgb, var(--rule) 80%, var(--ink)); padding: 22px 26px 26px; transform: rotate(.5deg); box-shadow: 0 46px 70px -34px color-mix(in srgb, var(--ink) 72%, transparent), 0 14px 24px -18px color-mix(in srgb, var(--ink) 40%, transparent), 0 2px 0 color-mix(in srgb, var(--ink) 12%, transparent); }
 .bag::before { content: ""; position: absolute; left: -1px; right: -1px; top: -9px; height: 9px;
   background: repeating-linear-gradient(90deg, color-mix(in srgb, var(--bag) 80%, var(--ink)) 0 2px, transparent 2px 6px); opacity: .55; }
@@ -82,8 +84,8 @@
 .tape i::after { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(90deg, transparent 0 22px, color-mix(in srgb, var(--ink) 9%, transparent) 22px 23px); }
 .tape .l { left: 0; width: 62%; padding-left: 40px; clip-path: polygon(0 0, 100% 0, 97% 18%, 100% 36%, 97% 54%, 100% 72%, 97% 90%, 100% 100%, 0 100%); transform: rotate(-1.4deg); }
 .tape .r { right: 0; width: 38.6%; padding-left: 14px; clip-path: polygon(0 0, 3% 18%, 0 36%, 3% 54%, 0 72%, 3% 90%, 0 100%, 100% 100%, 100% 0); transform: rotate(-1.4deg); }
-.bag.torn .tape .l { transform: rotate(-4deg) translate(-8px, 4px); }
-.bag.torn .tape .r { transform: rotate(6deg) translate(12px, 6px); }
+.bag.torn .tape .l { transform: rotate(-4deg) translate(-16px, 4px); }
+.bag.torn .tape .r { transform: rotate(6deg) translate(26px, 8px); }
 .steps { list-style: none; margin: 0; padding: 0; counter-reset: s; }
 .steps li { display: grid; grid-template-columns: 26px minmax(0, 1fr) auto; gap: 2px 12px; padding: 9px 0; border-bottom: 1px solid var(--rule); counter-increment: s; transition: opacity .35s, transform .35s var(--ease-out); }
 .steps li::before { content: counter(s, decimal-leading-zero); font: 800 18px/1.15 var(--font-display); color: var(--muted); }
@@ -96,8 +98,8 @@
 .tag { font: 600 12px var(--font-data); letter-spacing: .1em; text-transform: uppercase; border: 1.5px solid var(--ink); padding: 6px 9px; transform: rotate(-1.5deg); background: var(--paper); transition: opacity .3s, transform .3s var(--ease-out); }
 .stamp { width: 300px; max-width: 58%; flex: none; transform: rotate(-8deg); transform-origin: 60% 60%; margin: -26px -8px -6px 0; }
 .stamp svg { display: block; width: 100%; height: auto; overflow: visible; }
-.ex-cap { font: 400 13px/1.55 var(--font-data); color: color-mix(in srgb, var(--muted) 80%, var(--ink)); margin: 16px 0 0; }
-.ex-cap a { color: var(--ink-soft); }
+.ex-cap { font: 400 13px/1.55 var(--font-data); color: color-mix(in srgb, var(--paper) 74%, transparent); margin: 18px 0 0; }
+.ex-cap a, .ex-cap code { color: var(--paper); }
 
 /* sequence states (JS only; the markup default is the settled final state) */
 .js .bag.pre .steps li { opacity: .18; transform: translateX(-6px); }
@@ -164,7 +166,7 @@ body { font: 400 24px/1.45 var(--font-body); color: var(--ink); -webkit-font-smo
 .slide > * { position: relative; z-index: 1; }
 .slide.dark { background: var(--carbon); color: var(--paper); }
 .slide.dark::before { opacity: .12; }
-.foot { position: absolute; left: 120px; bottom: 40px; font: 400 16px var(--font-data); color: var(--muted); letter-spacing: .06em; z-index: 1; }
+.foot { position: absolute; left: 120px; bottom: 40px; font: 400 17px var(--font-data); color: var(--muted); letter-spacing: .06em; z-index: 1; }
 .dark .foot { color: color-mix(in srgb, var(--paper) 50%, transparent); }
 .chrome { position: fixed; right: 18px; bottom: 14px; display: flex; gap: 8px; align-items: center; z-index: 30; font: 600 13px var(--font-data); color: var(--paper); }
 .chrome button { font: inherit; background: color-mix(in srgb, var(--ink) 70%, transparent); color: var(--paper); border: 1px solid color-mix(in srgb, var(--paper) 30%, transparent); width: 34px; height: 30px; cursor: pointer; transition: background .2s, transform .15s; }
@@ -196,7 +198,6 @@ h2 { font-size: 92px; margin-bottom: 28px; }
 .term { background: var(--carbon); color: color-mix(in srgb, var(--paper) 88%, transparent); border-radius: 8px; box-shadow: 0 40px 60px -40px var(--ink); overflow: hidden; }
 .term header { display: flex; gap: 10px; align-items: center; padding: 16px 22px; border-bottom: 1px solid color-mix(in srgb, var(--paper) 14%, transparent); font: 400 17px var(--font-data); color: color-mix(in srgb, var(--paper) 55%, transparent); }
 .term header i { width: 14px; height: 14px; border-radius: 50%; background: color-mix(in srgb, var(--paper) 22%, transparent); }
-.term header i:first-child { background: var(--before); }
 .term pre { margin: 0; padding: 26px 26px 30px; font: 400 21px/1.6 var(--font-data); white-space: pre-wrap; overflow-wrap: anywhere; }
 .term .p { color: color-mix(in srgb, var(--paper) 50%, transparent); }
 .term .c { color: var(--paper); font-weight: 600; }
@@ -213,7 +214,7 @@ h2 { font-size: 92px; margin-bottom: 28px; }
   font: 800 22px/50px var(--font-display); letter-spacing: .16em; white-space: nowrap; overflow: hidden; padding-left: 30px; box-shadow: 0 4px 0 color-mix(in srgb, var(--ink) 18%, transparent); }
 .cover-stamp { position: relative; width: 330px; margin: -46px 40px 0 auto; transform: rotate(-7deg); color: var(--after); }
 .cover-stamp svg { display: block; width: 100%; height: auto; overflow: visible; }
-.cover-stamp p { margin: 6px -40px 0; text-align: center; font: 600 16px var(--font-data); color: var(--ink); white-space: nowrap; transform: rotate(7deg); }
+.cover-stamp p { margin: 34px -40px 0; text-align: center; font: 600 16px var(--font-data); color: var(--ink); white-space: nowrap; transform: rotate(7deg); }
 
 /* hook */
 .hook { display: flex; flex-direction: column; justify-content: center; }
@@ -242,7 +243,7 @@ h2 { font-size: 92px; margin-bottom: 28px; }
 .lane.old .st.end b { color: var(--muted); }
 
 /* exhibits on slides 4 + 5 */
-.ex-slide { display: grid; grid-template-columns: 1fr 760px; gap: 70px; align-items: start; }
+.ex-slide { display: grid; grid-template-columns: 1fr 760px; gap: 70px; align-items: center; height: 100%; }
 .ex-slide .side { padding-top: 6px; }
 .deck .bag { padding: 30px 40px 34px; }
 .deck .bag-head h3 { font-size: 52px; }
@@ -270,7 +271,7 @@ h2 { font-size: 92px; margin-bottom: 28px; }
 /* architecture */
 .arch svg { width: 100%; height: auto; display: block; margin-top: 8px; }
 .arch .lbl { font: 800 30px var(--font-display); letter-spacing: .06em; text-transform: uppercase; }
-.arch .sm { font: 400 22px var(--font-data); }
+.arch .sm { font: 400 19px var(--font-data); }
 .arch .xs { font: 400 19px var(--font-data); }
 
 /* receipt */
@@ -283,7 +284,7 @@ h2 { font-size: 92px; margin-bottom: 28px; }
 .rcpt dl { margin: 0; display: grid; grid-template-columns: 1fr auto; font: 400 22px var(--font-data); }
 .rcpt dt, .rcpt dd { padding: 12px 0; border-bottom: 2px dotted var(--rule); margin: 0; }
 .rcpt dd { text-align: right; font-weight: 600; }
-.rcpt dd small { display: block; font-weight: 400; font-size: 15px; color: var(--muted); }
+.rcpt dd small { display: block; font-weight: 400; font-size: 17px; color: var(--muted); }
 .rcpt .g { color: var(--after); }
 
 /* read vs run */
@@ -365,8 +366,8 @@ h2 { font-size: 92px; margin-bottom: 28px; }
 <span class="dim">…</span>
 <span class="c">replay: 29 OK · 0 FAIL · verifier.wasm d2972cd2659c2ad4…</span>
 <span class="p">$</span> <span class="caret"></span></pre></div><div class="cover-tape" aria-hidden="true">SEALED · DO NOT OPEN · SEALED · DO NOT OPEN · SEALED</div><div class="cover-stamp"><svg viewBox="0 0 260 132" role="img" aria-label="PAID stamp, 1 000 tUSDC"><g filter="url(#rubber)" fill="none" stroke="currentColor"><rect x="6" y="6" width="248" height="120" rx="12" stroke-width="7"/><rect x="17" y="17" width="226" height="98" rx="6" stroke-width="2"/></g><text x="130" y="84" text-anchor="middle" fill="currentColor" filter="url(#rubber)" style="font:800 74px var(--font-display);letter-spacing:.04em">PAID</text><text x="130" y="104" text-anchor="middle" fill="currentColor" style="font:600 13px var(--font-data);letter-spacing:.08em">1 000 TUSDC</text></svg><p>deliver AodmFQ6t… · PAID 2 1000000000</p></div></div></div><!--/stage-->
-  <footer class="foot">SEALED · v0.1.0 · build edcf271</footer>
-  <aside class="speaker-notes">A white-hat with a working exploit has one bad option today: send it and trust the team. Sealed makes the bounty owe the money before the protocol sees the exploit. Every number on these slides comes with the command that reproduces it.</aside>
+  <footer class="foot">SEALED · v0.1.0 · data ba12c87</footer>
+  <aside class="speaker-notes">A white-hat with a working exploit has one bad option today: send it and trust the team. Sealed makes the bounty owe the money before the protocol sees the exploit. Every number on these slides names the file or command that reproduces it.</aside>
 </section>
 
 <section class="slide hook" data-n="2" aria-label="Slide 2: the problem in one sentence">
@@ -455,7 +456,7 @@ h2 { font-size: 92px; margin-bottom: 28px; }
 
 <section class="slide arch" data-n="6" aria-label="Slide 6: how a bounty runs">
   <h2>How a bounty runs.</h2>
-  <div data-stage><svg viewBox="0 0 1680 760" role="img" aria-label="Sequence: protocol funds a keyless bounty; the hunter stores the exploit as an OutLayer secret and commits its hash with a bond; the bounty requests a TEE run of the pinned verifier; the verdict returns through resolve_execution; the hunter delivers the sealed exploit, which must hash to the attested value, and the bounty pays."><rect x="20" y="6" width="360" height="104" fill="#F6F1E3" stroke="#1E1B16" stroke-width="3"/><text x="200" y="54" text-anchor="middle" class="lbl" fill="#1E1B16">Hunter</text><text x="200" y="88" text-anchor="middle" class="xs" fill="#6E6457">bond · secret c-&lt;h[..8]&gt;</text><line x1="200" y1="110" x2="200" y2="750" stroke="#B9AC90" stroke-width="3" stroke-dasharray="2 10" stroke-linecap="round"/><rect x="460" y="6" width="360" height="104" fill="#F6F1E3" stroke="#1E1B16" stroke-width="3"/><text x="640" y="54" text-anchor="middle" class="lbl" fill="#1E1B16">Bounty · keyless</text><text x="640" y="88" text-anchor="middle" class="xs" fill="#6E6457">code 7HtmeswB… · 0 access keys</text><line x1="640" y1="110" x2="640" y2="750" stroke="#B9AC90" stroke-width="3" stroke-dasharray="2 10" stroke-linecap="round"/><rect x="910" y="6" width="360" height="104" fill="#F6F1E3" stroke="#1E1B16" stroke-width="3"/><text x="1090" y="54" text-anchor="middle" class="lbl" fill="#1E1B16">OutLayer TEE worker</text><text x="1090" y="88" text-anchor="middle" class="xs" fill="#6E6457">verifier.wasm d2972cd2… · revm</text><line x1="1090" y1="110" x2="1090" y2="750" stroke="#B9AC90" stroke-width="3" stroke-dasharray="2 10" stroke-linecap="round"/><rect x="1300" y="6" width="360" height="104" fill="#F6F1E3" stroke="#1E1B16" stroke-width="3"/><text x="1480" y="54" text-anchor="middle" class="lbl" fill="#1E1B16">Protocol</text><text x="1480" y="88" text-anchor="middle" class="xs" fill="#6E6457">funds pool · holds delivery key</text><line x1="1480" y1="110" x2="1480" y2="750" stroke="#B9AC90" stroke-width="3" stroke-dasharray="2 10" stroke-linecap="round"/><line x1="1470" y1="186" x2="654" y2="186" stroke="#1E1B16" stroke-width="3.5" marker-end="url(#ah)"/><text x="1060.0" y="172" text-anchor="middle" class="sm" fill="#1E1B16" paint-order="stroke" stroke="#EDE3CC" stroke-width="8">0  fund: snapshot hash · invariants · verifier hash · pool</text><line x1="210" y1="264" x2="1076" y2="264" stroke="#C8361D" stroke-width="3.5" marker-end="url(#ahr)"/><text x="645.0" y="250" text-anchor="middle" class="sm" fill="#C8361D" paint-order="stroke" stroke="#EDE3CC" stroke-width="8">1  exploit stored as an encrypted secret (this bounty only)</text><line x1="210" y1="342" x2="626" y2="342" stroke="#1E1B16" stroke-width="3.5" marker-end="url(#ah)"/><text x="420.0" y="328" text-anchor="middle" class="sm" fill="#1E1B16" paint-order="stroke" stroke="#EDE3CC" stroke-width="8">2  commit(h, inv, payout_to) + bond</text><line x1="650" y1="420" x2="1076" y2="420" stroke="#1E1B16" stroke-width="3.5" marker-end="url(#ah)"/><text x="865.0" y="406" text-anchor="middle" class="sm" fill="#1E1B16" paint-order="stroke" stroke="#EDE3CC" stroke-width="8">3  request_execution(pinned hash, input, secrets_ref, limits)</text><line x1="1080" y1="498" x2="654" y2="498" stroke="#1E1B16" stroke-width="3.5" marker-end="url(#ah)"/><text x="865.0" y="484" text-anchor="middle" class="sm" fill="#1E1B16" paint-order="stroke" stroke="#EDE3CC" stroke-width="8">4  resolve_execution → on_verdict: AWARDED or REFUSED + reason</text><line x1="210" y1="576" x2="626" y2="576" stroke="#1E1B16" stroke-width="3.5" marker-end="url(#ah)"/><text x="420.0" y="562" text-anchor="middle" class="sm" fill="#1E1B16" paint-order="stroke" stroke="#EDE3CC" stroke-width="8">5  deliver(enc): sha256(enc) = attested h_enc</text><line x1="630" y1="654" x2="214" y2="654" stroke="#1D6A47" stroke-width="3.5" marker-end="url(#ah)"/><text x="420.0" y="640" text-anchor="middle" class="sm" fill="#1D6A47" paint-order="stroke" stroke="#EDE3CC" stroke-width="8">6  ft_transfer → PAID</text><line x1="650" y1="732" x2="1466" y2="732" stroke="#6E6457" stroke-width="3.5" stroke-dasharray="10 8" marker-end="url(#ah)"/><text x="1060.0" y="718" text-anchor="middle" class="sm" fill="#6E6457" paint-order="stroke" stroke="#EDE3CC" stroke-width="8">7  enc is on chain, sealed to the protocol&#x27;s key</text></svg></div><!--/stage-->
+  <div data-stage><svg viewBox="0 0 1680 780" role="img" aria-label="Sequence: protocol funds a keyless bounty; the hunter stores the exploit as an OutLayer secret and commits its hash with a bond; the bounty requests a TEE run of the pinned verifier; the verdict returns through resolve_execution; the hunter delivers the sealed exploit, which must hash to the attested value, and the bounty pays."><line x1="180" y1="112" x2="180" y2="770" stroke="#B9AC90" stroke-width="3" stroke-dasharray="2 10" stroke-linecap="round"/><rect x="10" y="6" width="340" height="106" fill="#F6F1E3" stroke="#1E1B16" stroke-width="3"/><text x="180" y="54" text-anchor="middle" class="lbl" fill="#1E1B16">Hunter</text><text x="180" y="90" text-anchor="middle" class="xs" fill="#6E6457">bond · secret c-&lt;h[..8]&gt;</text><line x1="620" y1="112" x2="620" y2="770" stroke="#B9AC90" stroke-width="3" stroke-dasharray="2 10" stroke-linecap="round"/><rect x="450" y="6" width="340" height="106" fill="#F6F1E3" stroke="#1E1B16" stroke-width="3"/><text x="620" y="54" text-anchor="middle" class="lbl" fill="#1E1B16">Bounty · keyless</text><text x="620" y="90" text-anchor="middle" class="xs" fill="#6E6457">7HtmeswB… · 0 access keys</text><line x1="1060" y1="112" x2="1060" y2="770" stroke="#B9AC90" stroke-width="3" stroke-dasharray="2 10" stroke-linecap="round"/><rect x="890" y="6" width="340" height="106" fill="#F6F1E3" stroke="#1E1B16" stroke-width="3"/><text x="1060" y="54" text-anchor="middle" class="lbl" fill="#1E1B16">OutLayer TEE worker</text><text x="1060" y="90" text-anchor="middle" class="xs" fill="#6E6457">verifier d2972cd2… · revm</text><line x1="1500" y1="112" x2="1500" y2="770" stroke="#B9AC90" stroke-width="3" stroke-dasharray="2 10" stroke-linecap="round"/><rect x="1330" y="6" width="340" height="106" fill="#F6F1E3" stroke="#1E1B16" stroke-width="3"/><text x="1500" y="54" text-anchor="middle" class="lbl" fill="#1E1B16">Protocol</text><text x="1500" y="90" text-anchor="middle" class="xs" fill="#6E6457">pool · delivery key</text><line x1="1492" y1="196" x2="634" y2="196" stroke="#1E1B16" stroke-width="3.5" marker-end="url(#ah)"/><rect x="744" y="159" width="632" height="29" rx="4" fill="#EDE3CC"/><text x="1060.0" y="180" text-anchor="middle" class="sm" fill="#1E1B16">0 · fund: snapshot · invariants · verifier hash · pool</text><line x1="188" y1="268" x2="1046" y2="268" stroke="#C8361D" stroke-width="3.5" marker-end="url(#ahr)"/><rect x="333" y="231" width="575" height="29" rx="4" fill="#EDE3CC"/><text x="620.0" y="252" text-anchor="middle" class="sm" fill="#C8361D">1 · exploit → encrypted secret (this bounty only)</text><line x1="188" y1="340" x2="606" y2="340" stroke="#1E1B16" stroke-width="3.5" marker-end="url(#ah)"/><rect x="227" y="303" width="347" height="29" rx="4" fill="#EDE3CC"/><text x="400.0" y="324" text-anchor="middle" class="sm" fill="#1E1B16">2 · commit(h, inv, to) + bond</text><line x1="628" y1="412" x2="1046" y2="412" stroke="#1E1B16" stroke-width="3.5" marker-end="url(#ah)"/><rect x="661" y="375" width="358" height="29" rx="4" fill="#EDE3CC"/><text x="840.0" y="396" text-anchor="middle" class="sm" fill="#1E1B16">3 · request_execution(hash, …)</text><line x1="1052" y1="484" x2="634" y2="484" stroke="#1E1B16" stroke-width="3.5" marker-end="url(#ah)"/><rect x="638" y="447" width="404" height="29" rx="4" fill="#EDE3CC"/><text x="840.0" y="468" text-anchor="middle" class="sm" fill="#1E1B16">4 · resolve_execution → on_verdict</text><rect x="672" y="497" width="335" height="29" rx="4" fill="#EDE3CC"/><text x="840.0" y="518" text-anchor="middle" class="sm" fill="#1E1B16">AWARDED, or REFUSED + reason</text><line x1="188" y1="580" x2="606" y2="580" stroke="#1E1B16" stroke-width="3.5" marker-end="url(#ah)"/><rect x="210" y="543" width="381" height="29" rx="4" fill="#EDE3CC"/><text x="400.0" y="564" text-anchor="middle" class="sm" fill="#1E1B16">5 · deliver(enc): sha256 = h_enc</text><line x1="612" y1="652" x2="194" y2="652" stroke="#1D6A47" stroke-width="3.5" marker-end="url(#ah)"/><rect x="267" y="615" width="267" height="29" rx="4" fill="#EDE3CC"/><text x="400.0" y="636" text-anchor="middle" class="sm" fill="#1D6A47">6 · ft_transfer → PAID</text><line x1="628" y1="724" x2="1486" y2="724" stroke="#6E6457" stroke-width="3.5" stroke-dasharray="10 8" marker-end="url(#ah)"/><rect x="790" y="687" width="540" height="29" rx="4" fill="#EDE3CC"/><text x="1060.0" y="708" text-anchor="middle" class="sm" fill="#6E6457">7 · enc on chain, sealed to the protocol&#x27;s key</text></svg></div><!--/stage-->
   <footer class="foot">SEALED · v0.1.0 · ARCHITECTURE.md “Commit to payout” · scripts/hunter.py</footer>
   <aside class="speaker-notes">The bounty is created from one global contract hash with no access keys. The hunter's exploit never touches the chain in clear: it is an OutLayer secret only this bounty's request can read. The verdict comes back through resolve_execution, and delivery is checked against the hash the worker attested.</aside>
 </section>
@@ -466,10 +467,10 @@ h2 { font-size: 92px; margin-bottom: 28px; }
     <p class="lead">Each line names the command that reproduces it.</p>
   </div>
   <div data-stage><div class="rcpt">
-    <h3>Property receipt</h3><p class="sub">Exhibit 01 · NEAR testnet · data from commit edcf271</p>
+    <h3>Property receipt</h3><p class="sub">Exhibit 01 · NEAR testnet · data from commit ba12c87</p>
     <dl>
-      <dt>Real exploits paid</dt><dd class="g">5 of 5<small>corpus/results.json</small></dd>
-      <dt>Fakes paid</dt><dd>0 of 21<small>corpus/results.json</small></dd>
+      <dt>Real exploits paid</dt><dd class="g">5 of 5<small>make results</small></dd>
+      <dt>Fakes paid</dt><dd>0 of 21<small>make results</small></dd>
       <dt>Refusal kinds on chain</dt><dd>6 of 6<small>make refusals</small></dd>
       <dt>Runs re-checked from chain</dt><dd>29<small>make verify</small></dd>
       <dt>Request → verdict</dt><dd>p50 7.27 s · p95 10.85 s<small>make bench</small></dd>

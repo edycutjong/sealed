@@ -122,16 +122,18 @@ h1 { font: 800 clamp(54px, 6vw, 88px)/.92 var(--font-display); text-transform: u
 .copy.done .ok { display: inline; } .copy.done .cp { display: none; }
 
 /* ---------- the exhibit (signature) ---------- */
-.exhibit { grid-area: exhibit; margin: 0; min-width: 0; }
+.exhibit { grid-area: exhibit; margin: 0; min-width: 0; position: relative; padding: 24px 30px 20px; border-radius: 6px;
+  background: radial-gradient(ellipse at 40% 30%, color-mix(in srgb, var(--carbon) 84%, var(--bg)) 0%, var(--carbon) 70%);
+  box-shadow: 0 50px 80px -46px var(--ink), inset 0 1px 0 color-mix(in srgb, var(--paper) 12%, transparent); }
 .ex-bar { display: flex; align-items: flex-end; gap: 10px; }
 .ex-tabs { display: flex; gap: 6px; align-items: flex-end; flex-wrap: wrap; }
-.ex-tab { font: 700 12px var(--font-data); letter-spacing: .1em; text-transform: uppercase; padding: 10px 14px 9px; background: color-mix(in srgb, var(--bag) 70%, var(--bg));
-  border: 1px solid color-mix(in srgb, var(--rule) 80%, var(--ink)); border-bottom: 0; color: var(--muted); cursor: pointer; transition: background .2s, color .2s, transform .2s var(--ease-out); }
-.ex-tab:hover { color: var(--ink); transform: translateY(-2px); }
-.ex-tab[aria-selected="true"] { background: var(--bag); color: var(--ink); }
+.ex-tab { font: 700 12px var(--font-data); letter-spacing: .1em; text-transform: uppercase; padding: 10px 14px 9px; background: color-mix(in srgb, var(--paper) 9%, transparent);
+  border: 1px solid color-mix(in srgb, var(--paper) 24%, transparent); border-bottom: 0; color: color-mix(in srgb, var(--paper) 66%, transparent); cursor: pointer; transition: background .2s, color .2s, transform .2s var(--ease-out); }
+.ex-tab:hover { color: var(--paper); transform: translateY(-2px); }
+.ex-tab[aria-selected="true"] { background: var(--bag); color: var(--ink); border-color: var(--bag); }
 .ex-replay { margin-left: auto; font: 600 12px var(--font-data); letter-spacing: .08em; text-transform: uppercase; background: none; border: 0; border-bottom: 1px dashed var(--muted);
-  color: var(--ink-soft); padding: 7px 4px; min-height: 30px; cursor: pointer; margin-bottom: 4px; transition: color .2s, border-color .2s; }
-.ex-replay:hover { color: var(--ink); border-color: var(--ink); border-bottom-style: solid; }
+  color: color-mix(in srgb, var(--paper) 78%, transparent); border-bottom-color: color-mix(in srgb, var(--paper) 45%, transparent); padding: 7px 4px; min-height: 30px; cursor: pointer; margin-bottom: 4px; transition: color .2s, border-color .2s; }
+.ex-replay:hover { color: var(--paper); border-color: var(--paper); border-bottom-style: solid; }
 .bag { position: relative; background: var(--bag); border: 1px solid color-mix(in srgb, var(--rule) 80%, var(--ink)); padding: 22px 26px 26px; transform: rotate(.5deg); box-shadow: 0 46px 70px -34px color-mix(in srgb, var(--ink) 72%, transparent), 0 14px 24px -18px color-mix(in srgb, var(--ink) 40%, transparent), 0 2px 0 color-mix(in srgb, var(--ink) 12%, transparent); }
 .bag::before { content: ""; position: absolute; left: -1px; right: -1px; top: -9px; height: 9px;
   background: repeating-linear-gradient(90deg, color-mix(in srgb, var(--bag) 80%, var(--ink)) 0 2px, transparent 2px 6px); opacity: .55; }
@@ -146,8 +148,8 @@ h1 { font: 800 clamp(54px, 6vw, 88px)/.92 var(--font-display); text-transform: u
 .tape i::after { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(90deg, transparent 0 22px, color-mix(in srgb, var(--ink) 9%, transparent) 22px 23px); }
 .tape .l { left: 0; width: 62%; padding-left: 40px; clip-path: polygon(0 0, 100% 0, 97% 18%, 100% 36%, 97% 54%, 100% 72%, 97% 90%, 100% 100%, 0 100%); transform: rotate(-1.4deg); }
 .tape .r { right: 0; width: 38.6%; padding-left: 14px; clip-path: polygon(0 0, 3% 18%, 0 36%, 3% 54%, 0 72%, 3% 90%, 0 100%, 100% 100%, 100% 0); transform: rotate(-1.4deg); }
-.bag.torn .tape .l { transform: rotate(-4deg) translate(-8px, 4px); }
-.bag.torn .tape .r { transform: rotate(6deg) translate(12px, 6px); }
+.bag.torn .tape .l { transform: rotate(-4deg) translate(-16px, 4px); }
+.bag.torn .tape .r { transform: rotate(6deg) translate(26px, 8px); }
 .steps { list-style: none; margin: 0; padding: 0; counter-reset: s; }
 .steps li { display: grid; grid-template-columns: 26px minmax(0, 1fr) auto; gap: 2px 12px; padding: 9px 0; border-bottom: 1px solid var(--rule); counter-increment: s; transition: opacity .35s, transform .35s var(--ease-out); }
 .steps li::before { content: counter(s, decimal-leading-zero); font: 800 18px/1.15 var(--font-display); color: var(--muted); }
@@ -160,8 +162,8 @@ h1 { font: 800 clamp(54px, 6vw, 88px)/.92 var(--font-display); text-transform: u
 .tag { font: 600 12px var(--font-data); letter-spacing: .1em; text-transform: uppercase; border: 1.5px solid var(--ink); padding: 6px 9px; transform: rotate(-1.5deg); background: var(--paper); transition: opacity .3s, transform .3s var(--ease-out); }
 .stamp { width: 300px; max-width: 58%; flex: none; transform: rotate(-8deg); transform-origin: 60% 60%; margin: -26px -8px -6px 0; }
 .stamp svg { display: block; width: 100%; height: auto; overflow: visible; }
-.ex-cap { font: 400 13px/1.55 var(--font-data); color: color-mix(in srgb, var(--muted) 80%, var(--ink)); margin: 16px 0 0; }
-.ex-cap a { color: var(--ink-soft); }
+.ex-cap { font: 400 13px/1.55 var(--font-data); color: color-mix(in srgb, var(--paper) 74%, transparent); margin: 18px 0 0; }
+.ex-cap a, .ex-cap code { color: var(--paper); }
 
 /* sequence states (JS only; the markup default is the settled final state) */
 .js .bag.pre .steps li { opacity: .18; transform: translateX(-6px); }
@@ -216,7 +218,6 @@ h1 { font: 800 clamp(54px, 6vw, 88px)/.92 var(--font-display); text-transform: u
 .term { background: var(--carbon); color: color-mix(in srgb, var(--paper) 88%, transparent); border-radius: 4px; box-shadow: 0 24px 40px -28px var(--ink); overflow: hidden; position: sticky; top: 88px; }
 .term header { display: flex; align-items: center; gap: 8px; padding: 10px 14px; border-bottom: 1px solid color-mix(in srgb, var(--paper) 14%, transparent); font: 400 11.5px var(--font-data); color: color-mix(in srgb, var(--paper) 55%, transparent); }
 .term header i { width: 10px; height: 10px; border-radius: 50%; background: color-mix(in srgb, var(--paper) 22%, transparent); }
-.term header i:first-child { background: var(--before); }
 .term header span { margin-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .term pre { margin: 0; padding: 16px 16px 18px; font: 400 12.3px/1.62 var(--font-data); white-space: pre-wrap; overflow-wrap: anywhere; min-height: 360px; }
 .term .p { color: color-mix(in srgb, var(--paper) 50%, transparent); }
@@ -379,6 +380,8 @@ h1 { font: 800 clamp(54px, 6vw, 88px)/.92 var(--font-display); text-transform: u
   .log, .log tbody, .log tr, .log td { display: block; width: 100%; }
   .log tr { padding: 10px 16px; border-bottom: 1px solid var(--rule); }
   .log td { border: 0; padding: 2px 0; }
+  .log a, .steps .d a { display: inline-block; padding-block: 4px; }
+  .exhibit { padding: 16px 14px 14px; }
   .log td[data-k]::before { content: attr(data-k) " "; color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: .08em; }
   .term pre { min-height: 0; font-size: 11.5px; }
   .zero { font-size: 92px; }
@@ -430,7 +433,7 @@ h1 { font: 800 clamp(54px, 6vw, 88px)/.92 var(--font-display); text-transform: u
     <div class="hero-copy">
       <p class="label"><b>Exhibit 01</b> · Security track · NEAR OutLayer · testnet</p>
       <h1 id="h1">Your exploit stays <span class="tapeword">sealed</span> until the bounty <span class="owes">owes&nbsp;you</span>.</h1>
-      <p class="sub">A white-hat finds a drain at 2&nbsp;a.m. and knows the team can patch it, call it “known” and pay nothing. Sealed reverses the order: the bounty commits its rules at funding, NEAR OutLayer runs the sealed exploit in a TEE worker, and the protocol gets it only once the escrow is owed. On testnet: <strong>5 of 5</strong> real exploits paid, <strong>0 of 21</strong> fakes.</p>
+      <p class="sub">A white-hat finds a drain at 2&nbsp;a.m. and knows the team can patch it, call it “known” and pay nothing. Sealed flips the order: the rules are fixed at funding, NEAR OutLayer runs the sealed exploit in a TEE worker, and the protocol gets it only once the escrow is owed. On testnet: <strong>5 of 5</strong> real exploits paid, <strong>0 of 21</strong> fakes.</p>
       <div class="ctas">
         <a class="btn solid" href="https://github.com/edycutjong/sealed"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5 4 1 8l4 4M11 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>Source on GitHub</a>
         <a class="btn" href="pitch/"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="1.5" y="2.5" width="13" height="9" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M8 11.5V14M5 14h6" stroke="currentColor" stroke-width="1.6"/></svg>Pitch deck</a>
@@ -471,7 +474,7 @@ h1 { font: 800 clamp(54px, 6vw, 88px)/.92 var(--font-display); text-transform: u
         </ol>
         <div class="ex-out"><span class="tag">Bond slashed · tape intact</span><div class="stamp" style="color:var(--ink)"><svg viewBox="0 0 260 132" role="img" aria-label="REFUSED stamp: no invariant broken"><g filter="url(#rubber)" fill="none" stroke="currentColor"><rect x="6" y="6" width="248" height="120" rx="12" stroke-width="7"/><rect x="17" y="17" width="226" height="98" rx="6" stroke-width="2"/></g><text x="130" y="78" text-anchor="middle" fill="currentColor" filter="url(#rubber)" style="font:800 52px var(--font-display);letter-spacing:.04em">REFUSED</text><text x="130" y="104" text-anchor="middle" fill="currentColor" style="font:600 13px var(--font-data);letter-spacing:.08em">NO INVARIANT BROKEN</text></svg></div></div>
       </div>
-      <figcaption class="ex-cap">Re-set from <code>corpus/results.json</code> (testnet runs <code>d5-real-fallback</code> and <code>d5-nearmiss-fallback-no-receive</code>). Times are block time from <code>corpus/bench.json</code>; the replay above is sped up. Every tx hash opens the explorer.</figcaption>
+      <figcaption class="ex-cap">Testnet runs <code>d5-real-fallback</code> and <code>d5-nearmiss-fallback-no-receive</code>, re-set from <code>corpus/results.json</code>; block times from <code>corpus/bench.json</code>; replay sped up. Every tx hash opens the explorer.</figcaption>
     </figure>
   </div>
 </section>
@@ -532,7 +535,7 @@ h1 { font: 800 clamp(54px, 6vw, 88px)/.92 var(--font-display); text-transform: u
 </span><span class="ln"><span class="c">replay: 29 OK · 0 FAIL · verifier.wasm d2972cd2659c2ad4…</span>
 </span><span class="ln"><span class="p">$</span> <span class="caret"></span></span></pre>
         </div>
-        <p class="term-cap">Captured stdout, lines selected, none edited (make replay, 2026-11-01 18:04 WIB).</p>
+        <p class="term-cap">Captured stdout of <code>make replay</code> (1 Nov 2026), lines selected, none edited.</p>
       </div>
     </div>
   </div>
@@ -571,7 +574,7 @@ h1 { font: 800 clamp(54px, 6vw, 88px)/.92 var(--font-display); text-transform: u
       <article class="card w2">
         <svg class="glyph" viewBox="0 0 46 46" aria-hidden="true"><path d="M17 4h12v12l5 6H12l5-6z" fill="none" stroke="currentColor" stroke-width="2.2"/><rect x="7" y="22" width="32" height="8" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M7 38h32" stroke="currentColor" stroke-width="3"/></svg>
         <h3>Refused, with a reason</h3>
-        <p>Six refusal kinds, each fired on chain. A fake verdict or an expired award slashes the bond; the rest log the reason.</p>
+        <p>Six refusal kinds, each fired on chain. A refused verdict or an expired award slashes the bond; the other refusals only log the reason.</p>
         <ul class="kinds"><li style="--r:-1.5deg">delivery mismatch</li><li style="--r:1deg">invariant busy</li><li style="--r:-.5deg">pool pull</li><li style="--r:1.5deg">duplicate</li><li style="--r:-1deg">expired award</li><li style="--r:.5deg">fake</li></ul>
       </article>
       <article class="card w2">
@@ -624,7 +627,7 @@ h1 { font: 800 clamp(54px, 6vw, 88px)/.92 var(--font-display); text-transform: u
     <div>
       <details><summary>Do I need a NEAR account to check any of this?</summary><p>No. <code>make replay</code> re-runs every published verdict offline with the verifier wasm each bounty pinned; <code>make verify</code> reads chain data from a public archival RPC (<code>make verify-demo</code>: the five paid runs, about 1.5 min).</p></details>
       <details><summary>What does the TEE prove, exactly?</summary><p>That the request pinned the verifier hash and a registered OutLayer worker key answered, not that the worker ran exactly those bytes. <code>make replay</code> runs the same bytes on your machine.</p></details>
-      <details><summary>What stops junk submissions?</summary><p>A bond on every commit, slashed on a fake verdict, and the level's own check: 21 fakes on chain, 0 paid. The heaviest abuse input used 23.98% of the 2e9-instruction limit.</p></details>
+      <details><summary>What stops junk submissions?</summary><p>A bond on every commit, slashed on a refused verdict, and the level's own check: 21 fakes on chain, 0 paid. The heaviest abuse input used 23.98% of the 2e9-instruction limit.</p></details>
       <details><summary>What stops the protocol from walking away?</summary><p>The bounties have no access keys and their rules are fixed at funding. Reserved and awarded escrow cannot be withdrawn (I4); only the unreserved pool can, after a timelock (7 days by default).</p></details>
       <details><summary>What is mocked?</summary><p>The 20 sandbox tests use a mock OutLayer and token. The 29 testnet runs use the live OutLayer worker and a test token; mainnet has not run.</p></details>
       <details><summary>Why not let an LLM triage the reports?</summary><p>On the same 21 fakes, LLM-only triage paid 1, 3 and 3 (third-party models, one run each, not NEAR AI Cloud). The executing verifier paid 0. See <code>baseline/README.md</code>.</p></details>
@@ -647,7 +650,7 @@ h1 { font: 800 clamp(54px, 6vw, 88px)/.92 var(--font-display); text-transform: u
       <span>Sealed · built for NEAR Hackathon 2026 · MIT</span>
       <a href="https://github.com/edycutjong/sealed/blob/main/ARCHITECTURE.md">ARCHITECTURE.md</a>
       <a href="https://github.com/edycutjong/sealed/blob/main/LICENSE">LICENSE</a>
-      <span class="sp">data from commit edcf271 · fonts: Big Shoulders Stencil, Libre Franklin, IBM Plex Mono (OFL)</span>
+      <span class="sp">data from commit ba12c87 · fonts: Big Shoulders Stencil, Libre Franklin, IBM Plex Mono (OFL)</span>
     </div>
   </div>
 </footer>
