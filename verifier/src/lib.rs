@@ -18,7 +18,7 @@ use sha2::{Digest, Sha256};
 pub mod seal;
 
 /// Gas for ALL exploit txs together (each tx gets what is left). Frozen at day-0 G5b: the worst measured shape
-/// (a KECCAK256 loop, ~865 wasm instructions per gas) keeps exploit + validate under 50% of the worker's 2e9.
+/// (a KECCAK256 loop, ~787 wasm instructions per gas on the worker) keeps exploit + validate near 44% of its 2e9.
 pub const EXPLOIT_GAS_BUDGET: u64 = 600_000;
 /// Gas for the level's `validateInstance` call (it can reach hunter code, so it is bounded too).
 pub const VALIDATE_GAS_LIMIT: u64 = 500_000;
