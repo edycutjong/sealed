@@ -32,7 +32,14 @@ pub const MAX_CALLDATA: usize = 24 * 1024;
 pub const MAX_ERR: usize = 64;
 
 /// Snapshots compiled into the verifier. Index = `target` in the input.
-pub const SNAPSHOTS: &[&[u8]] = &[include_bytes!("../snapshots/fallback.json")];
+/// Order is frozen: a bounty pins `snapshot_hashes[target]`, so a new level is only ever appended.
+pub const SNAPSHOTS: &[&[u8]] = &[
+    include_bytes!("../snapshots/fallback.json"),   // 0 Fallback   (MVP)
+    include_bytes!("../snapshots/telephone.json"),  // 1 Telephone  (MVP)
+    include_bytes!("../snapshots/delegation.json"), // 2 Delegation (MVP)
+    include_bytes!("../snapshots/force.json"),      // 3 Force      (stretch)
+    include_bytes!("../snapshots/king.json"),       // 4 King       (stretch)
+];
 
 #[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct SnapAccount {
