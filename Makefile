@@ -26,10 +26,12 @@ test-verifier:
 	cargo test --locked --release -p verifier
 
 # ----- contracts (bounty / test token) -----
-## Build the contract wasms (Rust 1.85.0, near-sys 0.2.4 pinned) and wasm-opt -Oz the bounty.
+## Build the contract wasms (Rust 1.85.0, near-sys 0.2.4 pinned) and wasm-opt -Oz the bounty. Paths are
+## remapped so the public wasm carries no build-machine fingerprints and any clone rebuilds the same bytes.
 contracts-wasm:
-	cd contracts && cargo +1.85.0 build --locked --target wasm32-unknown-unknown --release
+	cd contracts && RUSTFLAGS="--remap-path-prefix=$(CARGO_HOME)=/cargo --remap-path-prefix=$(CURDIR)/contracts=/sealed-contracts" cargo +1.85.0 build --locked --target wasm32-unknown-unknown --release
 	wasm-opt -Oz contracts/target/wasm32-unknown-unknown/release/bounty.wasm -o contracts/bounty.wasm
+	@echo -n "paths leaked: "; strings contracts/bounty.wasm | grep -c '/Users/' || true
 	shasum -a 256 contracts/bounty.wasm
 
 ## near-workspaces sandbox tests for the bounty (I1–I8). Needs the wasms built first.
