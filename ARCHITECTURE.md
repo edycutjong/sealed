@@ -92,7 +92,7 @@ hunter                bounty (keyless)            token            OutLayer (TEE
 | Target | Script | Re-checks |
 |---|---|---|
 | `make replay` | `scripts/verify_offline.py` | each published commit under wasmtime from the committed wasm whose sha256 is the hash its bounty pinned (`verifier.wasm`, or `verifiers/<sha>.wasm` for the earlier D3 build) = the on-chain verdict |
-| `make verify` / `verify-d5` | `scripts/verify.py` | per commit, from the archival RPC: pinned hash (bounty's live state), the resolve tx went to the bounty's OutLayer contract from the operator OutLayer's config named at that block, with a key scoped to it; the bundle equals the chain; verdict, `h_enc`, `PAID` for this commit id; `view_commit` status matches the line; the bundle set equals `corpus/results.json` runs, each commit once, and covers every commit id the bounty holds on chain (`view_state.commits`); `verify-d5` adds I6 |
+| `make verify` / `verify-demo` / `verify-d5` | `scripts/verify.py` | per commit, from the archival RPC: pinned hash (bounty's live state), the resolve tx went to the bounty's OutLayer contract from the operator OutLayer's config named at that block, with a key scoped to it; the bundle equals the chain; verdict, `h_enc`, `PAID` for this commit id; the bounty's `paid_total` / `escrow` equal the bundled PAID / AWARDED amounts; the bundle set equals `corpus/results.json` runs, each commit once, and covers every commit id the bounty holds on chain (`view_state.commits`); `verify-d5` adds I6 |
 | `make corpus` | `scripts/corpus_check.py` | all 52 corpus items against their golden verdicts |
 | `make refusals` | `scripts/refusals.py` | the 6 refusal kinds seen on chain, with tx hashes |
 | `make bench` / `bench-chain` | `scripts/bench.py` | latency p50/p95 and resources vs limits, recomputed from the bundles (`bench-chain` re-reads the chain) |
@@ -106,7 +106,9 @@ hunter                bounty (keyless)            token            OutLayer (TEE
   `make verify`'s `bundle` check is what ties that bundle to the chain.
 - **RPC trust.** `make verify` believes the archival RPC it queries (no light-client proof). Run it against a second
   provider to cross-check: `make verify RPC=https://archival-rpc.testnet.near.org`. An RPC that errors or rate-limits
-  turns lines into RECORDED (exit 2), never into a pass.
+  turns lines into RECORDED (exit 2), never into a pass. To stay under the public node's rate limit, the OutLayer
+  operator and the worker key's scope are read at the first and last resolve block of the run and pinned in between
+  when both reads agree (a rotation away and back would need OutLayer's owner key); otherwise each row reads its own.
 - **Memory** is the verifier's own peak linear memory; OutLayer reports no worker memory figure.
 - **Stuck commits.** `release_stale` (`lib.rs:454`) unsticks a commit stuck in `AwaitingRegistration` (bond and
   deposit back: the deposit was never sent) or a dangling `Pending` (bond back; the OutLayer deposit already left with

@@ -64,6 +64,11 @@ replay:
 verify:
 	@python3 scripts/verify.py --rpc $(RPC)
 
+## Quick path (~25 RPC calls instead of ~80): the 5 paid lines of the D5 demo bounty, with the same checks, its
+## completeness and its ledger. Use it when a full `make verify` would outlast a command timeout.
+verify-demo:
+	@python3 scripts/verify.py --rpc $(RPC) --bounty demo.sealed-dev-11010702.testnet
+
 ## The D5 production bounties only (demo = 5 levels paid, corpus = fakes + expiry), and FAIL unless each is keyless
 ## on the global-contract hash (0 access keys for life). `make verify` above also covers the keyed D3 throwaway.
 D5_BOUNTIES := demo.sealed-dev-11010702.testnet corpus.sealed-dev-11010702.testnet
@@ -93,7 +98,7 @@ bench:
 bench-chain:
 	@python3 scripts/bench.py --chain --rpc $(RPC)
 
-.PHONY: doctor replay verify verify-d5 corpus refusals results bench bench-chain
+.PHONY: doctor replay verify verify-demo verify-d5 corpus refusals results bench bench-chain
 
 # ----- baseline / hunter agent (D6) -----
 ## The mirror image of `make replay`: the same corpus judged by an LLM that cannot execute anything. Prints, per recorded

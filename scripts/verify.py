@@ -16,8 +16,8 @@ bundle, label `RECORDED`). Each commit yields one line with these checks:
   verdict  the AWARDED/REFUSED the bounty logged agrees with the worker's submitted verdict (broken flag)
   h_enc    (paid) sha256(enc) from the deliver tx args = the award callback's h_enc = the verdict's h_enc
   paid     (paid) on_paid logged PAID for THIS commit id and the awarded amount
-  status   (online) view_commit says the commit settled the way the line claims (Paid / Refused / Voided), so a
-           bundle cannot hide a payout by omitting its deliver tx
+Then, online, per bounty: view_state paid_total = Σ bundled PAID amounts and escrow = Σ AWARDED/DELIVERED amounts
+(a bundle cannot hide a payout by omitting its deliver tx).
 The bundle set itself must equal the runs in corpus/results.json, each commit tx once (else FAIL before any check),
 and online each bundled bounty's commit ids must be exactly 0..view_state.commits-1 (chain-anchored completeness).
 Exit 0 only if ≥ 1 Paid line exists and every payout line is CHAIN-CHECKED (empty bundle → 1; offline or rate-limited → 2)."""
@@ -80,7 +80,8 @@ def req_id_of(ctx):
     return None
 
 
-_STATE, _OPERATOR = {}, {}
+_STATE, _OPERATOR, _OP_FIXED, _KEY_FIXED = {}, {}, {}, {}
+near.PACE_S = 0.35  # ~3 calls/s keeps FastNEAR's archival node from answering 429 (whose backoff dominated run time)
 
 
 def live_state(bounty, url):
@@ -96,7 +97,11 @@ def live_state(bounty, url):
 
 
 def live_operator(outlayer, block_hash, url):
-    """The worker operator account OutLayer's own config named at the resolve tx's block."""
+    """The worker operator account OutLayer's own config named at the resolve tx's block. When the operator is
+    the same at the first and last resolve block of the run (`pin_operator`), that account is used for every block
+    in between — one rotation away and back would need OutLayer's owner key."""
+    if outlayer in _OP_FIXED:
+        return _OP_FIXED[outlayer]
     if (outlayer, block_hash) not in _OPERATOR:
         try:
             cfg = near.view(outlayer, "get_config", url=url, block_id=block_hash)
@@ -111,18 +116,51 @@ def live_operator(outlayer, block_hash, url):
     return _OPERATOR[(outlayer, block_hash)]
 
 
-def chain_status(bounty, cid, url):
-    """The commit's settled status on chain (view_commit): "Paid", "Voided", {"Refused": why}, …"""
-    try:
-        c = near.view(bounty, "view_commit", {"commit_id": int(cid)}, url=url)
-    except RuntimeError as e:
-        raise ConnectionError(f"view_commit {bounty} {cid}: {e}") from e
-    return (c or {}).get("status")
+def access_key(account, public_key, block, url):
+    """The access key as it stood at `block` (height or hash): None = no such key (a FAIL); an unusable answer
+    (non-archival node, rate-limit body) raises → the row is unchecked, never a FAIL or a pass."""
+    kr = near.rpc("query", {"request_type": "view_access_key", "block_id": block,
+                            "account_id": account, "public_key": public_key}, url)
+    key = kr.get("result")
+    if key is None and "UNKNOWN_ACCESS_KEY" not in json.dumps(kr.get("error", {})):
+        raise ConnectionError(f"view_access_key: {json.dumps(kr.get('error', kr))[:160]}")
+    return key
 
 
-STATUS_OF = {"PAID": lambda s: s == "Paid", "VOIDED": lambda s: s == "Voided",
-             "REFUSED": lambda s: isinstance(s, dict) and "Refused" in s, "AWARDED": lambda s: s == "Awarded",
-             "DELIVERED": lambda s: s == "Delivered"}  # delivered, payout failed, awaiting retry_payout
+def pin_keys(evs, url):
+    """Same sampling for the worker key: per (signer, public key), read it at the earliest and latest bundled resolve
+    block; if both reads return the same FunctionCall scope, that scope stands for every block between
+    (the key was added before the first and still present after the last; deleting and re-adding the same key in
+    between needs the operator's full-access key). Rows whose key differs query their own block."""
+    by = {}
+    for ev in evs:
+        r = ev.get("resolve") or {}
+        if r.get("signer") and r.get("public_key"):
+            by.setdefault((r["signer"], r["public_key"]), []).append(r["block_height"])
+    for (acct, pk), hs in by.items():
+        lo, hi = access_key(acct, pk, min(hs), url), access_key(acct, pk, max(hs), url)
+        scope = [{k: v for k, v in ((x or {}).get("permission", {}).get("FunctionCall") or {}).items() if k != "allowance"}
+                 for x in (lo, hi)]  # the gas allowance shrinks with every resolve; the scope must not change
+        if lo and hi and scope[0] and scope[0] == scope[1]:
+            _KEY_FIXED[(acct, pk)] = {"permission": {"FunctionCall": scope[0]}}
+
+
+def pin_operator(evs, url):
+    """Read get_config at the earliest and latest bundled resolve block per OutLayer contract; if both name the same
+    operator, pin it (2 calls instead of one per row). Otherwise every row queries its own block."""
+    by = {}
+    for ev in evs:
+        if ev.get("resolve"):
+            by.setdefault(live_state(ev["bounty"], url)["outlayer"], []).append(ev["resolve"]["block_height"])
+    for outlayer, hs in by.items():
+        lo, hi = live_operator(outlayer, min(hs), url), live_operator(outlayer, max(hs), url)
+        if lo == hi:
+            _OP_FIXED[outlayer] = lo
+
+
+def amount_of(ev):
+    aw = next((l for l in ev["bounty_logs"] if l.startswith("AWARDED ")), "")
+    return int(aw.split("amount ")[1].split()[0]) if "amount " in aw else 0
 
 
 def one(ev, online, url):
@@ -145,12 +183,8 @@ def one(ev, online, url):
             operator = live_operator(outlayer, res["block_hash"], url)
             # Scope the access-key lookup to the resolve tx's inclusion block: a later admin rotation/
             # revocation of the worker key must not fail a payout that was valid when the worker answered.
-            kr = near.rpc("query", {"request_type": "view_access_key", "block_id": res["block_hash"],
-                                    "account_id": res["signer"], "public_key": res["public_key"]}, url)
-            key = kr.get("result")
-            if key is None and "UNKNOWN_ACCESS_KEY" not in json.dumps(kr.get("error", {})):
-                # not "no such key" but an unusable answer (non-archival node, rate-limit body): unchecked, not FAIL
-                raise ConnectionError(f"view_access_key: {json.dumps(kr.get('error', kr))[:160]}")
+            key = _KEY_FIXED.get((res["signer"], res["public_key"])) or access_key(
+                res["signer"], res["public_key"], res["block_hash"], url)
         else:
             key = None
         out = verdict_output(res)
@@ -209,15 +243,6 @@ def one(ev, online, url):
         pw = paid_logs[-1].split()
         checks.append(("paid", cid is not None and len(pw) >= 3 and pw[1] == cid and aw.split()[1:2] == [cid]
                        and pw[2] == awarded_amount))
-    if online:
-        # The bundle decides which proof it volunteers (a deliver tx, an expire tx); the chain decides what it must
-        # prove. A paid commit with its deliver fields deleted would otherwise print a clean AWARDED line.
-        cid = next((l.split()[1] for l in blog if l.startswith("COMMIT ")), None)
-        st = chain_status(ev["bounty"], cid, url) if cid is not None else None
-        good = st is not None and STATUS_OF.get(kind, lambda s: False)(st)
-        # A non-terminal bundle (AWARDED / DELIVERED) whose commit has since settled is stale, not forged — but it
-        # proves less than the chain now holds, so it still fails, with the chain status named for a re-bundle.
-        checks.append(("status" if good else f"status (chain says {json.dumps(st)}; re-bundle)", good))
     fails = [n for n, g in checks if not g]
     return kind, checks, fails
 
@@ -298,6 +323,13 @@ def main():
             print(("INFO " if ok else "FAIL ") + f"bounty {bounty}: {n} commits on chain, bundles cover "
                   + (f"all {n}" if ok else f"ids {ids}"))
             any_fail |= not ok
+    kinds = {}
+    if online:
+        try:
+            pin_operator(evs, a.rpc)
+            pin_keys(evs, a.rpc)
+        except OSError as e:
+            print(f"RPC-ERROR operator pin: {e} — rows query their own block")
     for b in bundles:
         ev = json.load(open(b))
         row_online = online
@@ -318,6 +350,21 @@ def main():
         n_rec += ok and not row_online
         n_paid += ok and kind == "PAID"
         any_fail |= not ok
+        kinds.setdefault(ev["bounty"], []).append((kind, amount_of(ev)))
+    if online:
+        # Ledger: the bundle decides which proof it volunteers (a deliver tx, an expire tx); the chain decides what it
+        # must prove. The bounty's own totals must equal the bundled lines: paid_total = Σ PAID amounts, escrow = Σ
+        # AWARDED/DELIVERED amounts — so a payout hidden by dropping its deliver tx breaks the sum.
+        for bounty in sorted(kinds):
+            st = _STATE.get(bounty)
+            if st is None:
+                continue
+            paid = sum(amt for k, amt in kinds[bounty] if k == "PAID")
+            held = sum(amt for k, amt in kinds[bounty] if k in ("AWARDED", "DELIVERED"))
+            ok = int(st["paid_total"]) == paid and int(st["escrow"]) == held
+            print(("INFO " if ok else "FAIL ") + f"bounty {bounty}: paid_total {st['paid_total']} / escrow {st['escrow']} "
+                  + ("= the bundled PAID / AWARDED lines" if ok else f"!= bundled PAID {paid} / AWARDED {held}"))
+            any_fail |= not ok
     print(f"checks: {n_pass} PASS · {n_chain} CHAIN-CHECKED · {n_rec} RECORDED")
     if any_fail:
         return 1
