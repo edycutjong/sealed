@@ -16,6 +16,9 @@ bundle, label `RECORDED`). Each commit yields one line with these checks:
   verdict  the AWARDED/REFUSED the bounty logged agrees with the worker's submitted verdict (broken flag)
   h_enc    (paid) sha256(enc) from the deliver tx args = the award callback's h_enc = the verdict's h_enc
   paid     (paid) on_paid logged PAID for THIS commit id and the awarded amount
+  status   (online) view_commit says the commit settled the way the line claims (Paid / Refused / Voided), so a
+           bundle cannot hide a payout by omitting its deliver tx
+The bundle set itself must equal the runs in corpus/results.json, each commit tx once (else FAIL before any check).
 Exit 0 only if ≥ 1 Paid line exists and every payout line is CHAIN-CHECKED (empty bundle → 1; offline or rate-limited → 2)."""
 import argparse, base64, glob, hashlib, json, os, sys
 
@@ -95,10 +98,29 @@ def live_operator(outlayer, block_hash, url):
     """The worker operator account OutLayer's own config named at the resolve tx's block."""
     if (outlayer, block_hash) not in _OPERATOR:
         try:
-            _OPERATOR[(outlayer, block_hash)] = near.view(outlayer, "get_config", url=url, block_id=block_hash)[1]
+            cfg = near.view(outlayer, "get_config", url=url, block_id=block_hash)
         except RuntimeError as e:
             raise ConnectionError(f"{outlayer}.get_config at {block_hash}: {e}") from e
+        # Today get_config returns [owner, operator]; accept an object with an `operator*` key too.
+        op = cfg[1] if isinstance(cfg, list) and len(cfg) > 1 else next(
+            (v for k, v in (cfg.items() if isinstance(cfg, dict) else []) if k.startswith("operator")), None)
+        if not isinstance(op, str):
+            raise ValueError(f"{outlayer}.get_config at {block_hash}: unrecognised shape {json.dumps(cfg)[:120]}")
+        _OPERATOR[(outlayer, block_hash)] = op
     return _OPERATOR[(outlayer, block_hash)]
+
+
+def chain_status(bounty, cid, url):
+    """The commit's settled status on chain (view_commit): "Paid", "Voided", {"Refused": why}, …"""
+    try:
+        c = near.view(bounty, "view_commit", {"commit_id": int(cid)}, url=url)
+    except RuntimeError as e:
+        raise ConnectionError(f"view_commit {bounty} {cid}: {e}") from e
+    return (c or {}).get("status")
+
+
+STATUS_OF = {"PAID": lambda s: s == "Paid", "VOIDED": lambda s: s == "Voided",
+             "REFUSED": lambda s: isinstance(s, dict) and "Refused" in s, "AWARDED": lambda s: s == "Awarded"}
 
 
 def one(ev, online, url):
@@ -122,7 +144,7 @@ def one(ev, online, url):
             # Scope the access-key lookup to the resolve tx's inclusion block: a later admin rotation/
             # revocation of the worker key must not fail a payout that was valid when the worker answered.
             kr = near.rpc("query", {"request_type": "view_access_key", "block_id": res["block_hash"],
-                                    "account_id": ev["operator"], "public_key": res["public_key"]}, url)
+                                    "account_id": res["signer"], "public_key": res["public_key"]}, url)
             key = kr.get("result")
             if key is None and "UNKNOWN_ACCESS_KEY" not in json.dumps(kr.get("error", {})):
                 # not "no such key" but an unusable answer (non-archival node, rate-limit body): unchecked, not FAIL
@@ -149,8 +171,9 @@ def one(ev, online, url):
     # The resolve tx must be for THIS commit's request, not just any run the same worker key signed.
     rid_ok = bool(res) and int((res.get("args") or {}).get("request_id", -1)) == ev["request_id"] == req_id_of(ctx)
     perm = (key or {}).get("permission") or {}
+    names = (perm.get("FunctionCall") or {}).get("method_names")
     key_ok = ("FunctionCall" in perm and perm["FunctionCall"].get("receiver_id") == outlayer
-              and any(m in perm["FunctionCall"]["method_names"] for m in RESOLVE_METHODS))
+              and (names == [] or any(m in (names or []) for m in RESOLVE_METHODS)))  # [] = every method
     checks.append(("worker", answered and key_ok and rid_ok))
     if online:
         # Bind the bundle to the chain, so `make replay` (which reads only the bundle) compares against what
@@ -183,6 +206,12 @@ def one(ev, online, url):
         pw = paid_logs[-1].split()
         checks.append(("paid", cid is not None and len(pw) >= 3 and pw[1] == cid and aw.split()[1:2] == [cid]
                        and pw[2] == awarded_amount))
+    if online:
+        # The bundle decides which proof it volunteers (a deliver tx, an expire tx); the chain decides what it must
+        # prove. A paid commit with its deliver fields deleted would otherwise print a clean AWARDED line.
+        cid = next((l.split()[1] for l in blog if l.startswith("COMMIT ")), None)
+        st = chain_status(ev["bounty"], cid, url) if cid is not None else None
+        checks.append(("status", st is not None and STATUS_OF.get(kind, lambda s: False)(st)))
     fails = [n for n, g in checks if not g]
     return kind, checks, fails
 
@@ -224,6 +253,18 @@ def main():
     if not bundles:
         print("verify: empty bundle (no corpus/evidence/*.json)")
         return 1
+    # Completeness: the checked set must be exactly the runs corpus/results.json reports (the numbers the README
+    # quotes), each commit tx once — a copied bundle or a quietly deleted one changes the counts, so it FAILs.
+    evs = [json.load(open(b)) for b in bundles]
+    runs = json.load(open(os.path.join(ROOT, "corpus", "results.json")))["runs"]
+    want = {r["label"] for r in runs if not a.bounty or r["bounty"] in a.bounty}
+    have = [ev["label"] for ev in evs]
+    dup = len({ev["commit_tx"] for ev in evs}) != len(evs)
+    if dup or set(have) != want or len(have) != len(want):
+        print(f"FAIL bundle set: {len(have)} bundles vs {len(want)} runs in corpus/results.json"
+              + (" · duplicate commit_tx" if dup else "")
+              + "".join(f" · missing {x}" for x in sorted(want - set(have))) + "".join(f" · extra {x}" for x in sorted(set(have) - want)))
+        return 1
     online = reachable(a.rpc)
     n_pass = n_chain = n_rec = n_paid = n_unb = 0
     any_fail = False
@@ -244,8 +285,8 @@ def main():
             print(f"RPC-ERROR {ev['label']}: {e} — checked from the bundle only")
             row_online = False
             kind, checks, fails = one(ev, False, a.rpc)
-        except KeyError as e:  # the archival node answered without a result (e.g. unknown tx): a real failure
-            kind, checks, fails = "?", [], [f"rpc returned no result ({e})"]
+        except (KeyError, ValueError) as e:  # a definitive but unusable answer (unknown tx, unexpected shape): FAIL
+            kind, checks, fails = "?", [], [f"unexpected chain data ({e})"]
         mark = ("CHAIN-CHECKED" if row_online else "RECORDED") if not fails else "FAIL"
         print(f"{mark} {ev['label']} [{kind}]: " + " · ".join(n for n, _ in checks)
               + ("" if not fails else " · FAILED: " + ",".join(fails)))
