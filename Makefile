@@ -1,7 +1,7 @@
 # Sealed Exploit — every judged command is a make target. See DEMO.md for expected output.
 SHELL := /bin/bash
 CARGO_HOME ?= $(HOME)/.cargo
-# Absolute build paths end up in panic-location strings; remap them so any clone rebuilds the same bytes.
+# Absolute build paths end up in panic-location strings; remap them so any clone on the same host OS rebuilds the same bytes.
 REMAP := --remap-path-prefix=$(CARGO_HOME)=/cargo --remap-path-prefix=$(CURDIR)=/sealed
 WASM := target/wasm32-wasip1/release/verifier.wasm
 
@@ -27,7 +27,7 @@ test-verifier:
 
 # ----- contracts (bounty / test token) -----
 ## Build the contract wasms (Rust 1.85.0, near-sys 0.2.4 pinned) and wasm-opt -Oz the bounty. Paths are
-## remapped so the public wasm carries no build-machine fingerprints and any clone rebuilds the same bytes.
+## remapped so the public wasm carries no build-machine fingerprints and any clone on the same host OS rebuilds the same bytes.
 contracts-wasm:
 	cd contracts && RUSTFLAGS="--remap-path-prefix=$(CARGO_HOME)=/cargo --remap-path-prefix=$(CURDIR)/contracts=/sealed-contracts" cargo +1.85.0 build --locked --target wasm32-unknown-unknown --release
 	wasm-opt -Oz contracts/target/wasm32-unknown-unknown/release/bounty.wasm -o contracts/bounty.wasm

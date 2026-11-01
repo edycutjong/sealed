@@ -21,13 +21,27 @@ jobs:
           targets: wasm32-wasip1
       - uses: Swatinem/rust-cache@v2
       - run: make test-verifier
-      - name: Rebuilt verifier.wasm equals the committed bytes (the pinned hash)
+      - name: Linux rebuild vs committed bytes (informational)
+        # The committed verifier.wasm is built on macOS/arm64; rustc lays out data differently on Linux, so the bytes
+        # differ there (same behaviour, checked by the golden tests above). The blocking check is verifier-reproduce.
+        continue-on-error: true
         run: make verifier-check
+
+  verifier-reproduce:
+    name: verifier.wasm rebuilds byte-for-byte (macOS/arm64, the pinned build host)
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: 1.97.1
+          targets: wasm32-wasip1
+      - run: make verifier-check
       - name: Keep the rebuilt wasm for diffing when the hash drifts
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: verifier-rebuilt
+          name: verifier-rebuilt-macos
           path: target/wasm32-wasip1/release/verifier.wasm
 
   replay:
