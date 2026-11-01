@@ -16,7 +16,7 @@
 <meta property="og:image" content="https://sealed-exploit.vercel.app/assets/og-1200x630.jpg?v=554484e7">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="A tamper-taped evidence bag, still sealed, stamped PAID in green; the receipt beneath carries the tx hash.">
+<meta property="og:image:alt" content="Sealed Exploit share card: an evidence bag taped SEALED, DO NOT OPEN and stamped PAID, a receipt with the tx redacted, and a no-op exploit stamped REFUSED.">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Sealed: your exploit stays sealed until the bounty owes you">
 <meta name="twitter:description" content="A bug bounty that pays for an executed break of a committed invariant. Testnet: 5 of 5 exploits paid, 0 of 21 fakes.">
@@ -102,14 +102,14 @@ code, .mono { font-family: var(--font-data); font-size: .88em; }
   border-top: 2px solid var(--ink); padding-top: 10px; }
 .label b { color: var(--ink); font-weight: 600; }
 h1 { font: 800 clamp(54px, 6vw, 88px)/.92 var(--font-display); text-transform: uppercase; letter-spacing: .016em; margin: 20px 0 26px; text-wrap: balance; }
-.tapeword { position: relative; display: inline-block; color: var(--paper); padding: .02em .14em 0; margin: 0 .02em; background: var(--before); transform: rotate(-2.2deg);
+.tapeword { position: relative; display: inline-block; color: var(--paper); padding: .02em .14em 0; margin: .06em .02em 0; background: var(--before); transform: rotate(-2.2deg);
   box-shadow: 0 3px 0 color-mix(in srgb, var(--ink) 18%, transparent); transform-origin: left center; }
 .tapeword::before, .tapeword::after { content: ""; position: absolute; left: 0; right: 0; height: 5px;
   background: radial-gradient(circle at 5px 5px, var(--bg) 2.6px, transparent 3px) 0 0 / 10px 5px repeat-x; }
 .tapeword::before { top: -1px; transform: scaleY(-1); }
 .tapeword::after { bottom: -1px; }
 .owes { position: relative; white-space: nowrap; }
-.sub { font-size: 19px; line-height: 1.55; max-width: 60ch; margin: 0 0 30px; color: var(--ink-soft); }
+.sub { font-size: 19px; line-height: 1.55; max-width: 54ch; margin: 0 0 28px; color: var(--ink-soft); }
 .sub strong { color: var(--ink); font-weight: 800; }
 .ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 22px; }
 .clone { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; font: 400 13px var(--font-data); color: var(--muted); }
@@ -122,7 +122,7 @@ h1 { font: 800 clamp(54px, 6vw, 88px)/.92 var(--font-display); text-transform: u
 .copy.done .ok { display: inline; } .copy.done .cp { display: none; }
 
 /* ---------- the exhibit (signature) ---------- */
-.exhibit { grid-area: exhibit; margin: 0; min-width: 0; position: relative; padding: 24px 30px 20px; border-radius: 6px;
+.exhibit { grid-area: exhibit; margin: 0; min-width: 0; position: relative; padding: 24px 30px 20px; border-radius: 6px; overflow: hidden;
   background: radial-gradient(ellipse at 40% 30%, color-mix(in srgb, var(--carbon) 84%, var(--bg)) 0%, var(--carbon) 70%);
   box-shadow: 0 50px 80px -46px var(--ink), inset 0 1px 0 color-mix(in srgb, var(--paper) 12%, transparent); }
 .ex-bar { display: flex; align-items: flex-end; gap: 10px; }
@@ -148,8 +148,8 @@ h1 { font: 800 clamp(54px, 6vw, 88px)/.92 var(--font-display); text-transform: u
 .tape i::after { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(90deg, transparent 0 22px, color-mix(in srgb, var(--ink) 9%, transparent) 22px 23px); }
 .tape .l { left: 0; width: 62%; padding-left: 40px; clip-path: polygon(0 0, 100% 0, 97% 18%, 100% 36%, 97% 54%, 100% 72%, 97% 90%, 100% 100%, 0 100%); transform: rotate(-1.4deg); }
 .tape .r { right: 0; width: 38.6%; padding-left: 14px; clip-path: polygon(0 0, 3% 18%, 0 36%, 3% 54%, 0 72%, 3% 90%, 0 100%, 100% 100%, 100% 0); transform: rotate(-1.4deg); }
-.bag.torn .tape .l { transform: rotate(-4deg) translate(-16px, 4px); }
-.bag.torn .tape .r { transform: rotate(6deg) translate(26px, 8px); }
+.bag.torn .tape .l { transform: rotate(-4deg) translate(-24px, 5px); }
+.bag.torn .tape .r { transform: rotate(7deg) translate(38px, 10px); }
 .steps { list-style: none; margin: 0; padding: 0; counter-reset: s; }
 .steps li { display: grid; grid-template-columns: 26px minmax(0, 1fr) auto; gap: 2px 12px; padding: 9px 0; border-bottom: 1px solid var(--rule); counter-increment: s; transition: opacity .35s, transform .35s var(--ease-out); }
 .steps li::before { content: counter(s, decimal-leading-zero); font: 800 18px/1.15 var(--font-display); color: var(--muted); }
@@ -158,8 +158,8 @@ h1 { font: 800 clamp(54px, 6vw, 88px)/.92 var(--font-display); text-transform: u
 .steps .d { grid-column: 2 / 4; font: 400 12.5px var(--font-data); color: var(--ink-soft); overflow-wrap: anywhere; }
 .steps .d a { color: var(--ink); padding-block: 5px; }
 .verdict-1 { color: var(--ink); font-weight: 600; }
-.ex-out { display: flex; align-items: flex-end; justify-content: space-between; gap: 14px; min-height: 150px; margin-top: 10px; }
-.tag { font: 600 12px var(--font-data); letter-spacing: .1em; text-transform: uppercase; border: 1.5px solid var(--ink); padding: 6px 9px; transform: rotate(-1.5deg); background: var(--paper); transition: opacity .3s, transform .3s var(--ease-out); }
+.ex-out { display: flex; align-items: flex-end; justify-content: space-between; gap: 14px; min-height: 136px; margin-top: -4px; }
+.tag { font: 600 13px var(--font-data); letter-spacing: .1em; text-transform: uppercase; border: 1.5px solid var(--ink); padding: 6px 9px; transform: rotate(-1.5deg); background: var(--paper); transition: opacity .3s, transform .3s var(--ease-out); }
 .stamp { width: 300px; max-width: 58%; flex: none; transform: rotate(-8deg); transform-origin: 60% 60%; margin: -26px -8px -6px 0; }
 .stamp svg { display: block; width: 100%; height: auto; overflow: visible; }
 .ex-cap { font: 400 13px/1.55 var(--font-data); color: color-mix(in srgb, var(--paper) 74%, transparent); margin: 18px 0 0; }
@@ -224,7 +224,7 @@ h1 { font: 800 clamp(54px, 6vw, 88px)/.92 var(--font-display); text-transform: u
 .term .c { color: var(--paper); font-weight: 600; }
 .term .ok { color: var(--paper); font-weight: 600; }
 .term .rf { color: var(--paper); }
-.term .dim { color: color-mix(in srgb, var(--paper) 48%, transparent); }
+.term .dim { color: color-mix(in srgb, var(--paper) 72%, transparent); }
 .js .term pre.typing .ln { visibility: hidden; }
 .js .term pre.typing .ln.on { visibility: visible; }
 .caret { display: inline-block; width: .6em; height: 1.1em; background: var(--paper); vertical-align: text-bottom; animation: blink 1s steps(1) infinite; }
@@ -247,7 +247,7 @@ h1 { font: 800 clamp(54px, 6vw, 88px)/.92 var(--font-display); text-transform: u
 .flow div:first-child { border-left-width: 1px; }
 .flow div b { display: block; font: 800 15px/1.1 var(--font-display); letter-spacing: .08em; text-transform: uppercase; margin-bottom: 4px; }
 .flow div:last-child { background: var(--ink); color: var(--paper); }
-.flow div:last-child em { font-style: normal; color: color-mix(in srgb, var(--after) 50%, var(--paper)); }
+.flow div:last-child em { font-style: normal; color: var(--paper); font-weight: 600; }
 .zero { font: 800 120px/.8 var(--font-display); letter-spacing: -.01em; }
 .zero small { font: 600 12px var(--font-data); letter-spacing: .1em; text-transform: uppercase; display: block; color: var(--muted); margin-top: 8px; }
 .kinds { display: flex; flex-wrap: wrap; gap: 6px; margin: 2px 0 0; padding: 0; list-style: none; }
@@ -301,7 +301,7 @@ h1 { font: 800 clamp(54px, 6vw, 88px)/.92 var(--font-display); text-transform: u
 .close { background: var(--carbon); color: var(--paper); padding: 96px 0 40px; position: relative; overflow: hidden; }
 .close::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 10px; background: radial-gradient(circle at 7px 0, var(--bg) 5px, transparent 5.5px) 0 0 / 14px 10px repeat-x; }
 .close h2 { font: 800 clamp(48px, 6vw, 92px)/.9 var(--font-display); text-transform: uppercase; margin: 0 0 18px; max-width: 14ch; }
-.close h2 .tapeword { color: var(--paper); }
+.close h2 .slip-word { display: inline-block; background: var(--paper); color: var(--ink); padding: .04em .16em 0; transform: rotate(-2deg); margin-top: .06em; }
 .close p { color: color-mix(in srgb, var(--paper) 78%, transparent); max-width: 60ch; margin: 0 0 28px; }
 .close .btn { border-color: var(--paper); color: var(--paper); }
 .close .btn:hover { box-shadow: 4px 4px 0 color-mix(in srgb, var(--paper) 40%, transparent); }
@@ -433,7 +433,7 @@ h1 { font: 800 clamp(54px, 6vw, 88px)/.92 var(--font-display); text-transform: u
     <div class="hero-copy">
       <p class="label"><b>Exhibit 01</b> · Security track · NEAR OutLayer · testnet</p>
       <h1 id="h1">Your exploit stays <span class="tapeword">sealed</span> until the bounty <span class="owes">owes&nbsp;you</span>.</h1>
-      <p class="sub">A white-hat finds a drain at 2&nbsp;a.m. and knows the team can patch it, call it “known” and pay nothing. Sealed flips the order: the rules are fixed at funding, NEAR OutLayer runs the sealed exploit in a TEE worker, and the protocol gets it only once the escrow is owed. On testnet: <strong>5 of 5</strong> real exploits paid, <strong>0 of 21</strong> fakes.</p>
+      <p class="sub">A white-hat finds a drain at 2&nbsp;a.m. and knows the team can patch it, call it “known” and pay nothing. With Sealed, the protocol gets the exploit only once the escrow is owed. On testnet: <strong>5 of 5</strong> real exploits paid, <strong>0 of 21</strong> fakes.</p>
       <div class="ctas">
         <a class="btn solid" href="https://github.com/edycutjong/sealed"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5 4 1 8l4 4M11 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>Source on GitHub</a>
         <a class="btn" href="pitch/"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="1.5" y="2.5" width="13" height="9" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M8 11.5V14M5 14h6" stroke="currentColor" stroke-width="1.6"/></svg>Pitch deck</a>
@@ -594,11 +594,11 @@ h1 { font: 800 clamp(54px, 6vw, 88px)/.92 var(--font-display); text-transform: u
     <p class="lede">Each slip is one of the 21 fakes that went on chain. Three LLMs read each one (with the hunter's claim, where it had one) and voted; the verifier had already run them.</p>
     <div class="slips" role="img" aria-label="Fakes paid of 21: muse-wonder-1.0 1, nemotron-3-ultra 3, qwen3.8-omni-flash 3, Sealed verifier 0">
       <div class="srow"><div class="who">muse-wonder-1.0<small>LLM · reads, cannot run</small></div><div class="bar"><span class="slip" title="abuse-create: REFUSE"></span><span class="slip" title="abuse-input: REFUSE"></span><span class="slip" title="abuse-keccak: REFUSE"></span><span class="slip" title="abuse-loop: REFUSE"></span><span class="slip pay" title="llm-muse-telephone: PAY"></span><span class="slip" title="llm-qwen-delegation: REFUSE"></span><span class="slip" title="llm-qwen-fallback: REFUSE"></span><span class="slip" title="llm-qwen-king: REFUSE"></span><span class="slip" title="llm-qwen-telephone: REFUSE"></span><span class="slip" title="malformed-bad-address: REFUSE"></span><span class="slip" title="malformed-bad-hex: REFUSE"></span><span class="slip" title="malformed-not-json: REFUSE"></span><span class="slip" title="malformed-too-many-txs: REFUSE"></span><span class="slip" title="nearmiss-delegation-wrong-contract: REFUSE"></span><span class="slip" title="nearmiss-fallback-no-receive: REFUSE"></span><span class="slip" title="nearmiss-force-transfer: REFUSE"></span><span class="slip" title="nearmiss-king-eoa: REFUSE"></span><span class="slip" title="nearmiss-telephone-direct: REFUSE"></span><span class="slip" title="noop-telephone: REFUSE"></span><span class="slip" title="wrong-snapshot-fallback-on-telephone: REFUSE"></span><span class="slip" title="wrong-snapshot-king-on-force: REFUSE"></span></div><div class="k">1<small> of 21</small></div></div>
-      <div class="srow"><div class="who">nemotron-3-ultra<small>LLM · reads, cannot run</small></div><div class="bar"><span class="slip" title="abuse-create: REFUSE"></span><span class="slip" title="abuse-input: REFUSE"></span><span class="slip" title="abuse-keccak: REFUSE"></span><span class="slip" title="abuse-loop: REFUSE"></span><span class="slip" title="llm-muse-telephone: REFUSE"></span><span class="slip pay" title="llm-qwen-delegation: PAY"></span><span class="slip pay" title="llm-qwen-fallback: PAY"></span><span class="slip pay" title="llm-qwen-king: PAY"></span><span class="slip" title="llm-qwen-telephone: REFUSE"></span><span class="slip" title="malformed-bad-address: REFUSE"></span><span class="slip" title="malformed-bad-hex: REFUSE"></span><span class="slip" title="malformed-not-json: REFUSE"></span><span class="slip" title="malformed-too-many-txs: REFUSE"></span><span class="slip" title="nearmiss-delegation-wrong-contract: REFUSE"></span><span class="slip" title="nearmiss-fallback-no-receive: REFUSE"></span><span class="slip" title="nearmiss-force-transfer: REFUSE"></span><span class="slip" title="nearmiss-king-eoa: REFUSE"></span><span class="slip" title="nearmiss-telephone-direct: REFUSE"></span><span class="slip" title="noop-telephone: REFUSE"></span><span class="slip" title="wrong-snapshot-fallback-on-telephone: REFUSE"></span><span class="slip" title="wrong-snapshot-king-on-force: REFUSE"></span></div><div class="k">3<small> of 21</small></div></div>
+      <div class="srow"><div class="who">nemotron-3-ultra<small>LLM · reads, cannot run</small></div><div class="bar"><span class="slip" title="abuse-create: REFUSE"></span><span class="slip" title="abuse-input: no reply (counted as not paying)"></span><span class="slip" title="abuse-keccak: REFUSE"></span><span class="slip" title="abuse-loop: REFUSE"></span><span class="slip" title="llm-muse-telephone: REFUSE"></span><span class="slip pay" title="llm-qwen-delegation: PAY"></span><span class="slip pay" title="llm-qwen-fallback: PAY"></span><span class="slip pay" title="llm-qwen-king: PAY"></span><span class="slip" title="llm-qwen-telephone: REFUSE"></span><span class="slip" title="malformed-bad-address: REFUSE"></span><span class="slip" title="malformed-bad-hex: REFUSE"></span><span class="slip" title="malformed-not-json: REFUSE"></span><span class="slip" title="malformed-too-many-txs: REFUSE"></span><span class="slip" title="nearmiss-delegation-wrong-contract: REFUSE"></span><span class="slip" title="nearmiss-fallback-no-receive: REFUSE"></span><span class="slip" title="nearmiss-force-transfer: REFUSE"></span><span class="slip" title="nearmiss-king-eoa: REFUSE"></span><span class="slip" title="nearmiss-telephone-direct: REFUSE"></span><span class="slip" title="noop-telephone: REFUSE"></span><span class="slip" title="wrong-snapshot-fallback-on-telephone: REFUSE"></span><span class="slip" title="wrong-snapshot-king-on-force: REFUSE"></span></div><div class="k">3<small> of 21</small></div></div>
       <div class="srow"><div class="who">qwen3.8-omni-flash<small>LLM · reads, cannot run</small></div><div class="bar"><span class="slip" title="abuse-create: REFUSE"></span><span class="slip" title="abuse-input: REFUSE"></span><span class="slip" title="abuse-keccak: REFUSE"></span><span class="slip" title="abuse-loop: REFUSE"></span><span class="slip pay" title="llm-muse-telephone: PAY"></span><span class="slip pay" title="llm-qwen-delegation: PAY"></span><span class="slip pay" title="llm-qwen-fallback: PAY"></span><span class="slip" title="llm-qwen-king: REFUSE"></span><span class="slip" title="llm-qwen-telephone: REFUSE"></span><span class="slip" title="malformed-bad-address: REFUSE"></span><span class="slip" title="malformed-bad-hex: REFUSE"></span><span class="slip" title="malformed-not-json: REFUSE"></span><span class="slip" title="malformed-too-many-txs: REFUSE"></span><span class="slip" title="nearmiss-delegation-wrong-contract: REFUSE"></span><span class="slip" title="nearmiss-fallback-no-receive: REFUSE"></span><span class="slip" title="nearmiss-force-transfer: REFUSE"></span><span class="slip" title="nearmiss-king-eoa: REFUSE"></span><span class="slip" title="nearmiss-telephone-direct: REFUSE"></span><span class="slip" title="noop-telephone: REFUSE"></span><span class="slip" title="wrong-snapshot-fallback-on-telephone: REFUSE"></span><span class="slip" title="wrong-snapshot-king-on-force: REFUSE"></span></div><div class="k">3<small> of 21</small></div></div>
       <div class="srow us"><div class="who">Sealed verifier<small>OutLayer TEE · runs it</small></div><div class="bar"><span class="slip" title="abuse-create: REFUSED on chain"></span><span class="slip" title="abuse-input: REFUSED on chain"></span><span class="slip" title="abuse-keccak: REFUSED on chain"></span><span class="slip" title="abuse-loop: REFUSED on chain"></span><span class="slip" title="llm-muse-telephone: REFUSED on chain"></span><span class="slip" title="llm-qwen-delegation: REFUSED on chain"></span><span class="slip" title="llm-qwen-fallback: REFUSED on chain"></span><span class="slip" title="llm-qwen-king: REFUSED on chain"></span><span class="slip" title="llm-qwen-telephone: REFUSED on chain"></span><span class="slip" title="malformed-bad-address: REFUSED on chain"></span><span class="slip" title="malformed-bad-hex: REFUSED on chain"></span><span class="slip" title="malformed-not-json: REFUSED on chain"></span><span class="slip" title="malformed-too-many-txs: REFUSED on chain"></span><span class="slip" title="nearmiss-delegation-wrong-contract: REFUSED on chain"></span><span class="slip" title="nearmiss-fallback-no-receive: REFUSED on chain"></span><span class="slip" title="nearmiss-force-transfer: REFUSED on chain"></span><span class="slip" title="nearmiss-king-eoa: REFUSED on chain"></span><span class="slip" title="nearmiss-telephone-direct: REFUSED on chain"></span><span class="slip" title="noop-telephone: REFUSED on chain"></span><span class="slip" title="wrong-snapshot-fallback-on-telephone: REFUSED on chain"></span><span class="slip" title="wrong-snapshot-king-on-force: REFUSED on chain"></span></div><div class="k">0<small> of 21</small></div></div>
     </div>
-    <p class="vs-cap">Same submission per column. Third-party models, not NEAR AI Cloud, one run each; every fake a model paid is one of the 5 that carried a hunter claim. On the 15 real exploits they paid 12, 12 and 11 (one qwen call failed with HTTP 403 and counts as a refusal). Record: <code>baseline/run.json</code>.</p>
+    <p class="vs-cap">Same submission per column. Third-party models, not NEAR AI Cloud, one run each; every fake a model paid is one of the 5 that carried a hunter claim. On the 15 real exploits they paid 12, 12 and 11 (one qwen call failed with HTTP 403 and counts as a refusal; one nemotron reply on a fake had no verdict and also counts as not paying). Record: <code>baseline/run.json</code>.</p>
   </div>
 </section>
 
@@ -638,7 +638,7 @@ h1 { font: 800 clamp(54px, 6vw, 88px)/.92 var(--font-display); text-transform: u
 
 <footer class="close">
   <div class="wrap">
-    <h2>Re-check it <span class="tapeword">yourself</span>.</h2>
+    <h2>Re-check it <span class="slip-word">yourself.</span></h2>
     <p>Replay offline, then check the payouts from chain data. No NEAR account, no keys.</p>
     <button class="copy" type="button" data-copy="git clone https://github.com/edycutjong/sealed && cd sealed && make replay && make verify-demo"><span><span class="k">$</span> make replay &amp;&amp; make verify-demo</span><span class="cp">copy</span><span class="ok">copied</span></button>
     <div class="ctas">
@@ -650,7 +650,7 @@ h1 { font: 800 clamp(54px, 6vw, 88px)/.92 var(--font-display); text-transform: u
       <span>Sealed · built for NEAR Hackathon 2026 · MIT</span>
       <a href="https://github.com/edycutjong/sealed/blob/main/ARCHITECTURE.md">ARCHITECTURE.md</a>
       <a href="https://github.com/edycutjong/sealed/blob/main/LICENSE">LICENSE</a>
-      <span class="sp">data from commit ba12c87 · fonts: Big Shoulders Stencil, Libre Franklin, IBM Plex Mono (OFL)</span>
+      <span class="sp">data from commit 8c6861d · fonts: Big Shoulders Stencil, Libre Franklin, IBM Plex Mono (OFL)</span>
     </div>
   </div>
 </footer>
