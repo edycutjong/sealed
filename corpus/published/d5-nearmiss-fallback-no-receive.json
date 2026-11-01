@@ -1,0 +1,24 @@
+{
+ "label": "d5-nearmiss-fallback-no-receive",
+ "bounty": "corpus.sealed-dev-11010702.testnet",
+ "commit_id": 2,
+ "input": {
+  "target": 0,
+  "invariant_id": "fallback-owner-drained",
+  "hunter": "sealed-hunter-a-11010702.testnet",
+  "commit_hash": "68dd5b7ac73bb4935cc603e924903610feb00ed7994652d5fc094979bb9812b8",
+  "protocol_enc_pk": "9110d7d50b64d770c267f401786ebfc1ce5861b55c25a8eb50916aa253b3b316"
+ },
+ "secrets": {
+  "EXPLOIT": "[{\"to\":\"0xd3264fed42a0dc00663d0aa2b0abb90a19b347f2\",\"data\":\"0xd7bb99ba\",\"value\":\"1\"},{\"to\":\"0xd3264fed42a0dc00663d0aa2b0abb90a19b347f2\",\"data\":\"0x3ccfd60b\",\"value\":\"0\"}]",
+  "SALT": "8c393e9ced9dc5b5f2299a0d44379d9e8bf954194cd054ef54385cc35439c781",
+  "EPH_SK": "2c8659ff048f511fe00cf117dc8d4870e5d0565814c6e309943a4d928392e9e2"
+ },
+ "exploit_name": "corpus:nearmiss-fallback-no-receive",
+ "final_status": {
+  "Refused": "no invariant broken"
+ },
+ "timing_s": {
+  "commit_to_verdict_s": 13.5
+ }
+}

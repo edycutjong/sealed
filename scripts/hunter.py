@@ -172,6 +172,9 @@ def finish(run):
     """Evidence bundle + (terminal commits) the published run. Re-runnable: `--finish <label>`."""
     label = run["label"]
     ev = evidence.bundle(label, run["bounty"], run["hunter"], run["commit_tx"], run.get("deliver_tx"))
+    if run.get("expire_tx"):  # an Awarded commit nobody delivered, voided by `expire` (refusal: expired award)
+        ev["expire_tx"], ev["expire_signer"] = run["expire_tx"], run["expire_signer"]
+        ev["expire_logs"] = [l["log"] for l in near.logs(near.tx(run["expire_tx"], run["expire_signer"]))]
     os.makedirs(os.path.join(ROOT, "corpus", "evidence"), exist_ok=True)
     json.dump(ev, open(os.path.join(ROOT, "corpus", "evidence", f"{label}.json"), "w"), indent=1)
     if status_name(run["final_status"]) in TERMINAL:

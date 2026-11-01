@@ -1,0 +1,24 @@
+{
+ "label": "d5-malformed-not-json",
+ "bounty": "corpus.sealed-dev-11010702.testnet",
+ "commit_id": 1,
+ "input": {
+  "target": 1,
+  "invariant_id": "telephone-owner-taken",
+  "hunter": "sealed-hunter-b-11010702.testnet",
+  "commit_hash": "ed7f40ff976b7fd6dbe07004bfc92695f799754ca7351fc7132c5bbd8ba2ed0a",
+  "protocol_enc_pk": "9110d7d50b64d770c267f401786ebfc1ce5861b55c25a8eb50916aa253b3b316"
+ },
+ "secrets": {
+  "EXPLOIT": "call changeOwner from a contract",
+  "SALT": "8e5f54499c3d2815016bb46b53a747979f92b038569d0325767cb83e135df56b",
+  "EPH_SK": "84ca3903d55e84912cc32a0b39b1ced29a9752998aaeb46c3f70e1b381d84a24"
+ },
+ "exploit_name": "corpus:malformed-not-json",
+ "final_status": {
+  "Refused": "exploit invalid: json"
+ },
+ "timing_s": {
+  "commit_to_verdict_s": 13.6
+ }
+}
