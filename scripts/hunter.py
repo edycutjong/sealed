@@ -121,16 +121,20 @@ def main():
     if not a.skip_store:
         run["store_secrets"] = store_secrets(a.hunter, a.bounty, st["verifier_wasm_hash"], profile, secrets)
         print(f"[{a.label}] secret row: {run['store_secrets'][:120]}")
-    cid = int(st["commits"])
     bond = int(inv["bond"]) + int(st["outlayer_deposit"])
     t0 = time.time()
     commit_tx = near.call(a.hunter, a.bounty, "commit",
                           {"commit_hash": commit_hash, "invariant_id": a.invariant, "payout_to": payout_to},
                           deposit=f"{bond} yoctonear", gas="300 Tgas")
+    # The commit id is whatever THIS tx logged ("COMMIT <id> …"), never a pre-commit view of `commits`
+    # (two concurrent commits would both read the same length and collide) — D4 runs fakes in parallel.
+    ctx = near.tx(commit_tx, a.hunter)
+    cid = next(int(l["log"].split()[1]) for l in near.logs(ctx)
+               if l["executor"] == a.bounty and l["log"].startswith("COMMIT "))
     print(f"[{a.label}] commit {cid} tx {commit_tx}")
     c = wait_commit(a.bounty, cid, lambda s: s not in ("AwaitingRegistration", "Pending"))
     run.update(commit_id=cid, commit_tx=commit_tx, verdict_status=c["status"],
-               commit_to_verdict_s=round(time.time() - t0, 1))
+               commit_to_verdict_s=round(time.time() - t0, 1), timing_method="client wall-clock, 3s poll (approx)")
     print(f"[{a.label}] verdict {c['status']} after {run['commit_to_verdict_s']} s")
 
     if status_name(c["status"]) == "Awarded" and not a.no_deliver:

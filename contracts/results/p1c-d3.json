@@ -48,5 +48,14 @@
   "paid_total": "1000000000",
   "slashed": "500000000000000000000000",
   "bonds_held": "0"
- }
+ },
+ "timing_method": "commit_to_verdict_s / deliver_to_paid_s are client wall-clock from a 3s poll (approx, not block-derived); not used as README claims",
+ "max_size_deliver": {
+  "note": "first measured on day-0 G6 (build-plan.md:54): a 65820 B enc deliver accepted on the keyless probe",
+  "deliver_tx": "BE7VgQ111GFgBK1FbYwUpJA8nuXkgRnqfUpwEc3pBfNq",
+  "enc_bytes": 65820,
+  "evidence": "day0/results/g6-deliver24k.json"
+ },
+ "bounty_is_keyed_throwaway": "d3 is a keyed iteration account (make verify prints '1 key(s), own code'); the production bounty is created keyless on the global-contract hash in D5 and must pass `make verify --require-keyless`",
+ "verify_checks_hardened": "pinned reads live view_state; worker asserts resolve.request_id==commit's execution_requested id + block-scoped key lookup; paid asserts PAID amount==AWARDED amount"
 }

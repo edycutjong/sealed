@@ -1,7 +1,13 @@
-# Default rules, minus lockfile checksums (sha256 strings trip generic-api-key).
+# Default rules, minus the high-entropy PUBLIC artifacts this tree records by design:
+# lockfile checksums, and the on-chain tx hashes / wasm sha256 / published self-play corpus that the
+# evidence bundle and result records carry (all public — real secrets live in ~/.config, never in the tree).
 [extend]
 useDefault = true
 
 [allowlist]
-description = "lockfile checksums"
-paths = ['''(^|/)Cargo\.lock$''']
+description = "lockfile checksums + public on-chain artifacts (tx hashes, wasm sha256, self-play corpus)"
+paths = [
+  '''(^|/)Cargo\.lock$''',
+  '''(^|/)contracts/results/.*\.json$''',
+  '''(^|/)corpus/(evidence|published)/.*\.json$''',
+]
