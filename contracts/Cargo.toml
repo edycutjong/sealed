@@ -1,0 +1,15 @@
+[workspace]
+resolver = "2"
+members = ["bounty", "test-token", "mock-outlayer", "mock-token"]
+
+[workspace.dependencies]
+near-sdk = { version = "=5.9.0", features = ["legacy"] }
+sha2 = "0.10"
+
+[profile.release]
+codegen-units = 1
+opt-level = "z"
+lto = true
+debug = false
+panic = "abort"
+overflow-checks = true
