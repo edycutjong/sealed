@@ -11,18 +11,19 @@ OUTLAYER = "outlayer.testnet"
 
 def rpc(method, params, url=RPC):
     body = json.dumps({"jsonrpc": "2.0", "id": "d0", "method": method, "params": params}).encode()
-    for attempt in range(5):
+    for attempt in range(8):
         try:
             req = urllib.request.Request(url, body, {"content-type": "application/json"})
             r = json.load(urllib.request.urlopen(req, timeout=60))
-            if "error" in r and "TIMEOUT" in json.dumps(r["error"]).upper() and attempt < 4:
+            if "error" in r and "TIMEOUT" in json.dumps(r["error"]).upper() and attempt < 7:
                 time.sleep(2)
                 continue
             return r
-        except Exception:
-            if attempt == 4:
+        except Exception as e:
+            if attempt == 7:
                 raise
-            time.sleep(2)
+            # public RPCs rate-limit (HTTP 429): back off harder than for a transient error
+            time.sleep(min(2 ** attempt, 30) if getattr(e, "code", None) == 429 else 2)
 
 
 def view(account, method, args=None):

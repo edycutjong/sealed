@@ -1,0 +1,52 @@
+{
+ "phase": "P1c",
+ "at": "2026-11-01T04:05Z",
+ "network": "testnet",
+ "bounty": "d3.sealed-dev-11010702.testnet",
+ "token": "tusdc.d3.sealed-dev-11010702.testnet",
+ "verifier": {
+  "hash": "92a4681dd4eebe23cd0d230bd3d8012a902e94a51cfa8654e5300e547c6a179a",
+  "url": "https://6pa7yka0ghwew5xh.public.blob.vercel-storage.com/wasm/92a4681dd4eebe23cd0d230bd3d8012a902e94a51cfa8654e5300e547c6a179a.wasm",
+  "bytes": 1507690
+ },
+ "pool_funded": "2000000000",
+ "submission_gate": {
+  "AWARDED_PAID": {
+   "label": "d3-paid-fallback",
+   "hunter": "sealed-hunter-a-11010702.testnet",
+   "commit_id": 1,
+   "commit_tx": "5E3ZEoDGsMkVyLQvNJtcJciFaSEx1gQT9q3rSQWid1J1",
+   "deliver_tx": "5xmBFX4EFCm54CDKMAsiGbsx3Kiy4giaCMLK5P34Mr7i",
+   "request_id": 6062,
+   "resolve_tx": "5yVJRwzMvmeDmd5qENXhBaPHsuPQKXVSgHCbD1FAsrwt",
+   "commit_to_verdict_s": 17.5,
+   "deliver_to_paid_s": 9.5,
+   "final": "Paid"
+  },
+  "REFUSED": {
+   "label": "d3-fake-noop",
+   "hunter": "sealed-hunter-b-11010702.testnet",
+   "commit_id": 0,
+   "commit_tx": "CryNBXS2tAqWkcTYebz7fPMrkTNv7DQ2BN6j5RQQKhCQ",
+   "request_id": 6060,
+   "resolve_tx": "GiqRsavGGRhYL6LCNtihRXLo2onQ3GFtvqSoDyyKevd4",
+   "commit_to_verdict_s": 21.2,
+   "reason": {
+    "Refused": "no invariant broken"
+   },
+   "final": {
+    "Refused": "no invariant broken"
+   }
+  }
+ },
+ "make_replay": "2 OK / 0 FAIL, exit 0",
+ "make_verify": "2 PASS / 2 CHAIN-CHECKED, exit 0 (online); exit 2 RECORDED offline",
+ "view_state_after": {
+  "pool": "1000000000",
+  "reserved": "0",
+  "escrow": "0",
+  "paid_total": "1000000000",
+  "slashed": "500000000000000000000000",
+  "bonds_held": "0"
+ }
+}

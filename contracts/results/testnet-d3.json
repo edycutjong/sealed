@@ -1,0 +1,79 @@
+{
+ "network": "testnet",
+ "bounty_account": "d3.sealed-dev-11010702.testnet",
+ "protocol": "sealed-dev-11010702.testnet",
+ "bounty_wasm_sha256": "5d79f36dc7e316ebdda192797dbfd4c1cb6a29c7a2a6b5ec68240b07575f2523",
+ "bounty_wasm_bytes": 222745,
+ "create_account_tx": "EVZz92ECWgJXFdGXaoaJNGJBnQjzooi1KEoypRC7swXD",
+ "token_create_tx": "D1e6ybSPBHPg5piDpAbKnn73EhW2rVd2gCfHcf3s76ZX",
+ "token_wasm_sha256": "f0509895f5362ef48a812da6087f7db770b2b057fce0177a16a39045a6fd9cd9",
+ "token_deploy_tx": "H5BxU89PR1hs1ZFm76euGbEUdbbEAkuiLtqZah5NAJpw",
+ "config": {
+  "protocol": "sealed-dev-11010702.testnet",
+  "protocol_enc_pk": "397dda9b24caf2bb4d63ce14f7815a0044a39426706c46e80c07a1b0fcac633c",
+  "token": "tusdc.d3.sealed-dev-11010702.testnet",
+  "outlayer": "outlayer.testnet",
+  "verifier_wasm_hash": "92a4681dd4eebe23cd0d230bd3d8012a902e94a51cfa8654e5300e547c6a179a",
+  "verifier_wasm_url": "https://6pa7yka0ghwew5xh.public.blob.vercel-storage.com/wasm/92a4681dd4eebe23cd0d230bd3d8012a902e94a51cfa8654e5300e547c6a179a.wasm",
+  "snapshot_hashes": [
+   "57263dfb780961cfb0391a49684340ba627e7e39159b1d513fd2e2861c60a073"
+  ],
+  "invariants": [
+   {
+    "id": "fallback-owner-drained",
+    "target": 0,
+    "amount": "1000000000",
+    "bond": "500000000000000000000000"
+   }
+  ],
+  "bond_floor": "500000000000000000000000",
+  "outlayer_deposit": "100000000000000000000000",
+  "deliver_ttl_ns": 3600000000000,
+  "timelock_ns": 604800000000000,
+  "max_instructions": 2000000000,
+  "max_memory_mb": 512,
+  "max_execution_seconds": 120,
+  "stale_after_ns": 1800000000000
+ },
+ "deploy_tx": "98HmNEaKZeDLUnAucrS1HPVDJFUqAFj89wev9NaUG8Td",
+ "register_txs": {
+  "d3.sealed-dev-11010702.testnet": "4FU3JLCgk4NtA8nRgp7wB5oiCQpVNZScvFAzUSiP59Pq",
+  "sealed-hunter-a-11010702.testnet": "BBMbhMbtUbpeyT6FKieoGnmqQMAehPsUHa3w7kEmu1b",
+  "sealed-hunter-b-11010702.testnet": "MDv8subMe7qHnxfzVkHgxie9p8xEiqgosRCn2dRMNae"
+ },
+ "fund_tx": "9kw2qLDk3ociiVPbiMuhzz4N9my84LBEt6nmMe72BnUN",
+ "view_state": {
+  "bond_floor": "500000000000000000000000",
+  "bonds_held": "0",
+  "commits": 0,
+  "created_at_ns": "1793504812709382134",
+  "deliver_ttl_ns": "3600000000000",
+  "escrow": "0",
+  "funded_total": "2000000000",
+  "invariants": [
+   {
+    "amount": "1000000000",
+    "bond": "500000000000000000000000",
+    "id": "fallback-owner-drained",
+    "state": "Open",
+    "target": 0
+   }
+  ],
+  "outlayer": "outlayer.testnet",
+  "outlayer_deposit": "100000000000000000000000",
+  "paid_total": "0",
+  "pool": "2000000000",
+  "protocol": "sealed-dev-11010702.testnet",
+  "protocol_enc_pk": "397dda9b24caf2bb4d63ce14f7815a0044a39426706c46e80c07a1b0fcac633c",
+  "reserved": "0",
+  "slashed": "0",
+  "snapshot_hashes": [
+   "57263dfb780961cfb0391a49684340ba627e7e39159b1d513fd2e2861c60a073"
+  ],
+  "timelock_ns": "604800000000000",
+  "token": "tusdc.d3.sealed-dev-11010702.testnet",
+  "verifier_wasm_hash": "92a4681dd4eebe23cd0d230bd3d8012a902e94a51cfa8654e5300e547c6a179a",
+  "verifier_wasm_url": "https://6pa7yka0ghwew5xh.public.blob.vercel-storage.com/wasm/92a4681dd4eebe23cd0d230bd3d8012a902e94a51cfa8654e5300e547c6a179a.wasm",
+  "withdrawn_total": "0"
+ }
+}

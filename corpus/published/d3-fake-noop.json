@@ -1,0 +1,24 @@
+{
+ "label": "d3-fake-noop",
+ "bounty": "d3.sealed-dev-11010702.testnet",
+ "commit_id": 0,
+ "input": {
+  "target": 0,
+  "invariant_id": "fallback-owner-drained",
+  "hunter": "sealed-hunter-b-11010702.testnet",
+  "commit_hash": "38bbffebcd82839fef68b5354e1f0d4b4943f6cffc8dc1cd9c5a3de75021c253",
+  "protocol_enc_pk": "397dda9b24caf2bb4d63ce14f7815a0044a39426706c46e80c07a1b0fcac633c"
+ },
+ "secrets": {
+  "EXPLOIT": "[]",
+  "SALT": "330c543b8a95ac4ac7a66c771366c177c7ff374dc839f39e01a2a4d186ef89a6",
+  "EPH_SK": "06d3358b9bd25b32d6430cbcfc7492358451dcd3c485b27e9b34dae93abcd40f"
+ },
+ "exploit_name": "noop",
+ "final_status": {
+  "Refused": "no invariant broken"
+ },
+ "timing_s": {
+  "commit_to_verdict_s": 21.2
+ }
+}
