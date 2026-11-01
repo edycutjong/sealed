@@ -12,7 +12,7 @@ use revm::{
     state::AccountInfo,
     ExecuteCommitEvm,
 };
-use verifier::{build_evm, tx, SnapAccount, Snapshot};
+use verifier::{build_evm, tx, SnapAccount, Snapshot, SETUP_GAS_LIMIT};
 
 const VALIDATOR: &str = "0x1000000000000000000000000000000000000001";
 const PLAYER: &str = "0x2000000000000000000000000000000000000002";
@@ -46,7 +46,7 @@ fn main() {
     };
     let mut evm = build_evm(&snap, db);
 
-    let r = evm.transact_commit(tx(validator, TxKind::Create, Bytes::from(initcode), U256::ZERO)).expect("deploy");
+    let r = evm.transact_commit(tx(validator, TxKind::Create, Bytes::from(initcode), U256::ZERO, SETUP_GAS_LIMIT)).expect("deploy");
     let factory = match r {
         ExecutionResult::Success { output: Output::Create(_, Some(addr)), .. } => addr,
         other => panic!("factory deploy failed: {other:?}"),
@@ -55,7 +55,7 @@ fn main() {
     data.extend_from_slice(&[0u8; 12]);
     data.extend_from_slice(player.as_slice());
     let r = evm
-        .transact_commit(tx(validator, TxKind::Call(factory), Bytes::from(data), U256::from(value)))
+        .transact_commit(tx(validator, TxKind::Call(factory), Bytes::from(data), U256::from(value), SETUP_GAS_LIMIT))
         .expect("createInstance");
     let instance = match r {
         ExecutionResult::Success { output, .. } => Address::from_slice(&output.data()[12..32]),

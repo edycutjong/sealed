@@ -3,7 +3,7 @@ resolver = "2"
 members = ["verifier"]
 
 [profile.release]
-opt-level = "s"
+opt-level = 3  # day-0 G5b: KECCAK256 costs ~3x fewer wasm instructions per gas than "s"
 lto = true
 codegen-units = 1
 panic = "abort"
