@@ -458,7 +458,7 @@ h1 { font: 800 clamp(54px, 6vw, 88px)/.92 var(--font-display); text-transform: u
           <li><b>Commit + bond</b><span class="t">t = 0</span><span class="d">H(exploit ‖ hunter ‖ salt) · <a href="https://testnet.nearblocks.io/txns/FNbCUc53YNayqd6NBqaaxnZTeGAVGABHfPsoHz7Gkc2s">FNbCUc53…</a></span></li>
           <li><b>OutLayer TEE runs the sealed exploit</b><span class="t">request #6065</span><span class="d">pinned verifier d2972cd2… · revm on the committed snapshot</span></li>
           <li data-tag><b>Worker verdict: broken</b><span class="t">+8.51 s</span><span class="d"><span class="verdict-1">validateInstance → 1</span> · <a href="https://testnet.nearblocks.io/txns/2vdtrvQmZmpt4NGfAD2FyBQy9d5PjLR4dEJuQCF8MXTX">2vdtrvQm…</a></span></li>
-          <li><b>Delivered to the protocol, hash-checked</b><span class="t">deliver +1.8 s</span><span class="d">sha256(enc) = h_enc · <a href="https://testnet.nearblocks.io/txns/AodmFQ6tq4pBcxLreRDSCanKkZQY7m6nhM459NfPAg3s">AodmFQ6t…</a> · <span title="AWARDED 2 fallback-owner-drained amount 1000000000 → PAID 2 1000000000">PAID 2 1000000000</span></span></li>
+          <li><b>Delivered to the protocol, hash-checked</b><span class="t">deliver +1.8 s</span><span class="d">sha256(enc) = h_enc · <a href="https://testnet.nearblocks.io/txns/AodmFQ6tq4pBcxLreRDSCanKkZQY7m6nhM459NfPAg3s">AodmFQ6t…</a> · <span title="AWARDED 2 fallback-owner-drained amount 1000000000 → PAID 2 1000000000 (6 decimals)">PAID 2 1000000000 = 1 000 tUSDC</span></span></li>
         </ol>
         <div class="ex-out"><span class="tag">Awarded at the verdict</span><div class="stamp" style="color:var(--after)"><svg viewBox="0 0 260 132" role="img" aria-label="PAID stamp: 1 000 tUSDC"><g filter="url(#rubber)" fill="none" stroke="currentColor"><rect x="6" y="6" width="248" height="120" rx="12" stroke-width="7"/><rect x="17" y="17" width="226" height="98" rx="6" stroke-width="2"/></g><text x="130" y="84" text-anchor="middle" fill="currentColor" filter="url(#rubber)" style="font:800 74px var(--font-display);letter-spacing:.04em">PAID</text><text x="130" y="104" text-anchor="middle" fill="currentColor" style="font:600 13px var(--font-data);letter-spacing:.08em">1 000 TUSDC</text></svg></div></div>
       </div>
@@ -511,7 +511,7 @@ h1 { font: 800 clamp(54px, 6vw, 88px)/.92 var(--font-display); text-transform: u
             <tr><td>Fallback<small>abuse (keccak)</small></td><td data-k="commit"><a href="https://testnet.nearblocks.io/txns/4MV8dDw7CrP6ECWmnWwHyjWnJsaifqsEucKFUmUB6yZj">4MV8dDw7…</a></td><td data-k="verdict"><a href="https://testnet.nearblocks.io/txns/AwXDN6GYxNXfWiETW1BZqtagQx1xVDaqaGeNPTVW7nfZ">AwXDN6GY…</a></td><td class="o-ref">REFUSED<small>no invariant broken · 479 555 711 instructions</small></td></tr>
           </tbody>
         </table>
-        <p class="log-foot">10 of 29 runs shown (2 of the 29 ran on a keyed test bounty). <code>make verify</code> re-checks every verdict from chain data, and the delivery hash and PAID of the 6 paid runs.</p>
+        <p class="log-foot">10 of 29 runs shown (2 of the 29 ran on a keyed test bounty). <code>make verify</code> re-checks every verdict from chain data, and the delivery hash and PAID of the 6 paid runs (the 5 demo-bounty exploits + 1 on the keyed test bounty); <code>make open</code> opens all 6 deliveries offline.</p>
       </div>
       <div>
         <div class="term" role="region" aria-label="Captured terminal run">
@@ -609,7 +609,7 @@ h1 { font: 800 clamp(54px, 6vw, 88px)/.92 var(--font-display); text-transform: u
     <div class="folder">
       <ol class="disc">
         <li><blockquote><strong>Testnet only.</strong> The mainnet leg is prepared (<code>scripts/mainnet_leg.py</code>) and has not run.</blockquote><cite>README · Honest limits, item 1</cite></li>
-        <li><blockquote><strong>Worker attestation.</strong> <code>make verify</code> shows the request pinned the verifier hash and a registered OutLayer worker key answered; it does not show the worker ran exactly those bytes. <code>make replay</code> re-runs the same bytes locally.</blockquote><cite>README · Honest limits, item 2</cite></li>
+        <li><blockquote><strong>Worker attestation.</strong> <code>make verify</code> shows the request pinned the verifier hash and the operator&#x27;s OutLayer worker key (scoped to <code>resolve_execution</code>) answered. It checks the key, not its TDX quote, and does not show the worker ran exactly those bytes. <code>make replay</code> re-runs the same bytes locally.</blockquote><cite>README · Honest limits, item 2</cite></li>
         <li><blockquote><strong>No outside users yet.</strong> The measured demo is our own hunter agent plus the fakes corpus.</blockquote><cite>README · Honest limits, item 7</cite></li>
       </ol>
       <p class="disc-more"><a href="https://github.com/edycutjong/sealed#honest-limits-7">All 7 limits in the README</a> · <a href="https://github.com/edycutjong/sealed/blob/main/ARCHITECTURE.md#limits">ARCHITECTURE.md § Limits</a></p>
@@ -650,7 +650,7 @@ h1 { font: 800 clamp(54px, 6vw, 88px)/.92 var(--font-display); text-transform: u
       <span>Sealed · built for NEAR Hackathon 2026 · MIT</span>
       <a href="https://github.com/edycutjong/sealed/blob/main/ARCHITECTURE.md">ARCHITECTURE.md</a>
       <a href="https://github.com/edycutjong/sealed/blob/main/LICENSE">LICENSE</a>
-      <span class="sp">data from commit 8c6861d · fonts: Big Shoulders Stencil, Libre Franklin, IBM Plex Mono (OFL)</span>
+      <span class="sp">data from commit 7884e1d · fonts: Big Shoulders Stencil, Libre Franklin, IBM Plex Mono (OFL)</span>
     </div>
   </div>
 </footer>
