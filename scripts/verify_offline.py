@@ -8,9 +8,12 @@ For each corpus/published/<label>.json:
      throwaway pins 92a4681d…, the pre-D4 Fallback-only verifier; rebuildable from the commit that introduced it).
   2. wasmtime runs the verifier on the exact input_data the bounty sent, with the published secrets.
   3. The replayed verdict (minus `lim`, the worker's environment report) must equal the verdict the TDX worker
-     submitted on chain (corpus/evidence/<label>.json → resolve tx args), byte for byte after JSON parsing.
+     submitted on chain, byte for byte after JSON parsing. Offline, "on chain" means the bundle's copy of the
+     resolve tx args (corpus/evidence/<label>.json); `make verify` re-fetches that tx and fails its `bundle`
+     check if the copy differs, so the two targets together anchor replay to the chain.
   4. h_exploit = sha256(EXPLOIT ‖ hunter ‖ SALT) = the commit_hash the hunter committed.
-  5. For a delivered commit: sha256(rebuilt enc) = h_enc = sha256(enc in the deliver tx args).
+  5. For a delivered commit: sha256(rebuilt enc) = h_enc = sha256(enc in the deliver tx args) — required for
+     every commit whose bundle logs PAID (a paid row without its deliver tx is a FAIL, not a skip).
 
 `make replay INPUT=<file>`: run a judge's own tx list ({target, invariant_id, txs:[{to|null,data,value}]}) — or
 any corpus/vectors/*.json item as-is — against the same verifier and print its verdict (fresh random SALT /
@@ -133,6 +136,8 @@ def main():
         if v["h_exploit"] != sent["commit_hash"]:
             fails.append("h_exploit != commit_hash")
         d = deliver_enc(ev)
+        if d is None and any(l.startswith("PAID ") for l in ev.get("deliver_logs") or []):
+            fails.append("paid commit without its deliver tx in the bundle")
         if d is not None and not (sha(d) == v["h_enc"] == sha(bytes.fromhex(enc))):
             fails.append("delivered enc != rebuilt enc / h_enc")
         tag = "REPLAY-OK" if not fails else "REPLAY-FAIL"

@@ -6,13 +6,16 @@ For every corpus/evidence/<label>.json, re-fetch the bundled txs from an archiva
 bundle, label `RECORDED`). Each commit yields one line with these checks:
   pinned   request_execution args pin WasmUrl.hash = the bounty's verifier_wasm_hash (`make replay` reruns
            those exact bytes, sha256-checked)
-  worker   the verdict came back in the operator's resolve tx for this request_id, signed by a key registered
-           on OutLayer via TDX quote — a FunctionCall access key scoped to resolve_execution (worker
+  worker   the verdict came back in a resolve tx for this request_id, sent TO the OutLayer contract the bounty
+           calls (its live view_state), BY the operator OutLayer's get_config named at that block, signed by a
+           key registered on OutLayer via TDX quote — a FunctionCall key for resolve_execution on OutLayer (worker
            attestation, https://app.outlayer.ai/docs/tee-attestation). On chain this shows the request pinned the hash and an
            attested key answered, NOT that the worker ran exactly those bytes (ARCHITECTURE.md §Limits).
+  bundle   (online) the bundled verdict, request input and delivered enc equal the re-fetched chain values —
+           so `make replay`, which reads only the bundle, is comparing against the chain
   verdict  the AWARDED/REFUSED the bounty logged agrees with the worker's submitted verdict (broken flag)
   h_enc    (paid) sha256(enc) from the deliver tx args = the award callback's h_enc = the verdict's h_enc
-  paid     (paid) on_paid logged PAID for the invariant amount
+  paid     (paid) on_paid logged PAID for THIS commit id and the awarded amount
 Exit 0 only if ≥ 1 Paid line exists and every payout line is CHAIN-CHECKED (empty bundle → 1; offline or rate-limited → 2)."""
 import argparse, base64, glob, hashlib, json, os, sys
 
@@ -73,15 +76,29 @@ def req_id_of(ctx):
     return None
 
 
-def live_verifier_hash(bounty, online, url, fallback):
-    """The hash the bounty pins RIGHT NOW (view_state), so `pinned` is independent of the bundle. Offline:
-    fall back to the bundled value (the bundle is all we have when the network is unreachable)."""
-    if not online:
-        return fallback
-    try:
-        return near.view(bounty, "view_state", url=url)["verifier_wasm_hash"]
-    except Exception:
-        return fallback
+_STATE, _OPERATOR = {}, {}
+
+
+def live_state(bounty, url):
+    """The bounty's view_state RIGHT NOW: the verifier hash it pins and the OutLayer contract it calls, so
+    `pinned` and `worker` are independent of the bundle. An unusable answer is unchecked (→ RECORDED), never
+    a silent fallback to the bundle's own values."""
+    if bounty not in _STATE:
+        try:
+            _STATE[bounty] = near.view(bounty, "view_state", url=url)
+        except RuntimeError as e:  # RPC answered without a result
+            raise ConnectionError(f"view_state {bounty}: {e}") from e
+    return _STATE[bounty]
+
+
+def live_operator(outlayer, block_hash, url):
+    """The worker operator account OutLayer's own config named at the resolve tx's block."""
+    if (outlayer, block_hash) not in _OPERATOR:
+        try:
+            _OPERATOR[(outlayer, block_hash)] = near.view(outlayer, "get_config", url=url, block_id=block_hash)[1]
+        except RuntimeError as e:
+            raise ConnectionError(f"{outlayer}.get_config at {block_hash}: {e}") from e
+    return _OPERATOR[(outlayer, block_hash)]
 
 
 def one(ev, online, url):
@@ -96,7 +113,12 @@ def one(ev, online, url):
             rtx = near.tx(res["tx"], ev["operator"], url)["result"]
             res = {**res, "args": tx_args(rtx, res["method"]),
                    "signer": rtx["transaction"]["signer_id"], "public_key": rtx["transaction"]["public_key"],
+                   "receiver": rtx["transaction"]["receiver_id"],
                    "block_hash": rtx["transaction_outcome"]["block_hash"]}
+            # The bundle's `operator` only locates the tx; who counts as the worker comes from chain state:
+            # the OutLayer contract this bounty calls, and the operator that contract named at that block.
+            outlayer = live_state(ev["bounty"], url)["outlayer"]
+            operator = live_operator(outlayer, res["block_hash"], url)
             # Scope the access-key lookup to the resolve tx's inclusion block: a later admin rotation/
             # revocation of the worker key must not fail a payout that was valid when the worker answered.
             kr = near.rpc("query", {"request_type": "view_access_key", "block_id": res["block_hash"],
@@ -113,6 +135,7 @@ def one(ev, online, url):
         denc = tx_args(dtx, "deliver") if dtx else None
     else:
         ctx, req, blog = ev["commit_tx_status"], ev["request_execution_args"], ev["bounty_logs"]
+        outlayer, operator = ev["outlayer"], ev["operator"]  # bundle-only: these lines print RECORDED
         res, key, out = ev["resolve"], ev.get("worker_access_key"), ev.get("verdict_output")
         out = json.loads(out) if isinstance(out, str) else out
         dlog = ev.get("deliver_logs") or []
@@ -120,13 +143,24 @@ def one(ev, online, url):
 
     checks = []
     pinned = (req or {}).get("source", {}).get("WasmUrl", {}).get("hash")
-    checks.append(("pinned", bool(pinned) and pinned == live_verifier_hash(ev["bounty"], online, url, ev["bounty_verifier_hash"])))
-    answered = bool(res) and res.get("signer") == ev["operator"]
+    live_pin = live_state(ev["bounty"], url)["verifier_wasm_hash"] if online else ev["bounty_verifier_hash"]
+    checks.append(("pinned", bool(pinned) and pinned == live_pin))
+    answered = bool(res) and res.get("signer") == operator and res.get("receiver", outlayer) == outlayer
     # The resolve tx must be for THIS commit's request, not just any run the same worker key signed.
     rid_ok = bool(res) and int((res.get("args") or {}).get("request_id", -1)) == ev["request_id"] == req_id_of(ctx)
     perm = (key or {}).get("permission") or {}
-    key_ok = "FunctionCall" in perm and any(m in perm["FunctionCall"]["method_names"] for m in RESOLVE_METHODS)
+    key_ok = ("FunctionCall" in perm and perm["FunctionCall"].get("receiver_id") == outlayer
+              and any(m in perm["FunctionCall"]["method_names"] for m in RESOLVE_METHODS))
     checks.append(("worker", answered and key_ok and rid_ok))
+    if online:
+        # Bind the bundle to the chain, so `make replay` (which reads only the bundle) compares against what
+        # the chain says: the bundled verdict, request input and delivered enc must equal the re-fetched ones.
+        b_out = ev.get("verdict_output")
+        b_out = json.loads(b_out) if isinstance(b_out, str) else b_out
+        b_enc = tx_args(ev["deliver_tx_status"], "deliver") if ev.get("deliver_tx_status") else None
+        checks.append(("bundle", b_out == out
+                       and ev["request_execution_args"].get("input_data") == (req or {}).get("input_data")
+                       and (b_enc or {}).get("enc") == (denc or {}).get("enc")))
     awarded = any(l.startswith("AWARDED ") for l in blog)
     refused = any(l.startswith("REFUSED ") for l in blog)
     checks.append(("verdict", isinstance(out, dict) and bool(out.get("broken")) == awarded and (awarded or refused)))
@@ -136,7 +170,7 @@ def one(ev, online, url):
         # Awarded, never delivered, voided by `expire` after deliver_by: escrow back to the pool, bond slashed.
         elog = logs(near.tx(ev["expire_tx"], ev["expire_signer"], url)["result"], ev["bounty"]) if online else ev["expire_logs"]
         cid = next((l.split()[1] for l in blog if l.startswith("COMMIT ")), None)
-        checks.append(("expired", any(l.startswith(f"EXPIRED {cid};") for l in elog)))
+        checks.append(("expired", cid is not None and any(l.startswith(f"EXPIRED {cid};") for l in elog)))
         kind = "VOIDED"
     if paid_logs:
         h_enc = sha(base64.b64decode(denc["enc"]))
@@ -144,9 +178,11 @@ def one(ev, online, url):
         awarded_h = aw.split("h_enc ")[1] if "h_enc " in aw else ""
         awarded_amount = aw.split("amount ")[1].split(" ")[0] if "amount " in aw else None
         checks.append(("h_enc", h_enc == awarded_h == (out or {}).get("h_enc")))
-        # PAID <commit_id> <amount>: the amount paid must equal the amount the award logged.
-        paid_amount = paid_logs[-1].split()[2] if len(paid_logs[-1].split()) >= 3 else None
-        checks.append(("paid", paid_amount is not None and paid_amount == awarded_amount))
+        # PAID <commit_id> <amount>: THIS commit was paid, the amount the award logged.
+        cid = next((l.split()[1] for l in blog if l.startswith("COMMIT ")), None)
+        pw = paid_logs[-1].split()
+        checks.append(("paid", cid is not None and len(pw) >= 3 and pw[1] == cid and aw.split()[1:2] == [cid]
+                       and pw[2] == awarded_amount))
     fails = [n for n, g in checks if not g]
     return kind, checks, fails
 

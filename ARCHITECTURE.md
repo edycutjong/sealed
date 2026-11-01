@@ -91,7 +91,7 @@ hunter                bounty (keyless)            token            OutLayer (TEE
 | Target | Script | Re-checks |
 |---|---|---|
 | `make replay` | `scripts/verify_offline.py` | each published commit under wasmtime from the committed wasm (hash-checked) = the on-chain verdict |
-| `make verify` / `verify-d5` | `scripts/verify.py` | per commit, from the archival RPC: pinned hash, an attested worker key answered, verdict, `h_enc`, `PAID`; `verify-d5` adds I6 |
+| `make verify` / `verify-d5` | `scripts/verify.py` | per commit, from the archival RPC: pinned hash (bounty's live state), the resolve tx went to the bounty's OutLayer contract from the operator OutLayer's config named at that block, with a key scoped to it; the bundle equals the chain; verdict, `h_enc`, `PAID` for this commit id; `verify-d5` adds I6 |
 | `make corpus` | `scripts/corpus_check.py` | all 52 corpus items against their golden verdicts |
 | `make refusals` | `scripts/refusals.py` | the 6 refusal kinds seen on chain, with tx hashes |
 | `make bench` / `bench-chain` | `scripts/bench.py` | latency p50/p95 and resources vs limits, recomputed from the bundles (`bench-chain` re-reads the chain) |
@@ -100,12 +100,27 @@ hunter                bounty (keyless)            token            OutLayer (TEE
 ## Limits
 
 - **Worker attestation.** On chain, `make verify` shows the request pinned the verifier hash and a key registered for
-  the OutLayer worker answered (`scripts/verify.py:9-13`); it does not show the worker ran exactly those bytes. `make
-  replay` re-runs the same bytes locally and must reproduce the verdict.
+  the OutLayer worker answered (`scripts/verify.py` docstring, `worker`); it does not show the worker ran exactly those
+  bytes. `make replay` re-runs the same bytes locally and must reproduce the verdict. Replay reads only the bundle;
+  `make verify`'s `bundle` check is what ties that bundle to the chain.
+- **RPC trust.** `make verify` believes the archival RPC it queries (no light-client proof). Run it against a second
+  provider to cross-check: `make verify RPC=https://archival-rpc.testnet.near.org`. An RPC that errors or rate-limits
+  turns lines into RECORDED (exit 2), never into a pass.
 - **Memory** is the verifier's own peak linear memory; OutLayer reports no worker memory figure.
-- **Untested branches.** `release_stale` refunds a commit stuck in `AwaitingRegistration` or a dangling `Pending`
-  (`lib.rs:454`). Neither state can be produced in the sandbox (the registration callback's gas is reserved up front;
-  the yield times out into a `null` verdict long before the 30-minute floor), so both are covered by code review only
-  (`bounty.rs:545-549`, `:595-599`). The yield-timeout `null` path itself was not observed on a live testnet run.
+- **Stuck commits.** `release_stale` (`lib.rs:454`) unsticks a commit stuck in `AwaitingRegistration` (bond and
+  deposit back: the deposit was never sent) or a dangling `Pending` (bond back; the OutLayer deposit already left with
+  the request, so the `RELEASE_STALE … (full refund, uncounted)` log means the bond). Neither state can be produced in
+  the near-workspaces sandbox (the registration callback's gas is reserved up front; the yield times out into a `null`
+  verdict long before the 30-minute floor). The `AwaitingRegistration` branch has a unit test with a mocked context
+  (`lib.rs:792`); the dangling-`Pending` branch is covered by code review only (`bounty.rs:545-549`, `:595-599`). The
+  yield-timeout `null` path itself was not observed on a live testnet run. The 30-minute clock starts at `commit`,
+  which is one or two blocks before the request.
+- **Griefing.** A commit holds its invariant for one verdict (p95 12.15 s commit→verdict, `corpus/bench.json`), and
+  other invariants are untouched (I4). A non-verdict refunds the bond once per `(hunter, invariant)` per 24 h
+  (`lib.rs:415-443`), so a set of fresh accounts can keep one invariant busy at the cost of the OutLayer fee and gas per
+  cycle rather than a bond. A commit whose payout account is unregistered reserves the amount for the one or two blocks
+  before its registration callback refunds it in full.
+- **Seal key reuse.** The seal's nonce is derived from `EPH_SK` (`seal.rs:5`), so a hunter client must draw a fresh
+  `EPH_SK` per commit; `scripts/hunter.py` draws 32 random bytes each time.
 - **Testnet only.** The mainnet leg (`scripts/mainnet_leg.py`) prints the commands; it never signs and has not run.
 - **Baseline models.** `make baseline` used third-party models, not NEAR AI Cloud (`baseline/README.md`).
