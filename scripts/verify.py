@@ -97,8 +97,8 @@ def one(ev, online, url):
             res = {**res, "args": tx_args(rtx, res["method"]),
                    "signer": rtx["transaction"]["signer_id"], "public_key": rtx["transaction"]["public_key"],
                    "block_hash": rtx["transaction_outcome"]["block_hash"]}
-            # Scope the access-key lookup to the resolve block: a later admin rotation/revocation of the
-            # worker key must not fail a payout that was valid when the worker answered.
+            # Scope the access-key lookup to the resolve tx's inclusion block: a later admin rotation/
+            # revocation of the worker key must not fail a payout that was valid when the worker answered.
             key = near.rpc("query", {"request_type": "view_access_key", "block_id": res["block_hash"],
                                      "account_id": ev["operator"], "public_key": res["public_key"]}, url).get("result")
         else:
