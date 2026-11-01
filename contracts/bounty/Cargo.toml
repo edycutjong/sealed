@@ -1,0 +1,12 @@
+[package]
+name = "bounty"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+description = "Sealed Exploit bounty: a keyless escrow that pays for an executed break of a committed invariant on a committed snapshot, revealing the exploit only once the money is owed"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+near-sdk = { workspace = true }
