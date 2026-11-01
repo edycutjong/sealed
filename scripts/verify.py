@@ -8,9 +8,10 @@ bundle, label `RECORDED`). Each commit yields one line with these checks:
            those exact bytes, sha256-checked)
   worker   the verdict came back in a resolve tx for this request_id, sent TO the OutLayer contract the bounty
            calls (its live view_state), BY the operator OutLayer's get_config named at that block, signed by a
-           key registered on OutLayer via TDX quote — a FunctionCall key for resolve_execution on OutLayer (worker
-           attestation, https://app.outlayer.ai/docs/tee-attestation). On chain this shows the request pinned the hash and an
-           attested key answered, NOT that the worker ran exactly those bytes (ARCHITECTURE.md §Limits).
+           FunctionCall key scoped to resolve_execution on OutLayer. OutLayer documents registering worker keys after
+           a TDX quote check (https://app.outlayer.ai/docs/tee-attestation); this script checks the key's scope, not
+           the quote. On chain this shows the request pinned the hash and the operator's scoped worker key answered,
+           NOT that the worker ran exactly those bytes (ARCHITECTURE.md §Limits).
   bundle   (online) the bundled verdict, request input and delivered enc equal the re-fetched chain values —
            so `make replay`, which reads only the bundle, is comparing against the chain
   verdict  the AWARDED/REFUSED the bounty logged agrees with the worker's submitted verdict (broken flag)
@@ -28,6 +29,7 @@ sys.path.insert(0, os.path.join(ROOT, "day0"))
 import near  # noqa: E402
 
 RESOLVE_METHODS = ("resolve_execution", "submit_execution_output_and_resolve")
+B58 = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
 
 
 def sha(b):
@@ -247,9 +249,20 @@ def one(ev, online, url):
     return kind, checks, fails
 
 
+def committed_code_hash():
+    """base58(sha256(contracts/bounty.wasm)): the global code hash a judged bounty must run (README)."""
+    d = hashlib.sha256(open(os.path.join(ROOT, "contracts", "bounty.wasm"), "rb").read()).digest()
+    n, out = int.from_bytes(d, "big"), ""
+    while n:
+        n, r = divmod(n, 58)
+        out = B58[r] + out
+    return "1" * (len(d) - len(d.lstrip(b"\0"))) + out
+
+
 def bounty_integrity(bounty, online, url, require_keyless):
-    """One line per bounty: access-key count + whether the code is a global-contract hash. The production
-    bounty is keyless on a global hash (I6); the D3 throwaway is a keyed iteration account. INFO by default
+    """One line per bounty: access-key count + whether its code is the global-contract hash of the committed
+    contracts/bounty.wasm. The production bounty is keyless on that hash (I6); the D3 throwaway is a keyed
+    iteration account with its own code. INFO by default
     (not a payout check); `--require-keyless` turns a keyed bounty into a FAIL for the final judged run."""
     if not online:
         return f"bounty {bounty}: keys/code not re-checked (offline)", True
@@ -263,9 +276,12 @@ def bounty_integrity(bounty, online, url, require_keyless):
         return f"bounty {bounty}: keys/code not re-checked (RPC error: {json.dumps(err)[:160]})", None
     keys = kr["result"].get("keys", [])
     acct = ar["result"]
-    glob = acct.get("global_contract_hash") or acct.get("global_contract_account_id")
-    keyless = len(keys) == 0 and bool(glob)
-    tag = "keyless+global-hash" if keyless else f"{len(keys)} key(s){'' if glob else ', own code'}"
+    glob, want = acct.get("global_contract_hash"), committed_code_hash()
+    code = ("global code = committed contracts/bounty.wasm " + want[:8] + "…" if glob == want
+            else f"global code {glob[:8]}… ≠ committed contracts/bounty.wasm {want[:8]}…" if glob
+            else "global code by account id" if acct.get("global_contract_account_id") else "own code")
+    keyless = len(keys) == 0 and glob == want
+    tag = f"{len(keys)} key(s), {code}"
     ok = keyless if require_keyless else True
     return f"bounty {bounty}: {tag}" + ("" if ok else "  FAIL (--require-keyless)"), ok
 
@@ -274,7 +290,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--rpc", default=near.ARCHIVAL)
     ap.add_argument("--require-keyless", action="store_true",
-                    help="fail if any bounty is keyed / not on a global-contract hash (the D5+ judged bounty)")
+                    help="fail if any bounty is keyed or its global code is not the committed contracts/bounty.wasm")
     ap.add_argument("--bounty", action="append", default=[],
                     help="only this bounty's bundles (repeatable); default: every bundle in corpus/evidence/")
     a = ap.parse_args()

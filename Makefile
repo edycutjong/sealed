@@ -58,19 +58,28 @@ RPC ?= https://archival-rpc.testnet.fastnear.com
 replay:
 	@python3 scripts/verify_offline.py $(INPUT)
 
-## Prove every payout from chain data: each commit's request pinned the verifier hash, an attested OutLayer
-## worker key answered, the logged verdict matches, and (paid) sha256(enc)=h_enc and PAID fired. Re-fetches
-## every bundled tx from the archival RPC → CHAIN-CHECKED; unreachable network → bundle only (RECORDED, exit 2).
+## Open every paid delivery offline: sha256(enc) = the verdict's h_enc, the box opens (published EPH_SK, the same
+## shared key the protocol's own key gives) to the exact exploit `make replay` re-runs, and it hashes to the commit.
+## Needs PyNaCl (pip install pynacl); no network, no NEAR credentials.
+open:
+	@python3 scripts/open_deliveries.py
+
+## Prove every payout from chain data: each commit's request pinned the verifier hash, the operator's scoped
+## OutLayer worker key answered, the logged verdict matches, and (paid) sha256(enc)=h_enc and PAID fired. Re-fetches
+## every bundled tx from the archival RPC → CHAIN-CHECKED; unreachable network → bundle only (RECORDED).
+## verify.py exits 1 on a failed check and 2 on RECORDED; through make both stop with "Error 1" / "Error 2"
+## (make's own status is 2 either way), so run `python3 scripts/verify.py` when a script needs the raw code.
 verify:
 	@python3 scripts/verify.py --rpc $(RPC)
 
 ## Quick path (~25 RPC calls instead of ~80): the 5 paid lines of the D5 demo bounty, with the same checks, its
-## completeness and its ledger. Use it when a full `make verify` would outlast a command timeout.
+## completeness and its ledger, and FAIL unless it is keyless on the committed bounty.wasm's global code hash.
+## Use it when a full `make verify` would outlast a command timeout.
 verify-demo:
-	@python3 scripts/verify.py --rpc $(RPC) --bounty demo.sealed-dev-11010702.testnet
+	@python3 scripts/verify.py --rpc $(RPC) --require-keyless --bounty demo.sealed-dev-11010702.testnet
 
 ## The D5 production bounties only (demo = 5 levels paid, corpus = fakes + expiry), and FAIL unless each is keyless
-## on the global-contract hash (0 access keys for life). `make verify` above also covers the keyed D3 throwaway.
+## on the global code hash of the committed contracts/bounty.wasm (0 access keys for life). `make verify` above also covers the keyed D3 throwaway.
 D5_BOUNTIES := demo.sealed-dev-11010702.testnet corpus.sealed-dev-11010702.testnet
 verify-d5:
 	@python3 scripts/verify.py --rpc $(RPC) --require-keyless $(addprefix --bounty ,$(D5_BOUNTIES))
@@ -98,7 +107,7 @@ bench:
 bench-chain:
 	@python3 scripts/bench.py --chain --rpc $(RPC)
 
-.PHONY: doctor replay verify verify-demo verify-d5 corpus refusals results bench bench-chain
+.PHONY: doctor replay open verify verify-demo verify-d5 corpus refusals results bench bench-chain
 
 # ----- baseline / hunter agent (D6) -----
 ## The mirror image of `make replay`: the same corpus judged by an LLM that cannot execute anything. Prints, per recorded
