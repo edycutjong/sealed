@@ -27,6 +27,18 @@ def native(inp):
     return v, enc
 
 
+def wasmtime(inp):
+    w = os.path.join(HERE, "artifacts", "verifier-day0.wasm")
+    p = subprocess.run(["wasmtime", "run", w], input=json.dumps(inp).encode(), capture_output=True)
+    return json.loads(p.stdout)
+
+
+def vhash(v):
+    """sha256 of the verdict without `lim` (the environment report differs by runtime by design)."""
+    import hashlib
+    return hashlib.sha256(json.dumps(strip(v), separators=(",", ":")).encode()).hexdigest()
+
+
 def strip(v):
     return {k: x for k, x in v.items() if k != "lim"}
 
@@ -44,6 +56,7 @@ def main():
 
     inp = json.load(open(a.input))
     want, enc = native(inp)
+    wt = wasmtime(inp)
     sent = dict(inp)
     secrets_ref = json.loads(a.secrets_ref) if a.secrets_ref else None
     if secrets_ref is not None:
@@ -83,6 +96,10 @@ def main():
             chain_v = None
     out["chain_verdict"] = chain_v
     out["match_native"] = bool(chain_v) and isinstance(chain_v, dict) and strip(chain_v) == strip(want)
+    out["wasmtime_verdict"] = wt
+    out["verdict_sha256"] = {"native": vhash(want), "wasmtime": vhash(wt),
+                             "outlayer": vhash(chain_v) if isinstance(chain_v, dict) else None}
+    out["three_of_three"] = len(set(out["verdict_sha256"].values())) == 1
     if a.deliver and rec and rec.get("h_enc"):
         b64 = base64.b64encode(bytes.fromhex(enc)).decode()
         out["deliver_enc_bytes"] = len(enc) // 2
@@ -91,7 +108,7 @@ def main():
     os.makedirs(os.path.join(HERE, "results"), exist_ok=True)
     path = os.path.join(HERE, "results", f"g6-{a.label}.json")
     json.dump(out, open(path, "w"), indent=1)
-    print(json.dumps({k: out[k] for k in ("label", "request_tx", "wall_s_chain", "match_native")}
+    print(json.dumps({k: out[k] for k in ("label", "request_tx", "wall_s_chain", "match_native", "three_of_three")}
                      | {"kind": rec and rec["kind"], "broken": rec and rec["broken"]}))
 
 
