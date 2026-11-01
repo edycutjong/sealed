@@ -1,0 +1,8 @@
+{"check":"G9","result":"PASS","at":"2026-11-01T00:16Z","network":"testnet",
+ "global_code":{"deploy_tx":"HxuexqhVB4pbTKf3SaYXSMm4Ftt9fQFEYqdHv7Himz2g","sha256_hex":"4f529e3495092383432bc86c6c3756f041113eed7200faebd3871d59d8daaf7a","hash_bs58":"6LeH16shVvqyppQ7kMpqKRWdV865qCXqkfKngz2uyZW9","wasm":"day0/artifacts/probe-day0.wasm"},
+ "account":"probe1.sealed-dev-11010702.testnet",
+ "create_tx":"BQQtpzPS4gFLNpuuxevRizDsqwHHHdtwy5vDhF6Pkh8F",
+ "create_batch":["CreateAccount","Transfer 3 NEAR","UseGlobalContract(hash)","FunctionCall new"],
+ "view_access_key_list":[],
+ "view_account":{"code_hash":"11111111111111111111111111111111","global_contract_hash":"6LeH16shVvqyppQ7kMpqKRWdV865qCXqkfKngz2uyZW9"},
+ "note":"Global code by hash costs storage at deploy: the 166 KB probe needed ~16.6 NEAR on the deployer (first attempt with 176 KB failed asking 17.62 NEAR)."}
