@@ -1,0 +1,10 @@
+[profile.default]
+src = "src"
+out = "out"
+libs = ["lib"]
+remappings = ["openzeppelin-contracts-08/=lib/openzeppelin-contracts-08/"]
+# Fallback's pragma is ^0.8.0; pin one compiler so the bytecode is reproducible.
+solc_version = "0.8.24"
+optimizer = false
+bytecode_hash = "none"
+cbor_metadata = false

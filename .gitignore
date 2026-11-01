@@ -9,3 +9,5 @@ __pycache__/
 .venv/
 day0/out/
 graphify-out/
+levels/out/
+levels/cache/
