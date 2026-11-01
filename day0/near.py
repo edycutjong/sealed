@@ -27,9 +27,10 @@ def rpc(method, params, url=RPC):
             time.sleep(min(2 ** attempt, 30) if getattr(e, "code", None) == 429 else 2)
 
 
-def view(account, method, args=None, url=RPC):
+def view(account, method, args=None, url=RPC, block_id=None):
     a = base64.b64encode(json.dumps(args or {}).encode()).decode()
-    r = rpc("query", {"request_type": "call_function", "finality": "final", "account_id": account,
+    at = {"block_id": block_id} if block_id else {"finality": "final"}
+    r = rpc("query", {"request_type": "call_function", **at, "account_id": account,
                       "method_name": method, "args_base64": a}, url)
     if "result" not in r or "result" not in r["result"]:
         raise RuntimeError(f"view {account}.{method}: {json.dumps(r)[:400]}")

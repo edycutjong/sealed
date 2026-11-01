@@ -413,7 +413,7 @@ impl Bounty {
     }
 
     /// `verifier unavailable`: refund the bond once per `(hunter, invariant)` per 24 h, else slash. A
-    /// no-verdict arriving ≥ 10 min after the request refunds in full and never counts toward the cap.
+    /// no-verdict arriving ≥ 10 min after the commit refunds in full and never counts toward the cap.
     /// `deposit_bounced` = the `request_execution` promise itself failed, so the OutLayer deposit came back
     /// to this account (no worker ran) and is refunded alongside the bond.
     fn no_verdict(&mut self, commit_id: u64, c: &mut Commit, idx: usize, deposit_bounced: bool) {
@@ -450,7 +450,7 @@ impl Bounty {
         }
     }
 
-    /// Anyone, after `stale_after_ns`: unstick a commit whose callback never ran. Full refund, never counted.
+    /// Anyone, after `stale_after_ns`: unstick a stuck commit. Bond back (+ deposit if never sent); uncounted.
     pub fn release_stale(&mut self, commit_id: u64) {
         let mut c = self.commits.get(commit_id).expect("commit");
         require!(now().saturating_sub(c.at_ns) >= self.stale_after_ns, "not stale yet");
