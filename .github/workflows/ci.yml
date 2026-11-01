@@ -61,6 +61,8 @@ jobs:
       - run: make refusals
       - run: make results
       - run: make bench
+      - name: Open every paid delivery (PyNaCl)
+        run: python3 -m pip install --quiet pynacl==1.6.2 && make open
 
   contracts:
     name: contracts (unit + near-workspaces I1–I8)
