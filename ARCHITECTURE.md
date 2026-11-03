@@ -16,7 +16,7 @@ verifier inside a NEAR OutLayer TEE worker. The exploit stays sealed until the v
 | Bounty contract | `contracts/bounty/src/lib.rs` → `contracts/bounty.wasm` | Keyless NEP-141 escrow: commit, request the verifier on OutLayer, award, deliver, pay |
 | Test token | `contracts/test-token/src/lib.rs` | Fixed-supply NEP-141 standing in for USDC on testnet |
 | Deploy | `scripts/deploy_bounty_testnet.py` | One batch: create account, `UseGlobalContract(hash)`, `new` — no `AddKey` |
-| Hunter client | `scripts/hunter.py` · `scripts/hunter_agent.py` | `hunter.py`: commit, store the sealed secrets on OutLayer, wait for the verdict, deliver · `hunter_agent.py`: an LLM proposes exploits and checks each locally against the same `verifier.wasm` |
+| Hunter client | `scripts/hunter.py` · `scripts/hunter_agent.py` | `hunter.py`: store the sealed secrets on OutLayer, commit, wait for the verdict, deliver · `hunter_agent.py`: an LLM proposes exploits and checks each locally against the same `verifier.wasm` |
 | Evidence | `corpus/evidence/*.json` (full tx bundles), `corpus/published/*.json`, `corpus/results.json`, `corpus/bench.json` | Everything the judge targets re-check |
 
 ## Commit to payout

@@ -43,7 +43,7 @@ protocol can patch it, call it "known" and pay nothing, and AI-written "exploit 
 A bounty account that nobody holds a key to commits three things at funding: the snapshot hash, the invariants, and the
 hash of the verifier WASM. Then:
 
-1. The hunter **commits** `H(exploit ‖ hunter ‖ salt)` with a bond and stores the exploit as an OutLayer encrypted secret.
+1. The hunter stores the exploit as an OutLayer encrypted secret, then **commits** `H(exploit ‖ hunter ‖ salt)` with a bond.
 2. The contract asks **NEAR OutLayer** to run the pinned verifier in a TEE worker. The verifier replays the exploit in
    revm on the snapshot and calls the level's own `validateInstance`.
 3. The callback **awards** the first commit that verifies, once per invariant. Everything else is **refused on chain with
