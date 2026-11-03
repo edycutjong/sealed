@@ -219,3 +219,10 @@ MIT — see [LICENSE](LICENSE).
 ## 🙏 Acknowledgments
 
 Levels from [OpenZeppelin Ethernaut](https://github.com/OpenZeppelin/ethernaut) · execution on [NEAR OutLayer](https://app.outlayer.ai) · EVM by [revm](https://github.com/bluealloy/revm).
+
+**Built with (hackathon rules Q-001/Q-005).** All code in this repo was written during the hackathon window
+(first commit 2026-11-01); there is no pre-hackathon baseline. Libraries: near-sdk 5.9.0, revm 43,
+crypto_box 0.9 (libsodium sealed-box layout), sha2 / blake2, serde_json; the `wasmtime` CLI for `make replay`;
+Ethernaut level sources (SPDX-MIT files only, see [levels/README.md](levels/README.md)) with OpenZeppelin 4.9.6
+`Ownable`/`Context`, compiled with solc 0.8.24. The code was written with AI coding agents (Claude Code) under
+human direction.
