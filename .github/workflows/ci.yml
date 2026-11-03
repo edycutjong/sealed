@@ -230,11 +230,8 @@ jobs:
     needs: [e2e-contracts, e2e-proof, e2e-site, performance, dependency-audit, build-verifier]
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
-    # Hosting is Vercel (Git integration on this repo, root docs/). This job records the GitHub "production"
-    # deployment once Vercel reports success for this exact commit and the live site passes the E2E check.
-    environment:
-      name: production
-      url: https://sealed.edycu.dev
+    # Hosting is Vercel (Git integration on this repo, root docs/); Vercel records the GitHub "Production" deployment.
+    # This gate waits for Vercel's success status on this exact commit, then E2E-checks the live site.
     permissions:
       contents: read
       statuses: read
