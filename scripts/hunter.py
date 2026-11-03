@@ -70,10 +70,10 @@ def store_secrets(hunter, bounty, wasm_hash, profile, secrets):
     p = subprocess.run([os.environ.get("OUTLAYER_BIN", "outlayer"), "secrets", "set", json.dumps(secrets), "--wasm-hash", wasm_hash,
                         "--profile", profile, "--access", f"whitelist:{hunter}", "--via", bounty],
                        env=env, capture_output=True, text=True)
-    out = (p.stdout + p.stderr).strip()
+    # Never echo the CLI's output: it is derived from the secret payload. Report only non-secret facts.
     if p.returncode != 0:
-        sys.exit(f"store_secrets failed:\n{out[-800:]}")
-    return out.splitlines()[-1]
+        sys.exit(f"store_secrets failed (outlayer exit {p.returncode}); re-run `outlayer secrets set` by hand to see why")
+    return f"Secrets stored (profile: {profile}, keys: {', '.join(sorted(secrets))})"
 
 
 def wait_commit(bounty, cid, done, timeout=900):
