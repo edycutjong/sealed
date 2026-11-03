@@ -1,6 +1,6 @@
 <div align="center">
   <img src="docs/assets/icon-animated.svg" alt="Sealed icon: a sealed evidence bag stamped PAID" width="144">
-  <h1>Sealed 🔒</h1>
+  <h1>Sealed Exploit 🔒</h1>
   <p><em>Bug bounties that pay for an executed break of a committed invariant on a committed snapshot — before the protocol ever sees the exploit.</em></p>
   <img src="docs/assets/readme-hero-animated.svg" alt="Sealed — verified inside NEAR OutLayer, paid on NEAR" width="100%">
 
