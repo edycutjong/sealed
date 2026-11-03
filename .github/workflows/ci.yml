@@ -1,17 +1,29 @@
-name: CI
+name: CI/CD Pipeline
+
+# Quality ─┐
+#          ├─▶ Build ─▶ E2E ─▶ Performance ─▶ Deploy gate (main only)
+# Security ┘
+# Rust sources are not reformatted by CI: rustfmt/line moves would shift panic-location strings and change the pinned
+# verifier.wasm / bounty.wasm bytes that the on-chain evidence names. Clippy gates on correctness + suspicious lints.
+
 on:
   push:
     branches: [main]
   pull_request:
+    branches: [main]
+  workflow_dispatch:
+
 permissions:
   contents: read
+
 concurrency:
-  group: ci-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 jobs:
-  verifier:
-    name: verifier (golden + reproducible wasm)
+  # ── STAGE 1: Code quality (parallel with Stage 2) ─────────────────────────────────────────────
+  rust-quality:
+    name: "Stage 1 · Rust quality + verifier tests"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -19,16 +31,74 @@ jobs:
         with:
           toolchain: 1.97.1
           targets: wasm32-wasip1
+          components: clippy
       - uses: Swatinem/rust-cache@v2
-      - run: make test-verifier
-      - name: Linux rebuild vs committed bytes (informational)
-        # The committed verifier.wasm is built on macOS/arm64; rustc lays out data differently on Linux, so the bytes
-        # differ there (same behaviour, checked by the golden tests above). The blocking check is verifier-reproduce.
-        continue-on-error: true
-        run: make verifier-check
+        with:
+          workspaces: |
+            .
+            contracts
+      - name: Clippy (verifier) — correctness + suspicious are errors
+        run: cargo clippy --locked -p verifier --all-targets -- -A clippy::all -D clippy::correctness -D clippy::suspicious
+      - name: Clippy (bounty contract) — correctness + suspicious are errors
+        working-directory: contracts
+        run: cargo clippy --locked -p bounty -- -A clippy::all -D clippy::correctness -D clippy::suspicious
+      - name: Verifier tests (11 golden + unit + CLI)
+        run: make test-verifier
 
-  verifier-reproduce:
-    name: verifier.wasm rebuilds byte-for-byte (macOS/arm64, the pinned build host)
+  python-quality:
+    name: "Stage 1 · Python quality"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Ruff (ruff.toml)
+        run: pipx run ruff==0.14.4 check --output-format=github .
+      - name: Byte-compile every script
+        run: python3 -m compileall -q -x "target|node_modules" .
+
+  # ── STAGE 2: Security gate (parallel with Stage 1) ────────────────────────────────────────────
+  secret-scan:
+    name: "Stage 2 · Secret scan (full history) + readiness"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: gitleaks (all commits, repo config)
+        run: |
+          curl -fsSL https://github.com/gitleaks/gitleaks/releases/download/v8.24.2/gitleaks_8.24.2_linux_x64.tar.gz | tar -xz gitleaks
+          ./gitleaks detect --source . --config .gitleaks.toml --log-opts="--all" --redact
+      - name: Submission readiness (no kitchen files, no secrets, required docs)
+        run: python3 scripts/check_submission_readiness.py
+
+  dependency-audit:
+    name: "Stage 2 · Dependency audit"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-audit
+      - name: cargo audit (verifier, contracts, itests)
+        # Reported, not blocking: the remaining advisories sit in deps pinned by near-sdk 5.9.0 / revm inside the
+        # deployed wasm. Each is reviewed in SECURITY.md § Known dependency advisories.
+        continue-on-error: true
+        run: |
+          status=0
+          for d in . contracts contracts/itests; do
+            echo "::group::cargo audit $d"; (cd "$d" && cargo audit) || status=1; echo "::endgroup::"
+          done
+          exit $status
+
+  # ── STAGE 3: Build verification ───────────────────────────────────────────────────────────────
+  build-verifier:
+    name: "Stage 3 · verifier.wasm rebuilds byte-for-byte (macOS/arm64 pin host)"
+    needs: [rust-quality, python-quality, secret-scan]
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
@@ -44,28 +114,37 @@ jobs:
           name: verifier-rebuilt-macos
           path: target/wasm32-wasip1/release/verifier.wasm
 
-  replay:
-    name: replay (creds-free, wasmtime + python only)
+  build-contracts:
+    name: "Stage 3 · contracts build + unit tests"
+    needs: [rust-quality, python-quality, secret-scan]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: dtolnay/rust-toolchain@master
         with:
-          python-version: "3.11"
-      - name: Install wasmtime
-        run: |
-          curl -fsSL https://wasmtime.dev/install.sh | bash
-          echo "$HOME/.wasmtime/bin" >> "$GITHUB_PATH"
-      - run: make replay
-      - run: make corpus
-      - run: make refusals
-      - run: make results
-      - run: make bench
-      - name: Open every paid delivery (PyNaCl)
-        run: python3 -m pip install --quiet pynacl==1.6.2 && make open
+          toolchain: 1.85.0
+          targets: wasm32-unknown-unknown
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: 1.97.1
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: contracts
+      - run: sudo apt-get update && sudo apt-get install -y binaryen
+      - run: make contracts-wasm
+      - run: cd contracts && cargo +1.97.1 test --locked -p bounty
+      - uses: actions/upload-artifact@v7
+        with:
+          name: contracts-wasm
+          path: |
+            contracts/bounty.wasm
+            contracts/test-token.wasm
+          retention-days: 7
 
-  contracts:
-    name: contracts (unit + near-workspaces I1–I8)
+  # ── STAGE 4: End-to-end ───────────────────────────────────────────────────────────────────────
+  e2e-contracts:
+    name: "Stage 4 · E2E contracts (near-workspaces sandbox, invariants I1–I8)"
+    needs: [build-contracts]
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
@@ -85,18 +164,82 @@ jobs:
       - run: sudo apt-get update && sudo apt-get install -y binaryen
       - run: make test-contracts
 
-  readiness:
-    name: readiness + secret scan
+  e2e-proof:
+    name: "Stage 4 · E2E proof (replay offline + verify against NEAR testnet)"
+    needs: [build-verifier]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - run: python3 scripts/check_submission_readiness.py
-      - name: gitleaks (full history, repo config)
+      - name: Install wasmtime + PyNaCl
         run: |
-          curl -fsSL https://github.com/gitleaks/gitleaks/releases/download/v8.24.2/gitleaks_8.24.2_linux_x64.tar.gz | tar -xz gitleaks
-          ./gitleaks detect --source . --config .gitleaks.toml --log-opts="--all" --redact
+          curl -fsSL https://wasmtime.dev/install.sh | bash
+          echo "$HOME/.wasmtime/bin" >> "$GITHUB_PATH"
+          python3 -m pip install --quiet pynacl==1.6.2
+      - name: make replay — every published verdict re-run under wasmtime
+        run: make replay
+      - name: make corpus — 52 items, real breaks vs fakes
+        run: make corpus
+      - name: make refusals — 6 refusal kinds, each a testnet tx
+        run: make refusals
+      - name: make open — every paid delivery opens to the exploit its verdict names
+        run: make open
+      - name: make verify-demo — payouts proven from live chain data (public archival RPC)
+        run: make verify-demo || (sleep 20 && make verify-demo)
+
+  e2e-site:
+    name: "Stage 4 · E2E judge site (docs/ + live /judge, no credentials)"
+    needs: [rust-quality, python-quality, secret-scan]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Static pages, local refs, /judge claim + receipts
+        run: python3 scripts/site_check.py
+      - name: Live site (sealed.edycu.dev) — 200 + claim with no cookies
+        run: python3 scripts/site_check.py --live https://sealed.edycu.dev
+
+  # ── STAGE 5: Performance ──────────────────────────────────────────────────────────────────────
+  performance:
+    name: "Stage 5 · Performance (OutLayer limits budget + Lighthouse)"
+    needs: [e2e-proof, e2e-site]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: make bench — p50/p95 over the 29 recorded runs
+        run: make results && make bench
+      - name: Budget gate — every run ≤ 50% of each worker limit, p95 verdict ≤ 30 s
+        run: python3 scripts/perf_gate.py
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Lighthouse CI on docs/ (landing, pitch, judge)
+        continue-on-error: true # advisory: a score dip should not block a proof-carrying build
+        run: npx --yes @lhci/cli@0.14.0 autorun
+
+  # ── STAGE 6: Deploy gate (main only) ──────────────────────────────────────────────────────────
+  deploy-gate:
+    name: "Stage 6 · Deploy gate"
+    needs: [e2e-contracts, e2e-proof, e2e-site, performance, dependency-audit, build-verifier]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: All gates passed
+        run: |
+          {
+            echo "## 🚀 All CI/CD gates passed"
+            echo "| Stage | Gate |"
+            echo "|---|---|"
+            echo "| 1 · Quality | clippy (correctness+suspicious) · ruff · verifier golden/unit/CLI tests |"
+            echo "| 2 · Security | gitleaks full history · readiness · cargo audit (reviewed) |"
+            echo "| 3 · Build | verifier.wasm byte-identical rebuild · contracts wasm + unit tests |"
+            echo "| 4 · E2E | sandbox I1–I8 · replay · corpus · refusals · open · verify-demo on testnet · /judge live |"
+            echo "| 5 · Performance | ≤ 50% of every OutLayer limit · p95 verdict ≤ 30 s · Lighthouse |"
+          } >> "$GITHUB_STEP_SUMMARY"

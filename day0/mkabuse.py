@@ -17,7 +17,6 @@ abuse-blake2f.json 4 × CREATE calling the BLAKE2F precompile with 16 M rounds (
                    EVM has no precompiles, so this is a call to an empty account
 Local-fuel-only shapes (fuel.py, results/g5b-fuel.json; not run on chain): abuse-exp (EXP on 256-bit operands),
 abuse-mcopy, abuse-log (LOG0 over 1 KB), abuse-cdcopy (CALLDATACOPY + CODECOPY), abuse-extcodecopy — all 4 txs."""
-import os
 from mkinput import envelope, write, INST
 
 LOOP = "0x5b5f56"                       # JUMPDEST PUSH0 JUMP

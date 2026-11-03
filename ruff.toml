@@ -1,0 +1,5 @@
+# Python harness (scripts/, day0/). E741 (one-letter math names like l/I in hash code) and E401 (packed imports in
+# small CLI scripts) are style-only and left as written; everything else in the default set is enforced in CI.
+target-version = "py311"
+[lint]
+ignore = ["E741", "E401"]

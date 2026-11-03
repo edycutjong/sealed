@@ -12,3 +12,6 @@ graphify-out/
 levels/out/
 levels/cache/
 baseline/.lock
+
+# Lighthouse CI
+.lighthouseci/

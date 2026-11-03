@@ -129,3 +129,27 @@ else
 endif
 
 .PHONY: baseline
+
+# ----- CI stages, runnable locally (mirrors .github/workflows/ci.yml) -----
+lint:
+	cargo clippy --locked -p verifier --all-targets -- -A clippy::all -D clippy::correctness -D clippy::suspicious
+	cd contracts && cargo +1.97.1 clippy --locked -p bounty -- -A clippy::all -D clippy::correctness -D clippy::suspicious
+	ruff check .
+
+security-scan:
+	gitleaks detect --source . --config .gitleaks.toml --log-opts="--all" --redact
+	python3 scripts/check_submission_readiness.py
+	-for d in . contracts contracts/itests; do (cd $$d && cargo audit); done
+
+e2e-site:
+	python3 scripts/site_check.py --live https://sealed.edycu.dev
+
+perf:
+	python3 scripts/perf_gate.py
+
+lighthouse:
+	npx --yes @lhci/cli@0.14.0 autorun
+
+ci: lint security-scan test-verifier verifier-check replay corpus refusals open e2e-site perf
+
+.PHONY: lint security-scan e2e-site perf lighthouse ci

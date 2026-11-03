@@ -169,7 +169,6 @@ def amount_of(ev):
 
 def one(ev, online, url):
     """Re-fetch (online) or read from the bundle (offline), then run the checks for one commit."""
-    inv_amount = None
     if online:
         ctx = near.tx(ev["commit_tx"], ev["hunter"], url)["result"]
         req = near.request_execution_args({"result": ctx})

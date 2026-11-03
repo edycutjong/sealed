@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="docs/assets/icon.svg" alt="Sealed Icon" width="144">
+  <img src="docs/assets/icon-animated.svg" alt="Sealed icon: a sealed evidence bag stamped PAID" width="144">
   <h1>Sealed 🔒</h1>
   <p><em>Bug bounties that pay for an executed break of a committed invariant on a committed snapshot — before the protocol ever sees the exploit.</em></p>
   <img src="docs/assets/readme-hero-animated.svg" alt="Sealed — verified inside NEAR OutLayer, paid on NEAR" width="100%">
@@ -184,10 +184,27 @@ make test          # verifier golden + contract unit + near-workspaces sandbox (
 make corpus        # 52 items vs golden verdicts, wasmtime only
 ```
 
-`.github/workflows/ci.yml` runs five jobs: verifier golden tests; a byte-for-byte rebuild of `verifier.wasm` on macOS/arm64 (the pinned build host; a Linux rebuild lays out data differently, so its bytes differ and that leg is informational); the
-credential-free `replay`/`corpus`/`refusals`/`results`/`bench` targets; the contract unit and sandbox tests (I1–I8);
-and `scripts/check_submission_readiness.py` with gitleaks over the full history. CodeQL (Python, Rust) and Dependabot are
-configured in `.github/`. Developer-experience notes on OutLayer and global contracts: [docs/DX-REPORT.md](docs/DX-REPORT.md).
+**6-stage pipeline** (`.github/workflows/ci.yml`): Quality ∥ Security → Build → E2E → Performance → Deploy gate.
+
+| Stage | Gate | Blocking |
+|---|---|---|
+| 1 · Quality | clippy (correctness + suspicious) on verifier and bounty · ruff · verifier golden/unit/CLI tests | ✅ |
+| 2 · Security | gitleaks over the full history · `scripts/check_submission_readiness.py` · `cargo audit` (advisories reviewed in [SECURITY.md](SECURITY.md)) | ✅ / audit reported |
+| 3 · Build | `verifier.wasm` rebuilds byte-for-byte on macOS/arm64 (the pinned build host) · contracts wasm + unit tests | ✅ |
+| 4 · E2E | near-workspaces sandbox I1–I8 · `make replay` / `corpus` / `refusals` / `open` · `make verify-demo` against NEAR testnet · `/judge` live with no credentials (`scripts/site_check.py`) | ✅ |
+| 5 · Performance | `make bench` · every recorded run ≤ 50% of each OutLayer limit and p95 verdict ≤ 30 s (`scripts/perf_gate.py`) · Lighthouse CI on `docs/` | ✅ / Lighthouse advisory |
+| 6 · Deploy gate | all of the above, `main` only | ✅ |
+
+```bash
+python3 scripts/perf_gate.py              # instructions 23.98% · time 2.31% · memory 0.34% of the limits; p95 10.85 s
+python3 scripts/site_check.py --live https://sealed.edycu.dev
+```
+
+Rust sources are not auto-formatted in CI: moving a line shifts panic-location strings and would change the pinned
+`verifier.wasm` / `bounty.wasm` bytes the on-chain evidence names. Releases are automatic: `.github/workflows/release.yml`
+tags `vX.Y.Z` from conventional commits (`feat` → minor, `fix`/`perf` → patch, `!` → major) and never edits files.
+CodeQL (Python, Rust), Dependabot, secret scanning and push protection are on. Developer-experience notes on OutLayer
+and global contracts: [docs/DX-REPORT.md](docs/DX-REPORT.md).
 
 ## 📁 Project Structure
 
