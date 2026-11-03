@@ -56,7 +56,7 @@ The protocol still decides what counts as a break, but up front, before any clai
 
 ## 🏗️ Architecture & Tech Stack
 
-![Sealed architecture: a hunter commits an exploit hash and bond to the keyless global bounty contract and uploads the sealed exploit to OutLayer secrets; the contract requests execution pinned by wasm hash; an OutLayer TEE worker runs the pinned revm verifier and resolves a verdict; the contract AWARDS escrow to the earliest verifying commit or REFUSES with a reason; on deliver, once sha256(enc) matches the committed h_enc, it pays via ft_transfer.](docs/assets/architecture.png)
+![Sealed architecture in ten steps across three phases. COMMIT: the protocol funds the keyless global bounty and pins snapshots, invariants and the verifier wasm hash; the hunter stores the exploit as an OutLayer encrypted secret, then commits H(exploit, hunter, salt) with a bond. VERIFY: the bounty calls request_execution pinned by hash; an OutLayer TEE worker replays the exploit in revm on the committed snapshot and returns the verdict to on_verdict; the first break per invariant is awarded into escrow. DELIVER and PAY: deliver(enc) must hash to the attested h_enc, then ft_transfer pays 1 000 tUSDC. Six refusal kinds branch off the failing check (pool pull, invariant busy, duplicate, fake, delivery mismatch, expired award). A trust strip says what is checked from chain, what replays offline, and what is not checked (the TDX quote).](docs/assets/architecture.png)
 
 <details>
 <summary><b>Text-equivalent diagram (Mermaid)</b> — click to expand</summary>
