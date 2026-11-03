@@ -230,7 +230,34 @@ jobs:
     needs: [e2e-contracts, e2e-proof, e2e-site, performance, dependency-audit, build-verifier]
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
+    # Hosting is Vercel (Git integration on this repo, root docs/). This job records the GitHub "production"
+    # deployment once Vercel reports success for this exact commit and the live site passes the E2E check.
+    environment:
+      name: production
+      url: https://sealed.edycu.dev
+    permissions:
+      contents: read
+      statuses: read
     steps:
+      - uses: actions/checkout@v4
+      - name: Wait for Vercel's production deploy of this commit
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for i in $(seq 1 60); do
+            state=$(gh api "repos/${{ github.repository }}/commits/${{ github.sha }}/statuses" \
+              -q '[.[] | select(.context=="Vercel")][0].state // "missing"')
+            echo "Vercel status: $state"
+            [ "$state" = success ] && exit 0
+            [ "$state" = failure ] || [ "$state" = error ] && exit 1
+            sleep 10
+          done
+          echo "::error::Vercel did not report a deploy for ${{ github.sha }} within 10 minutes"; exit 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Live site serves the deploy (/, /pitch/, /judge/ with the claim)
+        run: python3 scripts/site_check.py --live https://sealed.edycu.dev
       - name: All gates passed
         run: |
           {
@@ -242,4 +269,5 @@ jobs:
             echo "| 3 · Build | verifier.wasm byte-identical rebuild · contracts wasm + unit tests |"
             echo "| 4 · E2E | sandbox I1–I8 · replay · corpus · refusals · open · verify-demo on testnet · /judge live |"
             echo "| 5 · Performance | ≤ 50% of every OutLayer limit · p95 verdict ≤ 30 s · Lighthouse |"
+            echo "| 6 · Deploy | Vercel production deploy of this commit live at https://sealed.edycu.dev |"
           } >> "$GITHUB_STEP_SUMMARY"
