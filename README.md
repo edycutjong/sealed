@@ -10,6 +10,7 @@
 
   [![Live Demo](https://img.shields.io/badge/🚀_Live-Demo-06b6d4?style=for-the-badge)](https://sealed.edycu.dev)
   [![Pitch Deck](https://img.shields.io/badge/📊_Pitch-Deck-f59e0b?style=for-the-badge)](https://sealed.edycu.dev/pitch/)
+  [![Demo Video](https://img.shields.io/badge/▶_Demo-Video-ef4444?style=for-the-badge)](https://youtu.be/sEMg3q7gG5k)
   [![Built for NEAR Hackathon](https://img.shields.io/badge/NEAR-Hackathon_2026-8b5cf6?style=for-the-badge)](https://nearhackathon.com)
 
   <br/>
@@ -27,6 +28,10 @@
 ---
 
 ## 📸 See it in Action
+
+[![Sealed Exploit demo video (1:34): one real exploit paid, one fake refused on NEAR testnet](https://i.ytimg.com/vi/sEMg3q7gG5k/hqdefault.jpg)](https://youtu.be/sEMg3q7gG5k)
+
+**[▶ Watch the 1:34 demo on YouTube](https://youtu.be/sEMg3q7gG5k)**: a real exploit is paid and a fake is refused on chain, with captions.
 
 The hero above is the artwork; the product is the command line and the chain. Start with the five-minute path in
 [DEMO.md](DEMO.md): one real exploit pays out, one fake is refused with a reason, both with explorer links.
