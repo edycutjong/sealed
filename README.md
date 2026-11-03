@@ -58,7 +58,8 @@ The protocol still decides what counts as a break, but up front, before any clai
 
 ![Sealed architecture: a hunter commits an exploit hash and bond to the keyless global bounty contract and uploads the sealed exploit to OutLayer secrets; the contract requests execution pinned by wasm hash; an OutLayer TEE worker runs the pinned revm verifier and resolves a verdict; the contract AWARDS escrow to the earliest verifying commit or REFUSES with a reason; on deliver, once sha256(enc) matches the committed h_enc, it pays via ft_transfer.](docs/assets/architecture.png)
 
-Text-equivalent (renders on GitHub):
+<details>
+<summary><b>Text-equivalent diagram (Mermaid)</b> — click to expand</summary>
 
 ```mermaid
 flowchart LR
@@ -71,6 +72,8 @@ flowchart LR
   H -- deliver sealed to protocol --> B
   B -- ft_transfer --> H
 ```
+
+</details>
 
 | Layer | Choice |
 |---|---|
