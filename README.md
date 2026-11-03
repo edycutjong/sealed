@@ -196,7 +196,7 @@ make corpus        # 52 items vs golden verdicts, wasmtime only
 | 3 · Build | `verifier.wasm` rebuilds byte-for-byte on macOS/arm64 (the pinned build host) · contracts wasm + unit tests | ✅ |
 | 4 · E2E | near-workspaces sandbox I1–I8 · `make replay` / `corpus` / `refusals` / `open` · `make verify-demo` against NEAR testnet · `/judge` live with no credentials (`scripts/site_check.py`) | ✅ |
 | 5 · Performance | `make bench` · every recorded run ≤ 50% of each OutLayer limit and p95 verdict ≤ 30 s (`scripts/perf_gate.py`) · Lighthouse CI on `docs/` | ✅ / Lighthouse advisory |
-| 6 · Deploy gate | all of the above, `main` only | ✅ |
+| 6 · Deploy gate | all of the above, `main` only; Vercel's Git integration deploys `docs/` to https://sealed.edycu.dev on every push to `main` | ✅ |
 
 ```bash
 python3 scripts/perf_gate.py              # instructions 23.98% · time 2.31% · memory 0.34% of the limits; p95 10.85 s
