@@ -134,7 +134,7 @@ hunter                bounty (keyless)            token            OutLayer (TEE
   (not made: it would replace the global code hash the testnet evidence pins).
 - **Commit hash case.** `commit` accepts any 64 hex digits (`lib.rs:248`), but the award compares that string with the
   verifier's lowercase `h_exploit` (`lib.rs:379`), so an uppercase commit can never be awarded and is refused as
-  `commit mismatch` (bond slashed). `scripts/hunter.py` commits Python's lowercase `hexdigest()` (`hunter.py:118`).
+  `commit mismatch` (bond slashed). `scripts/hunter.py` commits Python's lowercase `hexdigest()` (`hunter.py:122`).
   Normalizing in the contract is a code change (not made: it would replace the global code hash).
 - **Verdict parsing.** `find_verdict` (`lib.rs:720`) takes the first JSON object carrying `h_enc`, parsing any string
   OutLayer wraps it in. Every verifier verdict serializes `h_enc` at its top level, error verdicts included

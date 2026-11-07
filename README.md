@@ -98,9 +98,9 @@ Full walk-through with `file:line` for every claim: [ARCHITECTURE.md](ARCHITECTU
 | OutLayer method | Used for | Code |
 |---|---|---|
 | `request_execution` | the bounty requests the verifier, pinned by hash, with the hunter's secrets profile | `contracts/bounty/src/lib.rs:334` (call), `:657` (hash pin) |
-| `resolve_execution` | the worker's call resumes the yield into `on_verdict`, which decides AWARDED or REFUSED | `contracts/bounty/src/lib.rs:343` |
+| `resolve_execution` | called by the OutLayer worker (not by the bounty): it resumes OutLayer's yield, and the verdict returns to the bounty's `on_verdict` callback, which decides AWARDED or REFUSED; `make verify` checks that resolve tx and its signing key | `contracts/bounty/src/lib.rs:335` (`.then(on_verdict)`), `:343`; `scripts/verify.py:33` |
 | `store_secrets` | the hunter stores the exploit as an OutLayer encrypted secret bound to the pinned wasm hash | `scripts/hunter.py:63-76` |
-| `get_config` | `make verify` anchors the worker to OutLayer's operator at the resolve block | `scripts/verify.py:107` |
+| `get_config` | `make verify` anchors the worker to OutLayer's operator at the resolve block | `scripts/verify.py:111` |
 | Global contracts | the bounty runs on a code hash with no access key (I6); the earlier D3 throwaway bounty (2 of the 29 runs) is keyed | `scripts/deploy_bounty_testnet.py:115` |
 
 ## ⛓️ Live Deployment
