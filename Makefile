@@ -134,7 +134,7 @@ bench-chain:
 ## The mirror image of `make replay`: the same corpus judged by an LLM that cannot execute anything. Prints, per recorded
 ## model, how many fakes it would pay (baseline/run.json, raw replies in baseline/transcripts/). `make baseline MODEL=<id>`
 ## re-runs it live on NEAR AI Cloud when ~/.config/near-ai-cloud/api.key exists and adds that model to the record
-## (the recorded run used other providers, see baseline/README.md).
+## (the record holds one NEAR AI Cloud model and three other providers, see baseline/README.md).
 MODEL ?=
 baseline:
 ifeq ($(MODEL),)

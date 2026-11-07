@@ -198,4 +198,5 @@ the expiry) are in run bundles that `make verify` re-reads; open the other four 
   real exploits and fakes; every published run's `exploit_name` is a corpus item or a built-in (`corpus/published/`),
   and the LLM hunter agent (`scripts/hunter_agent.py`) ran only locally (`hunter-agent/`).
 - **Testnet only.** The mainnet leg (`scripts/mainnet_leg.py`) prints the commands; it never signs and has not run.
-- **Baseline models.** `make baseline` used third-party models, not NEAR AI Cloud (`baseline/README.md`).
+- **Baseline models.** `make baseline` holds four models, one run each: three third-party and DeepSeek-V4.1-Flash-1017 on
+  NEAR AI Cloud, whose TEE attestation we did not check (`baseline/README.md`).

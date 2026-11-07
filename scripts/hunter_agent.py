@@ -10,8 +10,8 @@ The agent never sees the factory's validateInstance code, only what a local run 
 (success / revert + data) and what validateInstance returned. The model is only the proposer; whether anything is paid is
 decided by the verifier on chain (`scripts/hunter.py` commits a winning submission), so a wrong or lucky model changes
 what the agent finds, not what the bounty pays. Each run is written verbatim to hunter-agent/<level>-<model>.md.
-`--provider nearai` calls NEAR AI Cloud, whose inference is private (the finding is not shown to a model vendor);
-no run recorded in hunter-agent/ used it."""
+`--provider nearai` calls NEAR AI Cloud; the DeepSeek-V4.1-Flash-1017 runs in hunter-agent/ used it (NEAR AI lists that model
+as served privately from its attested TEE infrastructure; this script does not check any attestation)."""
 import argparse, hashlib, json, os, re, subprocess, sys, time
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))

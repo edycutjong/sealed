@@ -75,7 +75,8 @@ What each check covers, line by line, is in [DEMO.md](DEMO.md) and
 2. **Worker attestation** — `make verify` checks the OutLayer worker *key*, not its TDX quote; it
    does not prove the worker ran exactly the pinned bytes. `make replay` re-runs those bytes locally.
 3. **RPC trust** — `make verify` trusts the archival RPC; an RPC error is RECORDED, never a pass.
-4. **Baseline models** are third-party, not NEAR AI Cloud, one run each, with a hunter claim on only 5 of the 21 fakes.
+4. **Baseline models** are four text-only models, one run each: three third-party and one on NEAR AI Cloud (its TEE
+   attestation not checked by us). A hunter claim sits on only 5 of the 21 fakes, and an unanswered item counts as not paying.
 5. **Stuck commits** — the dangling-`Pending` refund and yield-timeout paths are code-review-only.
 6. **Storage and griefing** — commits are stored for good; fresh accounts can keep one invariant busy.
 7. **No outside users yet** — the measured demo is our own hunter client (`scripts/hunter.py`) committing the

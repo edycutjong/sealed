@@ -53,12 +53,12 @@ the same shared secret, to the replayed exploit, which hashes to the commit.
 ```bash
 make corpus     # 52 items re-run offline under wasmtime vs their golden verdicts: "corpus: 52 OK · 0 FAIL"
 make bench      # request→verdict p50 7.27 s, p95 10.85 s (29 runs); heaviest fake 23.98% of the instruction limit
-make baseline   # what LLM-only triage would pay (not NEAR AI Cloud models; see baseline/README.md)
+make baseline   # what LLM-only triage would pay (4 models, 1 on NEAR AI Cloud; see baseline/README.md)
 ```
 
-LLM-only triage would pay 1, 3 and 3 of the 21 fakes (three text-only models, one run each, no code execution: muse-wonder-1.0,
-nemotron-3-ultra, qwen3.8-omni-flash) and 12, 12 and 11 of the 15 submissions that
-really break a level (offline golden verdicts). The executing verifier paid 0 of the 21 fakes and 5 of 5 real exploits on the demo bounty.
+LLM-only triage would pay 1, 3, 3 and 2 of the 21 fakes (four text-only models, one run each, no code execution:
+muse-wonder-1.0, nemotron-3-ultra, qwen3.8-omni-flash, and DeepSeek-V4.1-Flash-1017 on NEAR AI Cloud) and 12, 12, 11 and 10
+of the 15 submissions that really break a level (offline golden verdicts; an unanswered item counts as not paying). The executing verifier paid 0 of the 21 fakes and 5 of 5 real exploits on the demo bounty.
 
 ## Limits
 

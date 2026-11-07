@@ -20,6 +20,7 @@
 
   [![NEAR](https://img.shields.io/badge/NEAR_testnet-000000?style=flat&logo=near&logoColor=white)](https://near.org)
   [![NEAR OutLayer](https://img.shields.io/badge/NEAR_OutLayer-TEE_workers-00EC97?style=flat&logo=near&logoColor=black)](https://app.outlayer.ai)
+  [![NEAR AI Cloud](https://img.shields.io/badge/NEAR_AI_Cloud-LLM_baseline-000000?style=flat&logo=near&logoColor=white)](https://cloud.near.ai)
   [![near-sdk](https://img.shields.io/badge/near--sdk-5.9.0-000000?style=flat&logo=near&logoColor=white)](https://github.com/near/near-sdk-rs)
   [![Rust](https://img.shields.io/badge/Rust-000000?style=flat&logo=rust)](https://www.rust-lang.org)
   [![WebAssembly](https://img.shields.io/badge/WASI-wasm32--wasip1-654FF0?style=flat&logo=webassembly&logoColor=white)](https://wasi.dev)
@@ -145,10 +146,11 @@ Testnet only; no wallet is needed to check any of it. Every hash is in `corpus/r
 | Request → verdict | p50 7.27 s · p95 10.85 s (29 runs) | `corpus/bench.json`, `make bench` |
 | Heaviest real run | 7 371 260 instructions (0.37% of the 2e9 limit) | `corpus/results.json` |
 | Heaviest fake | 479 555 711 instructions (23.98% of the limit) | `corpus/bench.json` |
-| LLM-only triage on the same corpus (fakes it would pay, of 21) | muse-wonder-1.0 1 · nemotron-3-ultra 3 · qwen3.8-omni-flash 3; the same models would pay 12, 12 and 11 of the 15 submissions that really break a level (offline golden verdicts) | `make baseline` |
+| LLM-only triage on the same corpus (fakes it would pay, of 21) | muse-wonder-1.0 1 · nemotron-3-ultra 3 · qwen3.8-omni-flash 3 · DeepSeek-V4.1-Flash-1017 on NEAR AI Cloud 2; the same models would pay 12, 12, 11 and 10 of the 15 submissions that really break a level (offline golden verdicts) | `make baseline` |
 
-The baseline models could not run code and are **not** NEAR AI Cloud; read its limits in
-[baseline/README.md](baseline/README.md) before quoting it.
+The baseline models could not run code. One of the four runs on NEAR AI Cloud, served privately from NEAR AI's attested
+TEE infrastructure (per NEAR AI's model listing; we did not verify an attestation); the other three are third-party.
+Read its limits in [baseline/README.md](baseline/README.md) before quoting it.
 
 ### Attacks defeated
 
@@ -175,7 +177,8 @@ The sandbox tests run the contract against a mock OutLayer and a mock token; the
    checks the key, not its TDX quote, and does not show the worker ran exactly those bytes. `make replay` re-runs the
    same bytes locally.
 3. **RPC trust.** `make verify` believes the archival RPC it queries; an RPC error becomes RECORDED (`verify.py` exit 2, `make` prints `Error 2`), never a pass.
-4. **Baseline models** are third-party, not NEAR AI Cloud, one run each, with a hunter claim on only 5 of the 21 fakes.
+4. **Baseline models** are four text-only models, one run each: three third-party and one on NEAR AI Cloud (its TEE
+   attestation not checked by us). A hunter claim sits on only 5 of the 21 fakes, and an unanswered item counts as not paying.
 5. **Stuck commits.** The dangling-`Pending` refund branch is covered by code review only, and the yield-timeout path was
    not observed on a live testnet run.
 6. **Storage and griefing.** Commits are stored for good and paid from the bounty's NEAR balance; fresh accounts can keep
@@ -254,7 +257,7 @@ hunter-agent/   LLM-hunter transcripts and proposed exploits       day0/        
 - [x] 5 Ethernaut levels, 52-item corpus, 6 refusal kinds on chain
 - [x] `make replay` and `make verify` from a fresh clone
 - [ ] Mainnet leg (script prepared, a human signs)
-- [ ] LLM baseline and hunter on NEAR AI Cloud (needs the key)
+- [x] LLM baseline and hunter agent on NEAR AI Cloud (DeepSeek-V4.1-Flash-1017, 2026-11-07)
 
 ## 📽️ Demo Materials
 
