@@ -12,16 +12,24 @@ Sealed is a bug bounty that pays for an *executed* break of a committed invarian
 snapshot — the exploit is verified inside a NEAR OutLayer TEE and paid on NEAR — and on testnet the
 executing verifier paid **5 of 5** real Ethernaut exploits and **0 of 21** submitted fakes.
 
-## 2. 30-second make path (do X → see Y)
+## 2. Two-command path (do X → see Y)
 
 From a fresh clone with `python3` and `wasmtime`, no account or key:
 
 ```bash
-make replay   # offline: re-runs 29 published commits under wasmtime → 29 OK, printing validateInstance = 1 (real break) or 0 (fake); the 4 malformed inputs print "no validateInstance call"
-make verify   # from chain data: re-checks all 29 runs against testnet (about 80 archival RPC calls)
+make replay        # offline: re-runs 29 published commits under wasmtime → "replay: 29 OK · 0 FAIL", printing validateInstance = 1 (real break) or 0 (fake); the 4 malformed inputs print "no validateInstance call"
+make verify-demo   # from chain data, about 25 archival RPC calls (about 1.5 min): the 5 paid demo-bounty runs → "checks: 5 PASS · 5 CHAIN-CHECKED · 0 RECORDED"
 ```
 
-`make replay` is offline and deterministic; `make verify` reads the public chain. Full script in
+`make replay` is offline and deterministic; `make verify-demo` reads the public chain. Through `make`, `Error 2` means
+the archival RPC was unreachable or rate-limited (re-run it, or pass `RPC=https://archival-rpc.testnet.near.org`),
+never a pass; `Error 1` is a failed check. Then `make open` (offline, needs PyNaCl) opens the 6 paid deliveries →
+"open: 6 of 6 paid runs (corpus/results.json) open to the exploit their verdict and payout name", and `make verify`
+re-checks all 29 runs from chain data (about 80 calls, a few minutes on a rate-limited node).
+
+One edit flips a verdict: `make replay INPUT=corpus/vectors/real-fallback.json` prints `validateInstance … → 1`
+(`"broken": true`); `make replay INPUT=corpus/vectors/nearmiss-fallback-no-receive.json`, the same exploit minus its
+1-wei send to `receive()`, prints `→ 0`. Your own tx list works the same way (README § Reproduce). Full script in
 [DEMO.md](DEMO.md).
 
 ## 3. Receipt block (on-chain, testnet)
@@ -47,6 +55,7 @@ once `sha256(enc) == h_enc`.
 ```bash
 make replay        # offline re-run, 29 OK
 make verify-demo   # 5 paid demo-bounty runs proven from chain (about 1.5 min)
+make verify        # all 29 runs proven from chain (about 80 calls; Error 2 = RPC unreachable, Error 1 = a failed check)
 make open          # offline: all 6 paid deliveries open to the exploit make replay re-runs (needs PyNaCl)
 make corpus        # 52 items vs golden verdicts → "corpus: 52 OK · 0 FAIL"
 make bench         # request→verdict p50 7.27 s · p95 10.85 s (29 runs)
