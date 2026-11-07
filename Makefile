@@ -5,7 +5,7 @@ CARGO_HOME ?= $(HOME)/.cargo
 REMAP := --remap-path-prefix=$(CARGO_HOME)=/cargo --remap-path-prefix=$(CURDIR)=/sealed
 WASM := target/wasm32-wasip1/release/verifier.wasm
 
-.PHONY: verifier-wasm verifier-check test test-verifier test-contracts contracts-wasm cov
+.PHONY: verifier-wasm verifier-check test test-verifier test-contracts contracts-build contracts-wasm cov
 
 ## Rebuild verifier.wasm from source and write its sha256 (the hash every bounty pins).
 verifier-wasm:
@@ -36,10 +36,15 @@ test-verifier:
 	cargo test --locked --release -p verifier
 
 # ----- contracts (bounty / test token) -----
-## Build the contract wasms (Rust 1.85.0, near-sys 0.2.4 pinned) and wasm-opt -Oz the bounty. Paths are
-## remapped so the public wasm carries no build-machine fingerprints and any clone on the same host OS rebuilds the same bytes.
-contracts-wasm:
+## Compile the contract wasms (Rust 1.85.0, near-sys 0.2.4 pinned) into contracts/target/: what the sandbox tests deploy.
+## Paths are remapped so the public wasm carries no build-machine fingerprints and any clone on the same host OS rebuilds the same bytes.
+contracts-build:
 	cd contracts && RUSTFLAGS="--remap-path-prefix=$(CARGO_HOME)=/cargo --remap-path-prefix=$(CURDIR)/contracts=/sealed-contracts" cargo +1.85.0 build --locked --target wasm32-unknown-unknown --release
+
+## contracts-build, then wasm-opt -Oz into the committed contracts/bounty.wasm / test-token.wasm (the deployed bytes, which
+## `make verify-demo` hashes). They rebuild byte-identically only on the pin host OS (a Linux build differs), so `make test`
+## depends on contracts-build and never rewrites them; run this target only to re-derive the deployed wasm.
+contracts-wasm: contracts-build
 	wasm-opt -Oz contracts/target/wasm32-unknown-unknown/release/bounty.wasm -o contracts/bounty.wasm
 	wasm-opt -Oz contracts/target/wasm32-unknown-unknown/release/test_token.wasm -o contracts/test-token.wasm
 	@echo -n "paths leaked: "; cat contracts/bounty.wasm contracts/test-token.wasm | strings | grep -c '/Users/' || true
@@ -48,7 +53,7 @@ contracts-wasm:
 ## Contract unit tests (native host) + near-workspaces sandbox tests for the bounty (I1–I8). The wasm the
 ## worker/judge runs is built on 1.85.0 (near-sys 0.2.4); the native unit tests use a newer toolchain only
 ## because near-sdk's `unit-testing` feature pulls deps that require rustc ≥ 1.88 — it never touches the wasm.
-test-contracts: contracts-wasm
+test-contracts: contracts-build
 	cd contracts && cargo +1.97.1 test --locked -p bounty -p test-token -p mock-outlayer -p mock-token
 	cd contracts/itests && cargo test --test bounty -- --test-threads=4
 
