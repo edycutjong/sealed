@@ -1,6 +1,7 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Sealed for judges: re-derive every number</title><meta name="description" content="A bug bounty that pays for an executed break of a committed invariant. Testnet: 5 of 5 exploits paid, 0 of 21 fakes."><link rel="canonical" href="https://sealed.edycu.dev/judge"><meta name="robots" content="index,follow"><meta name="theme-color" content="#EDE3CC"><meta name="author" content="Edy Cu"><meta property="og:type" content="website"><meta property="og:site_name" content="Sealed"><meta property="og:title" content="Sealed for judges: re-derive every number"><meta property="og:description" content="A bug bounty that pays for an executed break of a committed invariant. Testnet: 5 of 5 exploits paid, 0 of 21 fakes."><meta property="og:url" content="https://sealed.edycu.dev/judge"><meta property="og:image" content="https://sealed.edycu.dev/assets/og-1200x630.jpg?v=719940c1"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image"><link rel="icon" href="/assets/icon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="/assets/icon-512.png"><link rel="preload" href="/assets/fonts/bigshouldersstencil-800-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/librefranklin-400-800-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="/assets/fonts/ibmplexmono-400-latin.woff2" as="font" type="font/woff2" crossorigin><style>@font-face{font-family:"Big Shoulders Stencil Display";font-style:normal;font-weight:800;font-display:swap;src:url("/assets/fonts/bigshouldersstencil-800-latin-ext.woff2") format("woff2");unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF}
+<link rel="preload" href="/assets/fonts/ibmplexmono-400-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/ibmplexmono-600-latin.woff2" as="font" type="font/woff2" crossorigin><style>@font-face{font-family:"Big Shoulders Stencil Display";font-style:normal;font-weight:800;font-display:swap;src:url("/assets/fonts/bigshouldersstencil-800-latin-ext.woff2") format("woff2");unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF}
 @font-face{font-family:"Big Shoulders Stencil Display";font-style:normal;font-weight:800;font-display:swap;src:url("/assets/fonts/bigshouldersstencil-800-latin.woff2") format("woff2");unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
 @font-face{font-family:"Libre Franklin";font-style:normal;font-weight:400 800;font-display:swap;src:url("/assets/fonts/librefranklin-400-800-latin-ext.woff2") format("woff2");unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF}
 @font-face{font-family:"Libre Franklin";font-style:normal;font-weight:400 800;font-display:swap;src:url("/assets/fonts/librefranklin-400-800-latin.woff2") format("woff2");unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
@@ -290,11 +291,14 @@ h1 { font: 800 clamp(54px, 6vw, 88px)/.92 var(--font-display); text-transform: u
 .foot .sp { margin-left: auto; }
 
 /* load sequence (JS adds .armed; content is visible without it) */
-.js.armed .hero .label, .js.armed .hero h1, .js.armed .hero .sub, .js.armed .hero .ctas, .js.armed .hero .clone, .js.armed .exhibit { animation: rise .8s var(--ease-out) both; }
+/* the label + headline (the LCP element) only slide: never re-hidden at opacity 0, so they count as painted on first paint */
+.js.armed .hero .label, .js.armed .hero h1 { animation: slide .8s var(--ease-out) both; }
+.js.armed .hero .sub, .js.armed .hero .ctas, .js.armed .hero .clone, .js.armed .exhibit { animation: rise .8s var(--ease-out) both; }
 .js.armed .hero h1 { animation-delay: .08s; } .js.armed .hero .sub { animation-delay: .2s; } .js.armed .hero .ctas { animation-delay: .3s; }
 .js.armed .hero .clone { animation-delay: .38s; } .js.armed .exhibit { animation-delay: .25s; }
 .js.armed .hero .tapeword { animation: tape .6s .55s var(--ease-out) both; }
 @keyframes rise { from { opacity: 0; transform: translateY(14px); } }
+@keyframes slide { from { transform: translateY(14px); } }
 @keyframes tape { from { transform: rotate(-2.2deg) scaleX(0); } }
 @keyframes ink { from { transform: scaleX(0); } }
 .settled * { animation: none !important; }
@@ -506,7 +510,7 @@ h1 { font: 800 clamp(54px, 6vw, 88px)/.92 var(--font-display); text-transform: u
       <span>Sealed · built for NEAR Hackathon 2026 · MIT</span>
       <a href="https://github.com/edycutjong/sealed/blob/main/ARCHITECTURE.md">ARCHITECTURE.md</a>
       <a href="https://github.com/edycutjong/sealed/blob/main/LICENSE">LICENSE</a>
-      <span class="sp">data from commit e99beb7 · judge entry point</span>
+      <span class="sp">data from commit 0d8151a · judge entry point</span>
     </div>
   </div>
 </footer>

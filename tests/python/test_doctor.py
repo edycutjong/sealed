@@ -54,7 +54,7 @@ def test_main_custom_rpc_arg(fake_root, monkeypatch, capsys):
     monkeypatch.setattr(sys, "argv", ["doctor.py", "http://x.test"])
     assert doctor.main() == 0
     assert seen == ["http://x.test"]
-    assert "http://x.test" in capsys.readouterr().out
+    assert "OK   archival RPC reachable (http://x.test)" in capsys.readouterr().out.splitlines()
 
 
 def test_main_everything_missing(fake_root, monkeypatch, capsys):
