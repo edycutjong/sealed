@@ -87,6 +87,7 @@ Full detail: [README.md § Honest limits](README.md) and [ARCHITECTURE.md § Lim
 
 - Live site: https://sealed.edycu.dev · styled judge page: https://sealed.edycu.dev/judge
 - Pitch deck: https://sealed.edycu.dev/pitch/
+- Demo video (1:34, captioned): https://youtu.be/sEMg3q7gG5k · X demo post: https://x.com/edycutjong/status/2117725204403364028
 - Architecture (every claim with `file:line`): [ARCHITECTURE.md](ARCHITECTURE.md)
 - Demo walk-through: [DEMO.md](DEMO.md)
 - OutLayer integration (4 OutLayer methods plus NEAR global contracts, with code refs): [README.md § NEAR OutLayer Integration](README.md)
