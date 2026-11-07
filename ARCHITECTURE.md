@@ -81,6 +81,20 @@ the log line recorded in `corpus/refusals.json`: pool pull, duplicate, fake, inv
 award. "6 of 6" means all six fired; it is not a count of every `REFUSED` line above. Two of the six txs (the fake and
 the expiry) are in run bundles that `make verify` re-reads; open the other four on the explorer.
 
+## Who pays
+
+- **The protocol** funds the pool with a NEP-141 transfer to the bounty (`ft_on_transfer`, `contracts/bounty/src/lib.rs:222-232`;
+  any other token is refused) and can later withdraw only the unreserved pool, after the timelock (`withdraw_pool`, `:552-574`).
+- **The hunter** attaches the bond plus the OutLayer deposit to `commit` (`:250`); the deposit goes with
+  `request_execution` (`:334`), which names the hunter as the run's payer (`payer_account_id`, `:662`).
+- **The bond** comes back with the payout (`:510`), on a guard or registration refusal (`:266-268`, `:604-618`) and on a
+  first no-verdict (`:431`); a hunter-caused refusal (`:394`), a repeat no-verdict within 24 h (`:435`) or an expired
+  award (`:544`) slashes it into a NEAR ledger that only the protocol can sweep (`withdraw_slashed`, `:588-595`).
+- **No one else takes a cut:** the contract has no fee and no access key (I6). The bounty account pays its own storage
+  from its NEAR balance ([Limits](#limits)).
+- **A new target** is a new snapshot compiled into a new verifier build (`verifier/src/lib.rs:34-42`): a new verifier
+  hash and a new bounty, while existing bounties keep the build they pinned.
+
 ## What the verifier computes
 
 `run` (`verifier/src/lib.rs:336`):

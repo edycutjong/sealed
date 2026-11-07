@@ -95,7 +95,7 @@ flowchart LR
 | Execution | NEAR OutLayer TEE workers (documented as Intel TDX; this repo checks the worker key, not the quote), pinned by wasm hash |
 | Tooling | Python 3 scripts, `wasmtime`, archival RPC (FastNEAR) |
 
-Full walk-through with `file:line` for every claim: [ARCHITECTURE.md](ARCHITECTURE.md).
+Full walk-through with `file:line` for every claim, including every refusal and who pays what: [ARCHITECTURE.md](ARCHITECTURE.md).
 
 ## 🏆 NEAR OutLayer Integration (Security track; Privacy, Agents and Open fits)
 
