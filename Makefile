@@ -19,11 +19,17 @@ verifier-check:
 	RUSTFLAGS="$(REMAP)" cargo build --locked --release --target wasm32-wasip1 -p verifier
 	@shasum -a 256 -c <(sed 's#verifier.wasm#$(WASM)#' verifier.wasm.sha256)
 
-test: test-verifier test-contracts
+test: test-py test-verifier test-contracts
 
-## Verifier line coverage (needs cargo-llvm-cov: `cargo install cargo-llvm-cov`). The snapgen dev tool reads 0%.
+## Python unit tests for every script (no network: tests/python/conftest.py blocks sockets).
+test-py:
+	python3 -m pytest
+
+## Line coverage: Python (pytest-cov, gate 100%), verifier and contracts (cargo-llvm-cov: `cargo install cargo-llvm-cov`).
 cov:
+	python3 -m pytest --cov=scripts --cov=near --cov-report=term-missing --cov-fail-under=100
 	cargo llvm-cov --package verifier --summary-only
+	cd contracts && cargo +1.97.1 llvm-cov --locked -p bounty -p test-token -p mock-outlayer -p mock-token --summary-only
 
 ## Golden verdicts (native) + the committed verifier.wasm under wasmtime must print the same verdict bytes.
 test-verifier:
@@ -43,7 +49,7 @@ contracts-wasm:
 ## worker/judge runs is built on 1.85.0 (near-sys 0.2.4); the native unit tests use a newer toolchain only
 ## because near-sdk's `unit-testing` feature pulls deps that require rustc ≥ 1.88 — it never touches the wasm.
 test-contracts: contracts-wasm
-	cd contracts && cargo +1.97.1 test -p bounty
+	cd contracts && cargo +1.97.1 test --locked -p bounty -p test-token -p mock-outlayer -p mock-token
 	cd contracts/itests && cargo test --test bounty -- --test-threads=4
 
 # ----- replay / verify (judge-facing; see DEMO.md) -----

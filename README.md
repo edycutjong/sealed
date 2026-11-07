@@ -122,8 +122,8 @@ Testnet only; no wallet is needed to check any of it. Every hash is in `corpus/r
 | Real exploits paid / submitted | 5 of 5 (demo bounty) | `corpus/results.json` |
 | Non-breaking submissions paid | 0 of 21 (21 of 21 refused; all 21 ran on the corpus bounty) | `corpus/results.json` |
 | Corpus | 52 items vs golden verdicts | `make corpus` |
-| Tests | 42: 19 verifier (11 golden · 5 unit · 3 CLI), 3 contract unit, 20 near-workspaces sandbox | `make test` |
-| Verifier line coverage | ~95% of shipped logic (`lib.rs` 97% · CLI 86%); the `snapgen` dev tool is excluded | `make cov` (cargo-llvm-cov) |
+| Tests | 411: 305 Python unit (all 19 scripts), 39 verifier (11 golden · 12 unit · 9 CLI · 4 seal · 3 snapgen), 47 contract unit, 20 near-workspaces sandbox | `make test` |
+| Line coverage | Python 100% (1 771 statements, 19 files) · verifier 99.5% (380 lines) · contracts 99.1% (680 lines); the 8 uncovered Rust lines are error arms that cannot fire (e.g. an `Infallible` map_err) or a dead helper, left in rather than change pinned code | `make cov` |
 | Request → verdict | p50 7.27 s · p95 10.85 s (29 runs) | `corpus/bench.json`, `make bench` |
 | Heaviest real run | 7 371 260 instructions (0.37% of the 2e9 limit) | `corpus/results.json` |
 | Heaviest fake | 479 555 711 instructions (23.98% of the limit) | `corpus/bench.json` |

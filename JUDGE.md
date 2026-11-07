@@ -49,7 +49,7 @@ make verify-demo   # 5 paid demo-bounty runs proven from chain (about 1.5 min)
 make open          # offline: all 6 paid deliveries open to the exploit make replay re-runs (needs PyNaCl)
 make corpus        # 52 items vs golden verdicts → "corpus: 52 OK · 0 FAIL"
 make bench         # request→verdict p50 7.27 s · p95 10.85 s (29 runs)
-make test          # 42 tests: 19 verifier (11 golden · 5 unit · 3 CLI), 3 contract unit, 20 near-workspaces sandbox
+make test          # 411 tests: 305 Python unit, 39 verifier, 47 contract unit, 20 near-workspaces sandbox
 ```
 
 What each check covers, line by line, is in [DEMO.md](DEMO.md) and

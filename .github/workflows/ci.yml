@@ -57,6 +57,10 @@ jobs:
         run: pipx run ruff==0.14.4 check --output-format=github .
       - name: Byte-compile every script
         run: python3 -m compileall -q -x "target|node_modules" .
+      - name: Python unit tests (305, 100% line coverage gate, no network)
+        run: |
+          python3 -m pip install --quiet pytest==8.1.1 pytest-cov PyNaCl
+          python3 -m pytest --cov=scripts --cov=near --cov-report=term-missing --cov-fail-under=100
 
   # ── STAGE 2: Security gate (parallel with Stage 1) ────────────────────────────────────────────
   secret-scan:
@@ -132,7 +136,7 @@ jobs:
           workspaces: contracts
       - run: sudo apt-get update && sudo apt-get install -y binaryen
       - run: make contracts-wasm
-      - run: cd contracts && cargo +1.97.1 test --locked -p bounty
+      - run: cd contracts && cargo +1.97.1 test --locked -p bounty -p test-token -p mock-outlayer -p mock-token
       - uses: actions/upload-artifact@v7
         with:
           name: contracts-wasm

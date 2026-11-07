@@ -15,3 +15,5 @@ baseline/.lock
 
 # Lighthouse CI
 .lighthouseci/
+.coverage
+.coverage.*
