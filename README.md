@@ -164,7 +164,8 @@ The sandbox tests run the contract against a mock OutLayer and a mock token; the
    not observed on a live testnet run.
 6. **Storage and griefing.** Commits are stored for good and paid from the bounty's NEAR balance; fresh accounts can keep
    one invariant busy for the cost of gas and the OutLayer fee.
-7. **No outside users yet.** The measured demo is our own hunter agent plus the fakes corpus.
+7. **No outside users yet.** The measured demo is our own hunter client (`scripts/hunter.py`) committing the corpus'
+   real exploits and fakes; the LLM hunter agent (`scripts/hunter_agent.py`) ran only locally (`hunter-agent/`).
 
 Detail for each, plus memory and seal-key reuse: [ARCHITECTURE.md § Limits](ARCHITECTURE.md#limits).
 

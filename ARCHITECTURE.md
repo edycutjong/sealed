@@ -176,6 +176,8 @@ the expiry) are in run bundles that `make verify` re-reads; open the other four 
   (`verifier/src/lib.rs:118`), so the search stops at the verdict and never parses its `err` text (≤ 64 B, `MAX_ERR`).
 - **Seal key reuse.** The seal's nonce is derived from `EPH_SK` (`seal.rs:5`), so a hunter client must draw a fresh
   `EPH_SK` per commit; `scripts/hunter.py` draws 32 random bytes each time.
-- **No outside users yet.** The measured demo is our own hunter agent plus the fakes corpus.
+- **No outside users yet.** The measured demo is our own hunter client (`scripts/hunter.py`) committing the corpus'
+  real exploits and fakes; every published run's `exploit_name` is a corpus item or a built-in (`corpus/published/`),
+  and the LLM hunter agent (`scripts/hunter_agent.py`) ran only locally (`hunter-agent/`).
 - **Testnet only.** The mainnet leg (`scripts/mainnet_leg.py`) prints the commands; it never signs and has not run.
 - **Baseline models.** `make baseline` used third-party models, not NEAR AI Cloud (`baseline/README.md`).
