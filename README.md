@@ -37,7 +37,9 @@
 **[▶ Watch the 1:34 demo on YouTube](https://youtu.be/sEMg3q7gG5k)**: a real exploit is paid and a fake is refused on chain, with captions.
 
 The hero above is the artwork; the product is the command line and the chain. Start with the five-minute path in
-[DEMO.md](DEMO.md): one real exploit pays out, one fake is refused with a reason, both with explorer links.
+[DEMO.md](DEMO.md): one real exploit pays out, one fake is refused with a reason, both with explorer links. Judging?
+[JUDGE.md](JUDGE.md) is the one-page index: the claim, the two commands with their expected output, the receipts and
+the limits.
 
 ## 💡 The Problem & Solution
 
