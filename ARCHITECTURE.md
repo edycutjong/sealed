@@ -176,6 +176,10 @@ the expiry) are in run bundles that `make verify` re-reads; open the other four 
   (`verifier/src/lib.rs:118`), so the search stops at the verdict and never parses its `err` text (≤ 64 B, `MAX_ERR`).
 - **Seal key reuse.** The seal's nonce is derived from `EPH_SK` (`seal.rs:5`), so a hunter client must draw a fresh
   `EPH_SK` per commit; `scripts/hunter.py` draws 32 random bytes each time.
+- **Hunter secrets on the command line.** `scripts/hunter.py` hands the secret row (`EXPLOIT`, `SALT`, `EPH_SK`) to the
+  OutLayer CLI as the argument of `outlayer secrets set` (`hunter.py:75`; the CLI takes the JSON only as an argument),
+  so while that command runs another user of the same machine can read it from the process list. Run the hunter
+  client on a single-user machine.
 - **No outside users yet.** The measured demo is our own hunter client (`scripts/hunter.py`) committing the corpus'
   real exploits and fakes; every published run's `exploit_name` is a corpus item or a built-in (`corpus/published/`),
   and the LLM hunter agent (`scripts/hunter_agent.py`) ran only locally (`hunter-agent/`).
