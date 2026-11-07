@@ -391,7 +391,7 @@ h1 { font: 800 clamp(54px, 6vw, 88px)/.92 var(--font-display); text-transform: u
   <div class="wrap">
     <p class="form-label"><b>For the bench</b> · NEAR Hackathon 2026 · Security track</p>
     <h1 id="jh">Bug bounties that pay for an executed break of a committed invariant on a committed snapshot — before the protocol ever sees the exploit.</h1>
-    <p class="lede">Nothing here is a claim you take on trust. Re-run the exploits offline, then prove the payouts from chain data — <strong>5 of 5</strong> real exploits paid, <strong>0 of 21</strong> fakes. No NEAR account, no key.</p>
+    <p class="lede">Re-run the exploits offline, then prove the payouts from chain data — <strong>5 of 5</strong> real exploits paid, <strong>0 of 21</strong> fakes. No NEAR account, no key. What still rests on trust (the worker's TDX quote, the archival RPC) is listed under <a href="#limits">Limits</a>.</p>
     <div class="ctas">
       <a class="btn solid" href="#path"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8h9M8 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>The two-command path</a>
       <a class="btn" href="https://testnet.nearblocks.io/txns/AodmFQ6tq4pBcxLreRDSCanKkZQY7m6nhM459NfPAg3s">The PAID tx on testnet</a>
@@ -413,7 +413,7 @@ h1 { font: 800 clamp(54px, 6vw, 88px)/.92 var(--font-display); text-transform: u
   <div class="wrap">
     <p class="form-label">Two-command path · do X → see Y</p>
     <h2 id="path-h">Run it, don't read it.</h2>
-    <p class="lede">Two commands settle the whole claim: one re-runs every published verdict on your machine, the other proves the demo payouts from chain data.</p>
+    <p class="lede">Two commands check the headline: one re-runs every published verdict on your machine, the other proves the demo payouts from chain data.</p>
     <div class="bento">
       <article class="card w3">
         <h3>make replay</h3>
@@ -447,7 +447,7 @@ h1 { font: 800 clamp(54px, 6vw, 88px)/.92 var(--font-display); text-transform: u
       </article>
       <article class="card w3">
         <h3>Pinned verifier</h3>
-        <p>Every bounty commits the verifier WASM by hash at funding; <code>make replay</code> checks the sha256 before it runs a byte, so the bytes you run are the bytes that ran on chain.</p>
+        <p>Every bounty commits the verifier WASM by hash at funding; <code>make replay</code> checks the sha256 before it runs a byte, so you run exactly the bytes every request pinned. Chain data shows the operator's scoped worker key answered, not that the worker ran those bytes.</p>
         <span class="chip">verifier.wasm d2972cd2</span>
       </article>
       <article class="card w3">
@@ -504,7 +504,7 @@ h1 { font: 800 clamp(54px, 6vw, 88px)/.92 var(--font-display); text-transform: u
       <span>Sealed · built for NEAR Hackathon 2026 · MIT</span>
       <a href="https://github.com/edycutjong/sealed/blob/main/ARCHITECTURE.md">ARCHITECTURE.md</a>
       <a href="https://github.com/edycutjong/sealed/blob/main/LICENSE">LICENSE</a>
-      <span class="sp">data from commit 1a66c93 · judge entry point</span>
+      <span class="sp">data from commit 9f2118d · judge entry point</span>
     </div>
   </div>
 </footer>
