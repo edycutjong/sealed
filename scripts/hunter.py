@@ -77,7 +77,7 @@ def store_secrets(hunter, bounty, wasm_hash, profile, secrets):
 
 
 # The three secret names are fixed by the verifier; report them from this constant, never from the secrets dict.
-SECRET_KEYS = ("EPH_SK", "EXPLOIT", "SALT")
+ROW_KEYS = ("EPH_SK", "EXPLOIT", "SALT")
 
 
 def wait_commit(bounty, cid, done, timeout=900):
@@ -139,9 +139,9 @@ def main():
 
     if not a.skip_store:
         store_secrets(a.hunter, a.bounty, st["verifier_wasm_hash"], profile, secrets)
-        row_note = f"Secrets stored (profile: {profile}, keys: {', '.join(SECRET_KEYS)})"
+        row_note = f"Secrets stored (profile: {profile}, keys: {', '.join(ROW_KEYS)})"
         run["store_secrets"] = row_note
-        print(f"[{a.label}] stored row: {row_note}")
+        print(f"[{a.label}] stored the OutLayer row ({len(ROW_KEYS)} keys)")
     bond = int(inv["bond"]) + int(st["outlayer_deposit"])
     t0 = time.time()
     commit_tx = near.call(a.hunter, a.bounty, "commit",
