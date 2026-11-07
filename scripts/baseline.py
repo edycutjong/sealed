@@ -194,7 +194,7 @@ def show(only=None):
         on_chain = [n for n in fakes if n in chain]
         print(f"  {model}  [{run['models'][model]['provider']}, recorded {run['models'][model]['recorded']}]")
         print(f"    LLM-only triage would pay {len(pay(on_chain))} of {len(on_chain)} fakes  "
-              f"(the {len(on_chain)} non-breaking submissions that ran on testnet; the verifier paid 0 of {len(on_chain)})")
+              f"(the {len(on_chain)} non-breaking submissions to the corpus bounty on testnet; the verifier paid 0 of {len(on_chain)})")
         print(f"    over all {len(fakes)} non-breaking corpus items: pays {len(pay(fakes))}; "
               f"of the {len(real)} submissions that really break a level it would pay {len(pay(real))} "
               f"and refuse {len([n for n in real if run['models'][model]['verdicts'][n] == 'REFUSE'])}")

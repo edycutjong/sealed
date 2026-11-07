@@ -11,7 +11,7 @@ from a fresh clone of this repo with no NEAR account or key. Testnet only. A sty
 Sealed is a bug bounty that pays for an *executed* break of a committed invariant on a committed
 snapshot — the exploit is run by the pinned verifier in a NEAR OutLayer TEE worker (Intel TDX per OutLayer's
 docs; this repo checks the worker key, not the quote) and paid on NEAR — and on testnet the
-executing verifier paid **5 of 5** real Ethernaut exploits and **0 of 21** submitted fakes.
+executing verifier paid **5 of 5** real Ethernaut exploits on the demo bounty and **0 of 21** fakes submitted to the corpus bounty (the earlier keyed D3 bounty also paid 1 real exploit and refused 1 fake).
 
 ## 2. Two-command path (do X → see Y)
 
@@ -38,7 +38,7 @@ One edit flips a verdict: `make replay INPUT=corpus/vectors/real-fallback.json` 
 | Item | Value |
 |---|---|
 | Real exploits paid / submitted | **5 of 5** (demo bounty) — `corpus/results.json` |
-| Non-breaking submissions paid | **0 of 21** (21 of 21 refused) — `corpus/results.json` |
+| Non-breaking submissions paid | **0 of 21** on the corpus bounty (21 of 21 refused; the D3 bounty's 1 fake was also refused) — `corpus/results.json` |
 | Testnet runs | 29 = 5 paid (demo bounty) + 22 on the corpus bounty (the 21 refused + 1 real break awarded, never delivered, expired) + 2 on the earlier keyed D3 bounty (1 paid, 1 refused); 6 paid deliveries = 5 demo + 1 D3 — `corpus/results.json` |
 | Demo bounty (keyless) | `demo.sealed-dev-11010702.testnet` |
 | Corpus bounty (fakes) | `corpus.sealed-dev-11010702.testnet` |

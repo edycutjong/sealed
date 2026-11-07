@@ -128,7 +128,7 @@ Testnet only; no wallet is needed to check any of it. Every hash is in `corpus/r
 | Non-breaking submissions paid | 0 of 21 (21 of 21 refused; all 21 ran on the corpus bounty) | `corpus/results.json` |
 | Testnet runs | 29 = the 5 paid on the demo bounty + 22 on the corpus bounty (the 21 refused, plus 1 real break awarded but never delivered, expired back to the pool) + 2 on the earlier keyed D3 bounty (1 paid, 1 refused). Paid deliveries: 6 = the 5 demo payouts + the D3 one | `corpus/results.json` |
 | Corpus | 52 items vs golden verdicts | `make corpus` |
-| Tests | 413: 307 Python unit (all 19 scripts), 39 verifier (11 golden · 12 unit · 9 CLI · 4 seal · 3 snapgen), 47 contract unit, 20 near-workspaces sandbox | `make test` |
+| Tests | 413: 307 Python unit (all 18 scripts plus `day0/near.py`), 39 verifier (11 golden · 12 unit · 9 CLI · 4 seal · 3 snapgen), 47 contract unit, 20 near-workspaces sandbox | `make test` |
 | Line coverage | Python 100% (1 775 statements, 19 files) · verifier 99.5% (380 lines) · contracts 99.1% (680 lines); the 8 uncovered Rust lines are error arms that cannot fire (e.g. an `Infallible` map_err) or a dead helper, left in rather than change pinned code | `make cov` |
 | Request → verdict | p50 7.27 s · p95 10.85 s (29 runs) | `corpus/bench.json`, `make bench` |
 | Heaviest real run | 7 371 260 instructions (0.37% of the 2e9 limit) | `corpus/results.json` |
