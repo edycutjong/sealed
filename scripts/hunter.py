@@ -139,8 +139,9 @@ def main():
 
     if not a.skip_store:
         store_secrets(a.hunter, a.bounty, st["verifier_wasm_hash"], profile, secrets)
-        run["store_secrets"] = f"Secrets stored (profile: {profile}, keys: {', '.join(SECRET_KEYS)})"
-        print(f"[{a.label}] secret row: {run['store_secrets']}")
+        row_note = f"Secrets stored (profile: {profile}, keys: {', '.join(SECRET_KEYS)})"
+        run["store_secrets"] = row_note
+        print(f"[{a.label}] stored row: {row_note}")
     bond = int(inv["bond"]) + int(st["outlayer_deposit"])
     t0 = time.time()
     commit_tx = near.call(a.hunter, a.bounty, "commit",
