@@ -101,7 +101,7 @@ Full walk-through with `file:line` for every claim: [ARCHITECTURE.md](ARCHITECTU
 |---|---|---|
 | `request_execution` | the bounty requests the verifier, pinned by hash, with the hunter's secrets profile | `contracts/bounty/src/lib.rs:334` (call), `:657` (hash pin) |
 | `resolve_execution` | called by the OutLayer worker (not by the bounty): it resumes OutLayer's yield, and the verdict returns to the bounty's `on_verdict` callback, which decides AWARDED or REFUSED; `make verify` checks that resolve tx and its signing key | `contracts/bounty/src/lib.rs:335` (`.then(on_verdict)`), `:343`; `scripts/verify.py:33` |
-| `store_secrets` | the hunter stores the exploit as an OutLayer encrypted secret bound to the pinned wasm hash | `scripts/hunter.py:63-76` |
+| `store_secrets` | the hunter stores the exploit as an OutLayer encrypted secret bound to the pinned wasm hash | `scripts/hunter.py:68-81` |
 | `get_config` | `make verify` anchors the worker to OutLayer's operator at the resolve block | `scripts/verify.py:111` |
 | Global contracts | the bounty runs on a code hash with no access key (I6); the earlier D3 throwaway bounty (2 of the 29 runs) is keyed | `scripts/deploy_bounty_testnet.py:115` |
 
@@ -126,8 +126,8 @@ Testnet only; no wallet is needed to check any of it. Every hash is in `corpus/r
 | Non-breaking submissions paid | 0 of 21 (21 of 21 refused; all 21 ran on the corpus bounty) | `corpus/results.json` |
 | Testnet runs | 29 = the 5 paid on the demo bounty + 22 on the corpus bounty (the 21 refused, plus 1 real break awarded but never delivered, expired back to the pool) + 2 on the earlier keyed D3 bounty (1 paid, 1 refused). Paid deliveries: 6 = the 5 demo payouts + the D3 one | `corpus/results.json` |
 | Corpus | 52 items vs golden verdicts | `make corpus` |
-| Tests | 411: 305 Python unit (all 19 scripts), 39 verifier (11 golden · 12 unit · 9 CLI · 4 seal · 3 snapgen), 47 contract unit, 20 near-workspaces sandbox | `make test` |
-| Line coverage | Python 100% (1 771 statements, 19 files) · verifier 99.5% (380 lines) · contracts 99.1% (680 lines); the 8 uncovered Rust lines are error arms that cannot fire (e.g. an `Infallible` map_err) or a dead helper, left in rather than change pinned code | `make cov` |
+| Tests | 413: 307 Python unit (all 19 scripts), 39 verifier (11 golden · 12 unit · 9 CLI · 4 seal · 3 snapgen), 47 contract unit, 20 near-workspaces sandbox | `make test` |
+| Line coverage | Python 100% (1 775 statements, 19 files) · verifier 99.5% (380 lines) · contracts 99.1% (680 lines); the 8 uncovered Rust lines are error arms that cannot fire (e.g. an `Infallible` map_err) or a dead helper, left in rather than change pinned code | `make cov` |
 | Request → verdict | p50 7.27 s · p95 10.85 s (29 runs) | `corpus/bench.json`, `make bench` |
 | Heaviest real run | 7 371 260 instructions (0.37% of the 2e9 limit) | `corpus/results.json` |
 | Heaviest fake | 479 555 711 instructions (23.98% of the limit) | `corpus/bench.json` |
@@ -199,7 +199,7 @@ downloads its sandbox node the first time.
 ## 🧪 Testing & CI
 
 ```bash
-make test          # 411 tests: 305 Python unit + 39 verifier + 47 contract unit + 20 near-workspaces sandbox (Prerequisites above)
+make test          # 413 tests: 307 Python unit + 39 verifier + 47 contract unit + 20 near-workspaces sandbox (Prerequisites above)
 make corpus        # 52 items vs golden verdicts, wasmtime only
 ```
 
@@ -207,7 +207,7 @@ make corpus        # 52 items vs golden verdicts, wasmtime only
 
 | Stage | Gate | Blocking |
 |---|---|---|
-| 1 · Quality | clippy (correctness + suspicious) on verifier and bounty · ruff · verifier golden/unit/CLI tests · 305 Python unit tests with a 100% line-coverage gate | ✅ |
+| 1 · Quality | clippy (correctness + suspicious) on verifier and bounty · ruff · verifier golden/unit/CLI tests · 307 Python unit tests with a 100% line-coverage gate | ✅ |
 | 2 · Security | gitleaks over the full history · `scripts/check_submission_readiness.py` · `cargo audit` (advisories reviewed in [SECURITY.md](SECURITY.md)) | ✅ / audit reported |
 | 3 · Build | `verifier.wasm` rebuilds byte-for-byte on macOS/arm64 (the pinned build host) · contracts wasm + unit tests | ✅ |
 | 4 · E2E | near-workspaces sandbox I1–I8 · `make replay` / `corpus` / `refusals` / `open` · `make verify-demo` against NEAR testnet · `/judge` live with no credentials (`scripts/site_check.py`) | ✅ |

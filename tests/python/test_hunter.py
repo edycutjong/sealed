@@ -97,6 +97,7 @@ def _fake_chain(monkeypatch, statuses, calls):
           "protocol_enc_pk": "pk", "verifier_wasm_hash": "wh", "outlayer_deposit": "10"}
     monkeypatch.setattr(hunter.near, "view",
                         lambda b, m, args=None: st if m == "view_state" else next(statuses))
+    monkeypatch.setattr(hunter, "local_wasm_hash", lambda: st["verifier_wasm_hash"])
 
     def call(signer, contract, method, args, **kw):
         calls.append((method, args, kw))
@@ -271,3 +272,19 @@ def test_builtin_exploits_shape():
     assert len(hunter.EXPLOITS["fallback"]) == 3
     assert hunter.TERMINAL == ("Paid", "Refused", "Voided")
     assert subprocess  # module used for patch targets
+
+
+def test_local_wasm_hash_is_the_committed_pin():
+    want = open(os.path.join(os.path.dirname(hunter.VERIFIER), "verifier.wasm.sha256")).read().split()[0]
+    assert hunter.local_wasm_hash() == want
+
+
+def test_main_refuses_a_bounty_pinned_to_another_verifier(env, monkeypatch):
+    calls = []
+    _fake_chain(monkeypatch, iter([]), calls)
+    monkeypatch.setattr(hunter, "local_wasm_hash", lambda: "ab" * 32)
+    _argv(monkeypatch, "--bounty", BOUNTY, "--hunter", HUNTER, "--exploit", "noop", "--label", "pin")
+    with pytest.raises(SystemExit) as ei:
+        hunter.main()
+    assert "pins verifier wh" in str(ei.value) and "would not match the worker" in str(ei.value)
+    assert calls == [] and not (env / "private").exists()

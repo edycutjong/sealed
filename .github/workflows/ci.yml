@@ -57,7 +57,7 @@ jobs:
         run: pipx run ruff==0.14.4 check --output-format=github .
       - name: Byte-compile every script
         run: python3 -m compileall -q -x "target|node_modules" .
-      - name: Python unit tests (305, 100% line coverage gate, no network)
+      - name: Python unit tests (307, 100% line coverage gate, no network)
         run: |
           python3 -m pip install --quiet pytest==8.1.1 pytest-cov PyNaCl base58
           python3 -m pytest --cov=scripts --cov=near --cov-report=term-missing --cov-fail-under=100

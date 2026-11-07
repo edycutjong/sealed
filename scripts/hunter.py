@@ -50,6 +50,11 @@ def status_name(s):
     return s if isinstance(s, str) else next(iter(s))
 
 
+def local_wasm_hash():
+    """sha256 of the committed verifier.wasm, the bytes the local pre-flight runs."""
+    return hashlib.sha256(open(VERIFIER, "rb").read()).hexdigest()
+
+
 def local_run(inp, secrets):
     env = {**os.environ, **secrets, "SEALED_DEBUG_ENC": "1"}
     p = subprocess.run(["wasmtime", "run", "--env", "EXPLOIT", "--env", "SALT", "--env", "EPH_SK",
@@ -108,6 +113,11 @@ def main():
     payout_to = a.payout_to or a.hunter
 
     st = near.view(a.bounty, "view_state")
+    # The pre-flight runs the committed verifier.wasm; a bounty pinned to another build would have the worker run other
+    # bytes, so its verdict and h_enc need not match what the pre-flight showed. Stop before anything is saved or sent.
+    if local_wasm_hash() != st["verifier_wasm_hash"]:
+        sys.exit(f"{a.bounty} pins verifier {st['verifier_wasm_hash'][:12]}…, not the committed verifier.wasm "
+                 f"{local_wasm_hash()[:12]}…: the local pre-flight would not match the worker")
     if a.exploit.startswith("corpus:"):
         item = next(i for i in json.load(open(os.path.join(ROOT, "corpus", "manifest.json")))["items"]
                     if i["name"] == a.exploit[7:])
