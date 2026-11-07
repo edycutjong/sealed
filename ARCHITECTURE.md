@@ -57,6 +57,30 @@ hunter                bounty (keyless)            token            OutLayer (TEE
   `deliver_by`; `on_paid` (`:501`) logs `PAID`, or keeps the escrow owed for `retry_payout` (`:520`). An award never
   delivered can be `expire`d back to the pool (`:536`).
 
+## Refusals
+
+Every refusal is a successful tx with a log line. Calls that cannot apply at all panic instead: malformed arguments (an
+unknown invariant, a non-hex commit hash: `contracts/bounty/src/lib.rs:246`, `:248`) and wrong-caller or wrong-state
+calls, such as a `deliver` by anyone but the hunter or on a commit that is not awarded (`:480-481`). Every log the
+contract refuses with:
+
+| Where | Log line | Bond and money |
+|---|---|---|
+| `commit` guards (`:254-269`) | `REFUSED: bond`, `REFUSED: claim pending` (a verdict is in flight on that invariant), `REFUSED: invariant already paid`, `REFUSED: pool short` | everything attached comes back; nothing is reserved |
+| `on_payout_checked` (`:319`, `:321`, `:337-338`, through `refund_commit` `:604-618`) | `REFUSED <id> claim pending` or `invariant already paid` (the slot was taken while the registration was checked), `payout_to not registered`, `registration check unavailable`, each `(bond + deposit returned)` | bond and OutLayer deposit come back |
+| `on_verdict` (`:375-399`) | `REFUSED <id> <reason>`: the verifier's `err` (`exploit invalid: …`, `secret missing`) or `no invariant broken`; then `commit mismatch`, `wrong invariant`, `snapshot mismatch`, `malformed h_enc` | bond slashed (the worker ran, so the deposit is spent) |
+| `no_verdict` (`:419-443`) | `REFUSED <id> verifier unavailable (bond returned)`, or `(repeat within 24h: slashed)` | bond back once per `(hunter, invariant)` per 24 h; a no-verdict ≥ 10 min after the commit always returns it |
+| `release_stale` (`:454-472`) | `REFUSED <id> registration check unavailable (bond + deposit returned)`, or `RELEASE_STALE <id> (full refund, uncounted)` | bond back, plus the deposit if it was never sent |
+| `deliver` (`:483-490`) | `REFUSED <id> delivery expired`, `REFUSED <id> delivery mismatch` | no state change; the award stands |
+| `expire` (`:536-549`) | `EXPIRED <id>; escrow <amount> back to pool, bond slashed` | escrow back to the pool, bond slashed |
+| `withdraw_pool` (`:554-561`) | `REFUSED: claim pending` for any amount above `pool − reserved` (the same string whether a claim is pending or the request simply exceeds the unreserved pool), `REFUSED: timelock` | nothing moves |
+| `ft_on_transfer` (`:224-227`) | `REFUSED: wrong token` | the transfer is returned |
+
+`make refusals` (`scripts/refusals.py`) lists the six kinds the demo set out to show on chain, one testnet tx each, with
+the log line recorded in `corpus/refusals.json`: pool pull, duplicate, fake, invariant busy, delivery mismatch, expired
+award. "6 of 6" means all six fired; it is not a count of every `REFUSED` line above. Two of the six txs (the fake and
+the expiry) are in run bundles that `make verify` re-reads; open the other four on the explorer.
+
 ## What the verifier computes
 
 `run` (`verifier/src/lib.rs:336`):

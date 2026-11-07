@@ -44,7 +44,7 @@ One edit flips a verdict: `make replay INPUT=corpus/vectors/real-fallback.json` 
 | Global code hash | `7HtmeswBuR9JLCcU31QCioUGEmudjyYrNcbAr1jghRUv` |
 | A real exploit, PAID | commit `FNbCUc53YNayqd6NBqaaxnZTeGAVGABHfPsoHz7Gkc2s` → verdict `2vdtrvQmZmpt4NGfAD2FyBQy9d5PjLR4dEJuQCF8MXTX` → deliver `AodmFQ6tq4pBcxLreRDSCanKkZQY7m6nhM459NfPAg3s` |
 | A fake, REFUSED | `DUtubHScU3udGH58UxdTHWjwvDBjsHCsrupmBMxVYZiy` — "no invariant broken", bond slashed |
-| Refusal kinds on chain | 6 of 6 — `make refusals` lists each tx |
+| Refusal kinds on chain | 6 of 6 demonstrated kinds — `make refusals` lists each tx; every refusal the contract can log: [ARCHITECTURE.md § Refusals](ARCHITECTURE.md#refusals) |
 
 Explorer links for each: [README.md § Live Deployment](README.md). The payout is the verifier's
 award-then-pay: `on_verdict` awards escrow to the earliest verifying commit; `deliver` pays only

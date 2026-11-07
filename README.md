@@ -114,7 +114,7 @@ Testnet only; no wallet is needed to check any of it. Every hash is in `corpus/r
 | Global code hash | `7HtmeswBuR9JLCcU31QCioUGEmudjyYrNcbAr1jghRUv` |
 | A real exploit, PAID | [commit](https://testnet.nearblocks.io/txns/FNbCUc53YNayqd6NBqaaxnZTeGAVGABHfPsoHz7Gkc2s) · [worker verdict](https://testnet.nearblocks.io/txns/2vdtrvQmZmpt4NGfAD2FyBQy9d5PjLR4dEJuQCF8MXTX) · [deliver](https://testnet.nearblocks.io/txns/AodmFQ6tq4pBcxLreRDSCanKkZQY7m6nhM459NfPAg3s) |
 | A fake, REFUSED | [`fake`](https://testnet.nearblocks.io/txns/DUtubHScU3udGH58UxdTHWjwvDBjsHCsrupmBMxVYZiy): "no invariant broken", bond slashed |
-| Refusal kinds on chain | 6 of 6: `make refusals` lists each tx |
+| Refusal kinds on chain | 6 of 6 demonstrated kinds: `make refusals` lists each tx (every refusal the contract can log: [ARCHITECTURE.md § Refusals](ARCHITECTURE.md#refusals)) |
 
 ## 📊 Engineering Rigor
 
@@ -189,7 +189,7 @@ downloads its sandbox node the first time.
 | `make verify` | each of the 29 runs proven from chain data: pinned hash, the operator's scoped worker key, verdict, and for the 6 paid runs `h_enc` and PAID; every commit on chain bundled; paid totals match | archival RPC, about 80 calls (a few minutes on a rate-limited node; `Error 2` = unreachable, `Error 1` = a failed check) |
 | `make verify-demo` | the same checks on the 5 paid demo-bounty runs, and FAIL unless that bounty has 0 access keys, runs the committed `contracts/bounty.wasm` (global hash `7Htmes…`) and was created with no key (its create tx) | about 25 calls (about 1.5 min) |
 | `make corpus` | all 52 corpus items vs their golden verdicts | none |
-| `make refusals` | the 6 on-chain refusal kinds with tx hashes | none |
+| `make refusals` | the 6 on-chain refusal kinds with tx hashes and the logged line, from `corpus/refusals.json` (open each hash on the explorer) | none |
 | `make bench` | request→verdict p50/p95, instructions / time / memory vs the enforced limits | none (`make bench-chain` re-reads the chain) |
 | `make baseline` | what LLM-only triage would pay on the same corpus | none |
 
