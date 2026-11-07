@@ -5,7 +5,7 @@ CARGO_HOME ?= $(HOME)/.cargo
 REMAP := --remap-path-prefix=$(CARGO_HOME)=/cargo --remap-path-prefix=$(CURDIR)=/sealed
 WASM := target/wasm32-wasip1/release/verifier.wasm
 
-.PHONY: verifier-wasm verifier-check test test-verifier test-contracts contracts-build contracts-wasm cov
+.PHONY: verifier-wasm verifier-check test test-py test-py-cov test-verifier test-contracts contracts-build contracts-wasm cov
 
 ## Rebuild verifier.wasm from source and write its sha256 (the hash every bounty pins).
 verifier-wasm:
@@ -24,6 +24,10 @@ test: test-py test-verifier test-contracts
 ## Python unit tests for every script (no network: tests/python/conftest.py blocks sockets).
 test-py:
 	python3 -m pytest
+
+## The same with CI's 100% line-coverage gate (pip install pytest pytest-cov pynacl base58).
+test-py-cov:
+	python3 -m pytest --cov=scripts --cov=near --cov-report=term-missing --cov-fail-under=100
 
 ## Line coverage: Python (pytest-cov, gate 100%), verifier and contracts (cargo-llvm-cov: `cargo install cargo-llvm-cov`).
 cov:
@@ -141,7 +145,7 @@ endif
 
 .PHONY: baseline
 
-# ----- CI stages, runnable locally (mirrors .github/workflows/ci.yml) -----
+# ----- CI stages, runnable locally (mirrors .github/workflows/ci.yml; its advisory Lighthouse step is `make lighthouse`) -----
 lint:
 	cargo clippy --locked -p verifier --all-targets -- -A clippy::all -D clippy::correctness -D clippy::suspicious
 	cd contracts && cargo +1.97.1 clippy --locked -p bounty -- -A clippy::all -D clippy::correctness -D clippy::suspicious
@@ -161,6 +165,6 @@ perf:
 lighthouse:
 	npx --yes @lhci/cli@0.14.0 autorun
 
-ci: lint security-scan test-verifier verifier-check replay corpus refusals open e2e-site perf
+ci: lint security-scan test-py-cov test-verifier verifier-check test-contracts replay corpus refusals open verify-demo e2e-site bench perf
 
 .PHONY: lint security-scan e2e-site perf lighthouse ci

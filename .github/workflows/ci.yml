@@ -265,7 +265,7 @@ jobs:
             echo "## 🚀 All CI/CD gates passed"
             echo "| Stage | Gate |"
             echo "|---|---|"
-            echo "| 1 · Quality | clippy (correctness+suspicious) · ruff · verifier golden/unit/CLI tests |"
+            echo "| 1 · Quality | clippy (correctness+suspicious) · ruff · verifier golden/unit/CLI tests · Python unit tests (100% line coverage) |"
             echo "| 2 · Security | gitleaks full history · readiness · cargo audit (reviewed) |"
             echo "| 3 · Build | verifier.wasm byte-identical rebuild · contracts wasm + unit tests |"
             echo "| 4 · E2E | sandbox I1–I8 · replay · corpus · refusals · open · verify-demo on testnet · /judge live |"

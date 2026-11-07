@@ -207,7 +207,7 @@ make corpus        # 52 items vs golden verdicts, wasmtime only
 
 | Stage | Gate | Blocking |
 |---|---|---|
-| 1 · Quality | clippy (correctness + suspicious) on verifier and bounty · ruff · verifier golden/unit/CLI tests | ✅ |
+| 1 · Quality | clippy (correctness + suspicious) on verifier and bounty · ruff · verifier golden/unit/CLI tests · 305 Python unit tests with a 100% line-coverage gate | ✅ |
 | 2 · Security | gitleaks over the full history · `scripts/check_submission_readiness.py` · `cargo audit` (advisories reviewed in [SECURITY.md](SECURITY.md)) | ✅ / audit reported |
 | 3 · Build | `verifier.wasm` rebuilds byte-for-byte on macOS/arm64 (the pinned build host) · contracts wasm + unit tests | ✅ |
 | 4 · E2E | near-workspaces sandbox I1–I8 · `make replay` / `corpus` / `refusals` / `open` · `make verify-demo` against NEAR testnet · `/judge` live with no credentials (`scripts/site_check.py`) | ✅ |
