@@ -36,6 +36,10 @@ make verify        # all 29 runs, about 80 calls; make prints Error 2 = RPC unre
 make open          # offline: all 6 paid deliveries open to the exploit `make replay` re-runs (needs PyNaCl)
 ```
 
+The 29 runs: the 5 paid on the demo bounty, 22 on the corpus bounty (the 21 refused fakes plus one real break that was
+awarded, never delivered and expired back to the pool) and 2 on the earlier keyed D3 bounty (1 paid, 1 refused). So
+`make open` has 6 paid deliveries to open: the 5 demo payouts and the D3 one.
+
 Per run it checks: the pinned verifier hash, the operator's scoped OutLayer worker key, the verdict, `h_enc`, and PAID
 for that commit id; that every commit on chain is bundled; and that the bounty's paid and escrow totals match.
 `verify-demo` also fails unless the demo bounty has 0 access keys, runs the committed `contracts/bounty.wasm`, and its

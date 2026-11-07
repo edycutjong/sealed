@@ -30,6 +30,7 @@ make verify   # from chain data: re-checks all 29 runs against testnet (about 80
 |---|---|
 | Real exploits paid / submitted | **5 of 5** (demo bounty) — `corpus/results.json` |
 | Non-breaking submissions paid | **0 of 21** (21 of 21 refused) — `corpus/results.json` |
+| Testnet runs | 29 = 5 paid (demo bounty) + 22 on the corpus bounty (the 21 refused + 1 real break awarded, never delivered, expired) + 2 on the earlier keyed D3 bounty (1 paid, 1 refused); 6 paid deliveries = 5 demo + 1 D3 — `corpus/results.json` |
 | Demo bounty (keyless) | `demo.sealed-dev-11010702.testnet` |
 | Corpus bounty (fakes) | `corpus.sealed-dev-11010702.testnet` |
 | Global code hash | `7HtmeswBuR9JLCcU31QCioUGEmudjyYrNcbAr1jghRUv` |

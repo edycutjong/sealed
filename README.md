@@ -58,7 +58,8 @@ hash of the verifier WASM. Then:
    a reason**, and a hunter-caused failure slashes the bond.
 4. The hunter **delivers** the exploit sealed to the protocol's key. The contract checks it hashes to what the worker
    attested, and only then is the escrow owed and **paid**. The protocol gets exactly the exploit that was verified
-   (`make open` opens all 6 paid deliveries offline to the exploit `make replay` re-runs).
+   (`make open` opens all 6 paid deliveries, the 5 demo-bounty payouts plus one on the earlier D3 bounty, offline to
+   the exploit `make replay` re-runs).
 
 The protocol still decides what counts as a break, but up front, before any claim, and in public.
 
@@ -121,13 +122,14 @@ Testnet only; no wallet is needed to check any of it. Every hash is in `corpus/r
 |---|---|---|
 | Real exploits paid / submitted | 5 of 5 (demo bounty) | `corpus/results.json` |
 | Non-breaking submissions paid | 0 of 21 (21 of 21 refused; all 21 ran on the corpus bounty) | `corpus/results.json` |
+| Testnet runs | 29 = the 5 paid on the demo bounty + 22 on the corpus bounty (the 21 refused, plus 1 real break awarded but never delivered, expired back to the pool) + 2 on the earlier keyed D3 bounty (1 paid, 1 refused). Paid deliveries: 6 = the 5 demo payouts + the D3 one | `corpus/results.json` |
 | Corpus | 52 items vs golden verdicts | `make corpus` |
 | Tests | 411: 305 Python unit (all 19 scripts), 39 verifier (11 golden · 12 unit · 9 CLI · 4 seal · 3 snapgen), 47 contract unit, 20 near-workspaces sandbox | `make test` |
 | Line coverage | Python 100% (1 771 statements, 19 files) · verifier 99.5% (380 lines) · contracts 99.1% (680 lines); the 8 uncovered Rust lines are error arms that cannot fire (e.g. an `Infallible` map_err) or a dead helper, left in rather than change pinned code | `make cov` |
 | Request → verdict | p50 7.27 s · p95 10.85 s (29 runs) | `corpus/bench.json`, `make bench` |
 | Heaviest real run | 7 371 260 instructions (0.37% of the 2e9 limit) | `corpus/results.json` |
 | Heaviest fake | 479 555 711 instructions (23.98% of the limit) | `corpus/bench.json` |
-| LLM-only triage on the same corpus (fakes it would pay, of 21) | muse-wonder-1.0 1 · nemotron-3-ultra 3 · qwen3.8-omni-flash 3; the same models would pay 12, 12 and 11 of the 15 submissions that really break a level | `make baseline` |
+| LLM-only triage on the same corpus (fakes it would pay, of 21) | muse-wonder-1.0 1 · nemotron-3-ultra 3 · qwen3.8-omni-flash 3; the same models would pay 12, 12 and 11 of the 15 submissions that really break a level (offline golden verdicts) | `make baseline` |
 
 The baseline models could not run code and are **not** NEAR AI Cloud; read its limits in
 [baseline/README.md](baseline/README.md) before quoting it.
