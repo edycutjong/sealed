@@ -172,8 +172,11 @@ Detail for each, plus memory and seal-key reuse: [ARCHITECTURE.md § Limits](ARC
 
 ### Prerequisites
 
-`python3` ≥ 3.8 and `wasmtime` (`brew install wasmtime`, `cargo install wasmtime-cli`, or `curl https://wasmtime.dev/install.sh -sSf | bash`). Rust is
-only needed to rebuild the verifier from source (`make verifier-check`).
+`python3` ≥ 3.8 and `wasmtime` (`brew install wasmtime`, `cargo install wasmtime-cli`, or `curl https://wasmtime.dev/install.sh -sSf | bash`) run
+every target in the table below; `make open` also needs PyNaCl (`pip install pynacl`). Rust is only for rebuilding
+from source (`make verifier-check`) and for the full test suite: `make test` needs `pip install pytest pytest-cov pynacl base58`
+plus Rust 1.97.1 (from `rust-toolchain.toml`) and 1.85.0 with the `wasm32-unknown-unknown` target, and near-workspaces
+downloads its sandbox node the first time.
 
 ### Reproduce from a fresh clone (no NEAR account, no keys)
 
@@ -193,7 +196,7 @@ only needed to rebuild the verifier from source (`make verifier-check`).
 ## 🧪 Testing & CI
 
 ```bash
-make test          # verifier golden + contract unit + near-workspaces sandbox (needs Rust, wasm-opt)
+make test          # 411 tests: 305 Python unit + 39 verifier + 47 contract unit + 20 near-workspaces sandbox (Prerequisites above)
 make corpus        # 52 items vs golden verdicts, wasmtime only
 ```
 

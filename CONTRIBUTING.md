@@ -3,7 +3,7 @@
 ```bash
 make doctor        # python3, wasmtime, pinned verifier hash, archival RPC
 make replay        # re-run every published commit offline (wasmtime + python3)
-make test          # verifier golden + contract unit + near-workspaces (Rust 1.97.1 and 1.85.0, wasm-opt)
+make test          # Python unit + verifier golden + contract unit + near-workspaces (pip: pytest pytest-cov pynacl base58; Rust 1.97.1 and 1.85.0)
 python3 scripts/check_submission_readiness.py
 ```
 

@@ -59,8 +59,11 @@ make verify        # all 29 runs proven from chain (about 80 calls; Error 2 = RP
 make open          # offline: all 6 paid deliveries open to the exploit make replay re-runs (needs PyNaCl)
 make corpus        # 52 items vs golden verdicts → "corpus: 52 OK · 0 FAIL"
 make bench         # request→verdict p50 7.27 s · p95 10.85 s (29 runs)
-make test          # 411 tests: 305 Python unit, 39 verifier, 47 contract unit, 20 near-workspaces sandbox
 ```
+
+The full test suite needs a developer toolchain, not credentials: `pip install pytest pytest-cov pynacl base58`, Rust
+1.97.1 and 1.85.0 (`wasm32-unknown-unknown` target), then `make test` → 411 tests: 305 Python unit, 39 verifier, 47
+contract unit, 20 near-workspaces sandbox (it downloads the sandbox node the first time).
 
 What each check covers, line by line, is in [DEMO.md](DEMO.md) and
 [README.md § Engineering Rigor](README.md).

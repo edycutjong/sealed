@@ -97,7 +97,7 @@ hunter                bounty (keyless)            token            OutLayer (TEE
 | `make corpus` | `scripts/corpus_check.py` | all 52 corpus items against their golden verdicts |
 | `make refusals` | `scripts/refusals.py` | the 6 refusal kinds seen on chain, with tx hashes |
 | `make bench` / `bench-chain` | `scripts/bench.py` | latency p50/p95 and resources vs limits, recomputed from the bundles (`bench-chain` re-reads the chain) |
-| `make test` | `verifier/tests/golden.rs`, `contracts/bounty/src/lib.rs` unit tests, `contracts/itests/tests/bounty.rs` | golden verdicts native = wasmtime; contract unit tests (mocked context); the contract in a near-workspaces sandbox |
+| `make test` | `tests/python/`, `verifier/tests/*.rs`, the contract crates' unit tests, `contracts/itests/tests/bounty.rs` | every script with the network blocked (`tests/python/conftest.py`); golden verdicts native = wasmtime; contract unit tests (mocked context); the contract in a near-workspaces sandbox |
 
 ## Limits
 
