@@ -95,6 +95,17 @@ the expiry) are in run bundles that `make verify` re-reads; open the other four 
   native, wasmtime and the worker produce identical bytes (`verifier/src/seal.rs:1-5`); `h_enc = sha256(enc)`.
 - Bounds (`:20-32`): 600 000 gas for all exploit txs, 500 000 for `validateInstance`, ≤ 4 txs, ≤ 24 KiB calldata, no
   precompiles (`:220`), `err` capped at 64 bytes.
+- EVM settings (`build_evm`, `:197-215`; `tx`, `:238-247`): Cancun rules on the snapshot's chain id and block, with the
+  nonce check and the tx chain-id check off (`:203-204`), base fee 0, block gas limit unbounded (`:209-210`) and gas
+  price 0 (`:245`). It replays the level's own contracts under those rules; it is not a full mainnet environment.
+- Secrets come from the worker's env (`EXPLOIT`, `SALT`, `EPH_SK`, `main.rs:32-37`). Only when they are absent does the
+  verifier read an optional `secrets` field of the input (kept for the day-0 runs, `lib.rs:77-80`); the bounty builds
+  `input_data` with five fields and never sets it (`contracts/bounty/src/lib.rs:648-654`), so a commit whose secret
+  row is missing gets the verdict `secret missing` and is refused (the worker answered exactly that on day 0:
+  `day0/results/g6-g7d-missing.json`).
+- `SEALED_TRACE` (`lib.rs:274`) and `SEALED_DEBUG_ENC` (`main.rs:47-49`) write to stderr only; the verdict is the one
+  JSON line on stdout (`main.rs:61`). `make replay` sets both (to print the `validateInstance` call and check `enc`);
+  the hunter's local pre-flight sets `SEALED_DEBUG_ENC` to learn `enc` before it pays.
 - `main.rs` reads the worker's enforced limits (`NEAR_MAX_*`) and reports them plus its own peak linear memory in the
   verdict's `lim` field.
 
