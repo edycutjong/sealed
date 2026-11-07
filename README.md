@@ -32,8 +32,6 @@
 
 <p align="center"><img src="docs/assets/broll.gif" alt="Silent 17-second loop from the demo: BUG BOUNTIES RUN ON TRUST over a pile of AI-written reports; the red SEALED EXPLOIT tape, PAYS ONLY FOR AN EXECUTED BREAK; the custody form committed at funding with 0 access keys; a green PAID 1 000 tUSDC stamp on the real exploit's deliver tx; a red REFUSED bond slashed stamp on the near-miss; and the numbers 5/5 real exploits paid, 0/21 fakes paid, LLM-only 1 · 3 · 3 of 21." width="100%"></p>
 
-[![Sealed Exploit demo video (1:34): one real exploit paid, one fake refused on NEAR testnet](https://i.ytimg.com/vi/sEMg3q7gG5k/hqdefault.jpg)](https://youtu.be/sEMg3q7gG5k)
-
 **[▶ Watch the 1:34 demo on YouTube](https://youtu.be/sEMg3q7gG5k)**: a real exploit is paid and a fake is refused on chain, with captions.
 
 The hero above is the artwork; the product is the command line and the chain. Start with the five-minute path in
