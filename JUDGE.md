@@ -9,7 +9,8 @@ from a fresh clone of this repo with no NEAR account or key. Testnet only. A sty
 ## 1. One-sentence claim
 
 Sealed is a bug bounty that pays for an *executed* break of a committed invariant on a committed
-snapshot — the exploit is verified inside a NEAR OutLayer TEE and paid on NEAR — and on testnet the
+snapshot — the exploit is run by the pinned verifier in a NEAR OutLayer TEE worker (Intel TDX per OutLayer's
+docs; this repo checks the worker key, not the quote) and paid on NEAR — and on testnet the
 executing verifier paid **5 of 5** real Ethernaut exploits and **0 of 21** submitted fakes.
 
 ## 2. Two-command path (do X → see Y)

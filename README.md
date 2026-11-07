@@ -56,8 +56,8 @@ hash of the verifier WASM. Then:
    revm on the snapshot and calls the level's own `validateInstance`.
 3. The callback **awards** the first commit that verifies, once per invariant. Everything else is **refused on chain with
    a reason**, and a hunter-caused failure slashes the bond.
-4. The hunter **delivers** the exploit sealed to the protocol's key. The contract checks it hashes to what the worker
-   attested, and only then is the escrow owed and **paid**. The protocol gets exactly the exploit that was verified
+4. The hunter **delivers** the exploit sealed to the protocol's key. The contract checks it hashes to the `h_enc` in the
+   worker's verdict, and only then is the escrow owed and **paid**. The protocol gets exactly the exploit that was verified
    (`make open` opens all 6 paid deliveries, the 5 demo-bounty payouts plus one on the earlier D3 bounty, offline to
    the exploit `make replay` re-runs).
 
@@ -65,7 +65,7 @@ The protocol still decides what counts as a break, but up front, before any clai
 
 ## 🏗️ Architecture & Tech Stack
 
-![Sealed architecture in ten steps across three phases. COMMIT: the protocol funds the keyless global bounty and pins snapshots, invariants and the verifier wasm hash; the hunter stores the exploit as an OutLayer encrypted secret, then commits H(exploit, hunter, salt) with a bond. VERIFY: the bounty calls request_execution pinned by hash; an OutLayer TEE worker replays the exploit in revm on the committed snapshot and returns the verdict to on_verdict; the first break per invariant is awarded into escrow. DELIVER and PAY: deliver(enc) must hash to the attested h_enc, then ft_transfer pays 1 000 tUSDC. Six refusal kinds branch off the failing check (pool pull, invariant busy, duplicate, fake, delivery mismatch, expired award). A trust strip says what is checked from chain, what replays offline, and what is not checked (the TDX quote).](docs/assets/architecture.png)
+![Sealed architecture in ten steps across three phases. COMMIT: the protocol funds the keyless global bounty and pins snapshots, invariants and the verifier wasm hash; the hunter stores the exploit as an OutLayer encrypted secret, then commits H(exploit, hunter, salt) with a bond. VERIFY: the bounty calls request_execution pinned by hash; an OutLayer TEE worker replays the exploit in revm on the committed snapshot and returns the verdict to on_verdict; the first break per invariant is awarded into escrow. DELIVER and PAY: deliver(enc) must hash to the h_enc in the worker's verdict, then ft_transfer pays 1 000 tUSDC. Six refusal kinds branch off the failing check (pool pull, invariant busy, duplicate, fake, delivery mismatch, expired award). A trust strip says what is checked from chain, what replays offline, and what is not checked (the TDX quote).](docs/assets/architecture.png)
 
 <details>
 <summary><b>Text-equivalent diagram (Mermaid)</b> — click to expand</summary>
