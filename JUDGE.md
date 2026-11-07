@@ -3,8 +3,8 @@
 Machine-readable companion for the NEAR Hackathon 2026 AI judges (Claude Code + Codex) and the
 human jury. It is a short index to the evidence; the authority is [README.md](README.md),
 [DEMO.md](DEMO.md) and [ARCHITECTURE.md](ARCHITECTURE.md), and every number below is reproducible
-from `build/` with no NEAR account or key. Testnet only. A styled web version is at
-`docs/judge/index.html`, served at `/judge` once the site is deployed.
+from a fresh clone of this repo with no NEAR account or key. Testnet only. A styled web version
+(source `docs/judge/index.html`) is live at https://sealed.edycu.dev/judge/.
 
 ## 1. One-sentence claim
 
@@ -87,4 +87,4 @@ Full detail: [README.md § Honest limits](README.md) and [ARCHITECTURE.md § Lim
 - Pitch deck: https://sealed.edycu.dev/pitch/
 - Architecture (every claim with `file:line`): [ARCHITECTURE.md](ARCHITECTURE.md)
 - Demo walk-through: [DEMO.md](DEMO.md)
-- OutLayer integration (5 methods, with code refs): [README.md § NEAR OutLayer Integration](README.md)
+- OutLayer integration (4 OutLayer methods plus NEAR global contracts, with code refs): [README.md § NEAR OutLayer Integration](README.md)
