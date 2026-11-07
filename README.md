@@ -238,7 +238,8 @@ hunter-agent/   LLM-hunter transcripts and proposed exploits       day0/        
 
 Walk-through with explorer links: [DEMO.md](DEMO.md). Landing page: [sealed.edycu.dev](https://sealed.edycu.dev)
 (source `docs/index.html`; it replays two recorded testnet runs). Pitch deck: [/pitch/](https://sealed.edycu.dev/pitch/)
-(`docs/pitch/index.html`). A video is not published yet.
+(`docs/pitch/index.html`). Demo video (1:34, captioned): [YouTube](https://youtu.be/sEMg3q7gG5k), also attached to the
+[X demo post](https://x.com/edycutjong/status/2117725204403364028).
 
 ## 📄 License
 
