@@ -34,7 +34,9 @@
 
 <p align="center"><img src="docs/assets/broll.gif" alt="Silent 17-second loop from the demo: BUG BOUNTIES RUN ON TRUST over a pile of AI-written reports; the red SEALED EXPLOIT tape, PAYS ONLY FOR AN EXECUTED BREAK; the custody form committed at funding with 0 access keys; a green PAID 1 000 tUSDC stamp on the real exploit's deliver tx; a red REFUSED bond slashed stamp on the near-miss; and the numbers 5/5 real exploits paid, 0/21 fakes paid, LLM-only 1 · 3 · 3 of 21." width="100%"></p>
 
-**[▶ Watch the 1:34 demo on YouTube](https://youtu.be/sEMg3q7gG5k)**: a real exploit is paid and a fake is refused on chain, with captions.
+**[▶ Watch the 1:34 demo on YouTube](https://youtu.be/sEMg3q7gG5k)**, with captions: the real exploit is paid at 0:45,
+`make replay` shows the near-miss (the same exploit minus one transfer) returning 0 at 0:50, and that near-miss is
+refused on chain, bond slashed, at 1:00.
 
 The hero above is the artwork; the product is the command line and the chain. Start with the five-minute path in
 [DEMO.md](DEMO.md): one real exploit pays out, one fake is refused with a reason, both with explorer links. Judging?
