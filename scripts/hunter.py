@@ -73,7 +73,11 @@ def store_secrets(hunter, bounty, wasm_hash, profile, secrets):
     # Never echo the CLI's output: it is derived from the secret payload. Report only non-secret facts.
     if p.returncode != 0:
         sys.exit(f"store_secrets failed (outlayer exit {p.returncode}); re-run `outlayer secrets set` by hand to see why")
-    return f"Secrets stored (profile: {profile}, keys: {', '.join(sorted(secrets))})"
+    return True
+
+
+# The three secret names are fixed by the verifier; report them from this constant, never from the secrets dict.
+SECRET_KEYS = ("EPH_SK", "EXPLOIT", "SALT")
 
 
 def wait_commit(bounty, cid, done, timeout=900):
@@ -134,8 +138,9 @@ def main():
     print(f"[{a.label}] local verdict broken={verdict['broken']} h_enc={verdict['h_enc'][:16]}… err={verdict['err']}")
 
     if not a.skip_store:
-        run["store_secrets"] = store_secrets(a.hunter, a.bounty, st["verifier_wasm_hash"], profile, secrets)
-        print(f"[{a.label}] secret row: {run['store_secrets'][:120]}")
+        store_secrets(a.hunter, a.bounty, st["verifier_wasm_hash"], profile, secrets)
+        run["store_secrets"] = f"Secrets stored (profile: {profile}, keys: {', '.join(SECRET_KEYS)})"
+        print(f"[{a.label}] secret row: {run['store_secrets']}")
     bond = int(inv["bond"]) + int(st["outlayer_deposit"])
     t0 = time.time()
     commit_tx = near.call(a.hunter, a.bounty, "commit",
