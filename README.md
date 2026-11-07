@@ -12,6 +12,8 @@
   [![Pitch Deck](https://img.shields.io/badge/📊_Pitch-Deck-f59e0b?style=for-the-badge)](https://sealed.edycu.dev/pitch/)
   [![Judge Page](https://img.shields.io/badge/⚖️_Judge-Page-10b981?style=for-the-badge)](https://sealed.edycu.dev/judge/)
   [![Demo Video](https://img.shields.io/badge/▶_Demo-Video-ef4444?style=for-the-badge)](https://youtu.be/sEMg3q7gG5k)
+  [![X Post](https://img.shields.io/badge/Demo-Post-000000?style=for-the-badge&logo=x&logoColor=white)](https://x.com/edycutjong/status/2117725204403364028)
+  [![dev.to Article](https://img.shields.io/badge/dev.to-Article-0a0a0a?style=for-the-badge&logo=devdotto&logoColor=white)](https://dev.to/edycutjong/i-asked-3-llms-to-triage-bug-bounty-exploits-so-i-built-a-contract-that-runs-them-instead-38i6)
   [![Built for NEAR Hackathon](https://img.shields.io/badge/NEAR-Hackathon_2026-8b5cf6?style=for-the-badge)](https://nearhackathon.com)
 
   <br/>
