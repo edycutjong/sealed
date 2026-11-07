@@ -1,0 +1,19 @@
+{
+ "source": "GET https://cloud-api.near.ai/v1/models (NEAR AI Cloud model listing), entry for the baseline model",
+ "fetched": "2026-11-07",
+ "model": {
+  "id": "deepseek-ai/DeepSeek-V4.1-Flash-1017",
+  "owned_by": "nearai",
+  "description": "October 17, 2026 snapshot of DeepSeek V4.1 Flash, a reasoning and coding model. Served privately from NEAR AI's attested TEE infrastructure.",
+  "context_length": 1048576,
+  "pricing": {
+   "input": 0.3,
+   "output": 1.2,
+   "prompt": "0.0000003",
+   "completion": "0.0000012",
+   "image": "0",
+   "request": "0",
+   "input_cache_read": "0.000000006"
+  }
+ }
+}

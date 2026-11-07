@@ -80,7 +80,7 @@ What each check covers, line by line, is in [DEMO.md](DEMO.md) and
 5. **Stuck commits** — the dangling-`Pending` refund and yield-timeout paths are code-review-only.
 6. **Storage and griefing** — commits are stored for good; fresh accounts can keep one invariant busy.
 7. **No outside users yet** — the measured demo is our own hunter client (`scripts/hunter.py`) committing the
-   corpus' real exploits and fakes; the LLM hunter agent ran only locally (`hunter-agent/`).
+   corpus' real exploits and fakes; the LLM hunter agent never submitted on chain: its exploits were checked against the local verifier only (`hunter-agent/`).
 
 Full detail: [README.md § Honest limits](README.md) and [ARCHITECTURE.md § Limits](ARCHITECTURE.md#limits).
 

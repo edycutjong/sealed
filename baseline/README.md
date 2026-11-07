@@ -15,7 +15,8 @@ Ground truth is the verifier's golden verdict (it executes the submission and ca
   with a larger output cap after the 4000-token cap truncated the reply), nemotron-3-ultra (NVIDIA, free tier via Kilo, tools
   denied). These three are third-party APIs, not private inference.
 - **NEAR AI Cloud (2026-11-07):** `deepseek-ai/DeepSeek-V4.1-Flash-1017` (`--provider nearai`, temperature 0, `owned_by: nearai`).
-  NEAR AI's model listing describes it as "Served privately from NEAR AI's attested TEE infrastructure." We did not verify
+  NEAR AI's model listing describes it as "Served privately from NEAR AI's attested TEE infrastructure." (the listing entry,
+  as fetched on 2026-11-07, is saved in [nearai-model-listing.json](nearai-model-listing.json)). We did not verify
   any TEE attestation ourselves; that sentence is NEAR AI's claim, not something this repo checks. Long items that hit the
   default 300 s read timeout were re-run with `BASELINE_TIMEOUT=900`; `llm-muse-king` still got no reply after 3 tries at 900 s.
   `make baseline MODEL=<id>` adds another NEAR AI Cloud model (key in `~/.config/near-ai-cloud/api.key`).
@@ -31,4 +32,5 @@ Ground truth is the verifier's golden verdict (it executes the submission and ca
 - A reply that cannot be parsed (or an API failure) is recorded as `None` and counted as not paying; `make baseline` names each one. Three exist: nemotron's `abuse-input` (a 49 KB fake; no VERDICT line, which would help the baseline), qwen's `real-king` (a real exploit; HTTP 403 on every try, and by the time it was retried DashScope reported the free quota exhausted, though the first failure's response body was not captured; this hurts the baseline), and DeepSeek's `llm-muse-king` (a real exploit; no reply after 3 tries with a 900 s read timeout; this hurts the baseline). The qwen row also cannot be re-run today for that reason.
 - A triager that refuses everything would score 0 fakes; the line "of the 15 submissions that really break a level it would pay
   n" is the other half. The executing verifier pays 5 of 5 real exploits on the demo bounty.
-- Prompts, replies and verdicts are one run each; no repeats, so there is no variance estimate.
+- One retained reply per item and model (calls that timed out were retried; failed attempts are not kept); answered items were
+  never re-asked, so there is no variance estimate.

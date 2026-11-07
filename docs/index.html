@@ -616,7 +616,7 @@ h1 { font: 800 clamp(54px, 6vw, 88px)/.92 var(--font-display); text-transform: u
       <ol class="disc">
         <li><blockquote><strong>Testnet only.</strong> The mainnet leg is prepared (<code>scripts/mainnet_leg.py</code>) and has not run.</blockquote><cite>README · Honest limits, item 1</cite></li>
         <li><blockquote><strong>Worker attestation.</strong> <code>make verify</code> shows the request pinned the verifier hash and the operator&#x27;s OutLayer worker key answered (a FunctionCall key limited to OutLayer&#x27;s contract, its method list including <code>resolve_execution</code>). It checks the key, not its TDX quote, and does not show the worker ran exactly those bytes. <code>make replay</code> re-runs the same bytes locally.</blockquote><cite>README · Honest limits, item 2</cite></li>
-        <li><blockquote><strong>No outside users yet.</strong> The measured demo is our own hunter client (<code>scripts/hunter.py</code>) committing the corpus&#x27; real exploits and fakes; the LLM hunter agent (<code>scripts/hunter_agent.py</code>) ran only locally (<code>hunter-agent/</code>).</blockquote><cite>README · Honest limits, item 7</cite></li>
+        <li><blockquote><strong>No outside users yet.</strong> The measured demo is our own hunter client (<code>scripts/hunter.py</code>) committing the corpus&#x27; real exploits and fakes; the LLM hunter agent (<code>scripts/hunter_agent.py</code>) never submitted on chain: its exploits were checked against the local verifier only (<code>hunter-agent/</code>).</blockquote><cite>README · Honest limits, item 7</cite></li>
       </ol>
       <p class="disc-more"><a href="https://github.com/edycutjong/sealed#honest-limits-7">All 7 limits in the README</a> · <a href="https://github.com/edycutjong/sealed/blob/main/ARCHITECTURE.md#limits">ARCHITECTURE.md § Limits</a></p>
     </div>
@@ -657,7 +657,7 @@ h1 { font: 800 clamp(54px, 6vw, 88px)/.92 var(--font-display); text-transform: u
       <span>Sealed · built for NEAR Hackathon 2026 · MIT</span>
       <a href="https://github.com/edycutjong/sealed/blob/main/ARCHITECTURE.md">ARCHITECTURE.md</a>
       <a href="https://github.com/edycutjong/sealed/blob/main/LICENSE">LICENSE</a>
-      <span class="sp">data from commit bb99556 · fonts: Big Shoulders Stencil, Libre Franklin, IBM Plex Mono (OFL)</span>
+      <span class="sp">data from commit 5cad068 · fonts: Big Shoulders Stencil, Libre Franklin, IBM Plex Mono (OFL)</span>
     </div>
   </div>
 </footer>
