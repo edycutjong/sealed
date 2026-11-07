@@ -14,7 +14,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-PROSE = ["README.md", "DEMO.md", "ARCHITECTURE.md", "docs/DX-REPORT.md", "SECURITY.md", "CONTRIBUTING.md"]
+PROSE = ["README.md", "JUDGE.md", "DEMO.md", "ARCHITECTURE.md", "docs/DX-REPORT.md", "SECURITY.md", "CONTRIBUTING.md"]
 PLACEHOLDER = re.compile(
     r"0x…|0x\.\.\.|\bTBD\b|\bTODO\b|\bFIXME\b|\bXXX\b|lorem ipsum|<your[- ][a-z -]+>|\[(?:link|url|todo)\]|"
     r"https?://(?:example\.com|localhost|127\.0\.0\.1)|\bplaceholder\b",
