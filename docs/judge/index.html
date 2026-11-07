@@ -417,7 +417,7 @@ h1 { font: 800 clamp(54px, 6vw, 88px)/.92 var(--font-display); text-transform: u
     <div class="bento">
       <article class="card w3">
         <h3>make replay</h3>
-        <p>Re-runs every published commit under wasmtime from the verifier wasm its bounty pinned (sha256-checked): <strong>29 OK · 0 FAIL</strong>, each with <code>validateInstance</code> → 1 for a real exploit, 0 for a fake. Offline.</p>
+        <p>Re-runs every published commit under wasmtime from the verifier wasm its bounty pinned (sha256-checked): <strong>29 OK · 0 FAIL</strong>, with <code>validateInstance</code> → 1 for a real exploit, 0 for a fake (the 4 malformed inputs stop before that call). Offline.</p>
         <span class="chip">offline · no NEAR account</span>
       </article>
       <article class="card w3">
@@ -504,7 +504,7 @@ h1 { font: 800 clamp(54px, 6vw, 88px)/.92 var(--font-display); text-transform: u
       <span>Sealed · built for NEAR Hackathon 2026 · MIT</span>
       <a href="https://github.com/edycutjong/sealed/blob/main/ARCHITECTURE.md">ARCHITECTURE.md</a>
       <a href="https://github.com/edycutjong/sealed/blob/main/LICENSE">LICENSE</a>
-      <span class="sp">data from commit 0b1fc45 · judge entry point</span>
+      <span class="sp">data from commit b9be051 · judge entry point</span>
     </div>
   </div>
 </footer>

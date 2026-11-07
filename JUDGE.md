@@ -17,7 +17,7 @@ executing verifier paid **5 of 5** real Ethernaut exploits and **0 of 21** submi
 From a fresh clone with `python3` and `wasmtime`, no account or key:
 
 ```bash
-make replay   # offline: re-runs 29 published commits under wasmtime → 29 OK, each printing validateInstance = 1 (real break) or 0 (fake)
+make replay   # offline: re-runs 29 published commits under wasmtime → 29 OK, printing validateInstance = 1 (real break) or 0 (fake); the 4 malformed inputs print "no validateInstance call"
 make verify   # from chain data: re-checks all 29 runs against testnet (about 80 archival RPC calls)
 ```
 

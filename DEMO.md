@@ -10,8 +10,8 @@ make replay
 ```
 
 Expect 29 `OK` rows. Each row re-runs a published commit under wasmtime from the committed verifier wasm its bounty pinned
-and prints `factory.validateInstance(instance, player)`: `1` for a real exploit, `0` for a fake. The same verdict is on
-chain.
+and prints `factory.validateInstance(instance, player)`: `1` for a real exploit, `0` for a fake; the 4 malformed inputs
+print `no validateInstance call` instead (the verifier rejects them before that call). The same verdict is on chain.
 
 The paid fallback exploit on the demo bounty, in order:
 [commit](https://testnet.nearblocks.io/txns/FNbCUc53YNayqd6NBqaaxnZTeGAVGABHfPsoHz7Gkc2s) (14.6 s client wall-clock to verdict, 8.5 s on chain block time) →
