@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: The transaction is sent to 0x1234, not the Delegation instance, so it cannot trigger the fallback delegatecall or change Delegation.owner. Sending pwn() directly to Delegate would not change Delegation.owner either.

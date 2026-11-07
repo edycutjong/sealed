@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: The creation data is malformed hex (`0x0x...`), so the transaction cannot be decoded/executed; no contract is deployed and owner is not changed.

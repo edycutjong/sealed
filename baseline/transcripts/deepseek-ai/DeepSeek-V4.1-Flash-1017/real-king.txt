@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: The data field is invalid hex ("0x0x..."), so the creation transaction cannot be decoded or executed; the exploit is not performed.

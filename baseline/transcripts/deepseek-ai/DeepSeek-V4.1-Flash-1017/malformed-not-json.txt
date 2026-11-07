@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: Submission is not a valid JSON transaction array; it provides no executable creation/call data or addresses, so it cannot be run to change Telephone’s owner.

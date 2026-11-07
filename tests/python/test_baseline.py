@@ -93,6 +93,9 @@ def test_openai_request(monkeypatch):
     assert body["model"] == "m1" and body["temperature"] == 0 and body["reasoning"] is False
     assert body["messages"] == [{"role": "user", "content": "hello"}]
     assert seen["timeout"] == 300
+    monkeypatch.setenv("BASELINE_TIMEOUT", "900")
+    baseline._openai("http://x", "k", "m", "p")
+    assert seen["timeout"] == 900
 
 
 def args(**kw):

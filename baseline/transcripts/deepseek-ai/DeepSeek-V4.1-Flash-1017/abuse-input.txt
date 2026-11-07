@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: The calldata selector 0xabababab matches no Fallback function, and the contract has no fallback function, so the transaction reverts; owner and balance remain unchanged.

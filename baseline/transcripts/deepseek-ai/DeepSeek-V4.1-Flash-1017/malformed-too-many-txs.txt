@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: Submission has five transactions, exceeding the maximum of four, and sends empty calldata to 0xd326..., not the Delegation instance; it cannot invoke pwn() or make the player owner.

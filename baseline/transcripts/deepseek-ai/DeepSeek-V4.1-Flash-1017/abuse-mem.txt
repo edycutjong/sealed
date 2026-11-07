@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: The transactions only create contracts with looping init code; they never call the Fallback instance, so ownership and balance remain unchanged.

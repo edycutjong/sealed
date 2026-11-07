@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: The creation init code loops SSTORE/JUMP until out of gas, never returns or calls Fallback; all four transactions fail, so owner and balance are unchanged.

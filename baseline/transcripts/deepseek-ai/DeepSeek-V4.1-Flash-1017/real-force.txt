@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: The data field is invalid hex due to the double 0x prefix, so the transaction cannot execute and Force's balance remains 0.

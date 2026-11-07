@@ -1,0 +1,2 @@
+VERDICT: PAY
+REASON: The calls correctly invoke contribute() with 1 wei, then empty calldata receive() with 1 wei to set owner to player, then withdraw() to transfer the contract's balance to player, leaving it zero. Gas is within budget.

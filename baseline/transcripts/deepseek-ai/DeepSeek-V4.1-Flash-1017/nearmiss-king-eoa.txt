@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: The transaction only makes the EOA king; an EOA accepts ETH, so the owner/level can still reclaim kingship. No reverting contract locks the throne.

@@ -1,0 +1,2 @@
+VERDICT: PAY
+REASON: The creation sends 0.001 ETH to King, making the reverting contract king; its runtime always reverts, so the owner's zero-value reclaim transfer fails, locking the throne.

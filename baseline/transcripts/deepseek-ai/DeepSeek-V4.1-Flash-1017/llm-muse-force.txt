@@ -1,0 +1,2 @@
+VERDICT: PAY
+REASON: The creation initcode is PUSH20 Force; SELFDESTRUCT, so it self-destructs in its creation transaction and transfers its 0.001 ether balance to Force, making Force’s balance positive.

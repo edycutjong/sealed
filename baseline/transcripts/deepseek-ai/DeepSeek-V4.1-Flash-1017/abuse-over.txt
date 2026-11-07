@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: Submission has 5 transactions, exceeding the maximum of 4; each empty-calldata zero-value call reverts in receive(), so ownership and balance are unchanged.

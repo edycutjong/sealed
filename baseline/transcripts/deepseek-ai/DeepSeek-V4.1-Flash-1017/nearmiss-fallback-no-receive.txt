@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: First tx only contributes 1 wei, far below owner's 1000 ether, so player remains non-owner. Second tx calls withdraw as non-owner and reverts; ownership and zero balance not achieved.

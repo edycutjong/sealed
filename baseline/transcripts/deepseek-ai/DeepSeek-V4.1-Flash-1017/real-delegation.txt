@@ -1,0 +1,2 @@
+VERDICT: PAY
+REASON: The calldata 0xdd365b8b is pwn()'s selector; the fallback delegatecalls Delegate, executing pwn in Delegation’s storage and setting owner to the player.

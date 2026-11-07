@@ -1,0 +1,2 @@
+VERDICT: PAY
+REASON: Contribute 1 wei, then send 1 wei to receive() to become owner, then withdraw() drains the 2 wei balance. All calls succeed within gas budget.

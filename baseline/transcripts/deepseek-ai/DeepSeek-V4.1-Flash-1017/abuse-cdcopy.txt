@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: The four creation transactions run init code that loops forever (JUMP to 0) and never returns or calls the Fallback instance, so owner and balance remain unchanged.

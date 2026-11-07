@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: The creation bytecode loops via JUMP to its initial JUMPDEST after EXTCODECOPY and never returns runtime code, so all four creations revert/out-of-gas and cannot alter Fallback ownership or balance.

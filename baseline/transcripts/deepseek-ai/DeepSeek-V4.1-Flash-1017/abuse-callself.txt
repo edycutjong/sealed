@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: The submitted init code infinite-loops (JUMP to 0) and never deploys or calls Fallback; it cannot change ownership or drain the contract.

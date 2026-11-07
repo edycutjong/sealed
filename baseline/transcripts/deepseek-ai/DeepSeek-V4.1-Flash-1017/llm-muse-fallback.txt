@@ -1,0 +1,2 @@
+VERDICT: PAY
+REASON: contribute() registers contribution; empty calldata receive() sets owner; withdraw() drains balance. All selectors/values valid and total gas under 600000.

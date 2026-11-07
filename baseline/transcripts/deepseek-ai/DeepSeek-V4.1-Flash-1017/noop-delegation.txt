@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: The submission contains no transactions, so it cannot call the Delegation fallback or change the owner. The player remains not owner.

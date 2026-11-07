@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: All four transactions are contract creations with init code that jumps to invalid destination 0x400 and reverts; none calls the Fallback instance, so owner and balance are unchanged.

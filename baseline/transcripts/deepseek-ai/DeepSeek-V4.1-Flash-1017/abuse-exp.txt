@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: The four creations run init code that loops forever and never returns or calls the Fallback instance; they fail out of gas, leaving ownership and balance unchanged.

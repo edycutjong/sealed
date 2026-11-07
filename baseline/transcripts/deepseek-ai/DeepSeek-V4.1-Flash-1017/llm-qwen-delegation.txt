@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: The calldata selector 0xdd01383d is not pwn() (0xdd365b8b), so the delegatecall matches no function and does not change Delegation.owner.

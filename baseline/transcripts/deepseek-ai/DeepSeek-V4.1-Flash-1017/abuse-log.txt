@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: The four creations run init code that only loops logging zero memory and never returns or calls Fallback; they cannot change owner or drain balance.

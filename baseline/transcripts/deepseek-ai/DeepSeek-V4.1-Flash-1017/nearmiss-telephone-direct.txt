@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: The player EOA calls changeOwner directly, so tx.origin equals msg.sender; the condition fails and ownership is not changed. An intermediary contract is required.

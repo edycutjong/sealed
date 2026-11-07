@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: The calldata "0xzz" is invalid hex, so the transaction cannot execute. It also directly calls Telephone, which cannot satisfy tx.origin != msg.sender.

@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: All calls are direct from the player EOA to Telephone; no intermediary contract is created, so tx.origin == msg.sender and changeOwner cannot execute. The provided selectors also do not change ownership.

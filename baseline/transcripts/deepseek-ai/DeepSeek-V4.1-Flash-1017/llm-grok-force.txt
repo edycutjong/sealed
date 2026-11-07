@@ -1,0 +1,2 @@
+VERDICT: PAY
+REASON: The init code PUSH20 Force; SELFDESTRUCT sends the 1 wei creation value to Force. Under Cancun, selfdestruct still transfers balance, so Force balance becomes positive.

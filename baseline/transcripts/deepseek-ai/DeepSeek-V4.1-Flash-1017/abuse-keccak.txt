@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: The four creations run looping init code (JUMPDEST/SHA3/POP/JUMP) and never deploy or call Fallback; they cannot change owner or drain its balance.

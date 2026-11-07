@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: Calldata selector 0xabababab matches no function; Fallback has no fallback function, so the call reverts. Player never becomes owner and balance remains nonzero.

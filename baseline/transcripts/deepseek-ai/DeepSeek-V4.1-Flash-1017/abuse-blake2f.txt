@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: All four transactions create empty contracts that only STATICCALL address 0x09; none call the Fallback instance, so owner and balance remain unchanged.

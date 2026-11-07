@@ -1,0 +1,2 @@
+VERDICT: PAY
+REASON: The selectors are correct: contribute() adds 1 wei, empty calldata triggers receive() to set player as owner, and withdraw() transfers the 2 wei balance to the player, leaving zero.

@@ -1,0 +1,2 @@
+VERDICT: PAY
+REASON: The calldata is the `pwn()` selector; Delegation’s fallback delegatecalls Delegate, writing `msg.sender` (player) into slot 0, so owner becomes the player.

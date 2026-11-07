@@ -1,0 +1,2 @@
+VERDICT: PAY
+REASON: The calldata selector is pwn(); Delegation's fallback delegatecalls Delegate, whose pwn() sets storage slot 0 owner to msg.sender, the player.

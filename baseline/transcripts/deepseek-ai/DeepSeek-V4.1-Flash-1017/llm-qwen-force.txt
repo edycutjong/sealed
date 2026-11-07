@@ -1,0 +1,2 @@
+VERDICT: PAY
+REASON: Init code pushes Force address then SELFDESTRUCTs; the 1 wei creation value is forcibly transferred to Force, bypassing its missing receive/fallback.

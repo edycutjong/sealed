@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: Transaction calls pwn() on 0xd326..., not the Delegation instance 0x1780.... It changes the Delegate contract’s owner, not Delegation.owner, so the level is not broken.

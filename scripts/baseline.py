@@ -103,11 +103,12 @@ def parse_verdict(reply):
 # ----- providers: each takes the prompt text and returns the model's reply text -----
 def _openai(base, key, model, prompt):
     # EXTRA_BODY (JSON) merges provider-specific request fields, e.g. a reasoning/thinking switch.
+    # BASELINE_TIMEOUT (seconds, default 300): long reasoning replies on the biggest prompts can need more.
     body = json.dumps({"model": model, "messages": [{"role": "user", "content": prompt}], "temperature": 0,
                        **json.loads(os.environ.get("EXTRA_BODY", "{}"))}).encode()
     req = urllib.request.Request(base.rstrip("/") + "/chat/completions", data=body,
                                  headers={"Content-Type": "application/json", "Authorization": "Bearer " + key})
-    with urllib.request.urlopen(req, timeout=300) as r:
+    with urllib.request.urlopen(req, timeout=int(os.environ.get("BASELINE_TIMEOUT", "300"))) as r:
         return json.load(r)["choices"][0]["message"]["content"]
 
 

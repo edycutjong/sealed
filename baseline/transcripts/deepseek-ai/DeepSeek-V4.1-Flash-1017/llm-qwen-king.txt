@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: The creation code uses ADDRESS (0x30) instead of CODECOPY (0x39), so it returns zeroed memory (STOP) rather than the intended reverting runtime. The contract accepts ETH, so the level can reclaim kingship.

@@ -1,0 +1,2 @@
+VERDICT: REFUSE
+REASON: The submitted transactions only deploy recursive self-replicating init code that runs out of gas and reverts; they never call the Fallback instance, so the player does not become owner.
