@@ -221,7 +221,7 @@ jobs:
         run: make results && make bench
       - name: Budget gate — every run ≤ 50% of each worker limit, p95 verdict ≤ 30 s
         run: python3 scripts/perf_gate.py
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: 22
       - name: Lighthouse CI on docs/ (landing, pitch, judge)
